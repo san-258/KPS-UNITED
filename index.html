@@ -394,7 +394,29 @@
             </form>
         </div>
     </div>
+    </div>
 
+    <!-- Verification Modal -->
+    <div id="verification-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center; padding: 2rem;">
+            <h2 style="color: var(--kps-navy); margin-bottom: 1rem;">Verify Your Email</h2>
+            <p style="margin-bottom: 1.5rem; color: #666;">We sent a verification code to your email.</p>
+
+            <div id="demo-code-display"
+                style="background: #e3f2fd; color: #0d47a1; padding: 10px; border-radius: 5px; margin-bottom: 1.5rem; border: 1px dashed #0d47a1;">
+                <!-- Code will appear here -->
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="verification-input" placeholder="Enter 6-digit code"
+                    style="text-align: center; letter-spacing: 5px; font-size: 1.5rem;" maxlength="6">
+            </div>
+
+            <button class="btn" onclick="verifyRegistration()">Verify & Create Account</button>
+            <button class="btn" style="background: #ccc; margin-top: 10px;"
+                onclick="closeVerificationModal()">Cancel</button>
+        </div>
+    </div>
     <script>
         function showTab(tab) {
             document.getElementById('error-message').style.display = 'none';
@@ -428,6 +450,9 @@
             document.getElementById('error-message').style.display = 'none';
         }
 
+        let pendingUser = null;
+        let generatedRegCode = null;
+
         function handleRegister(event) {
             event.preventDefault();
 
@@ -454,16 +479,59 @@
                 return;
             }
 
+            // Store pending data
+            pendingUser = {
+                name: name,
+                email: email,
+                password: password
+            };
+
+            // Generate Code
+            generatedRegCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+            // Show Modal & Demo Code
+            document.getElementById('verification-modal').style.display = 'block';
+            document.getElementById('demo-code-display').innerHTML = `
+                <strong>Demo Mode:</strong> Your code is <br>
+                <span style="font-size: 1.5em; font-weight: bold;">${generatedRegCode}</span>
+            `;
+
+            console.log(`Verification Code for ${email}: ${generatedRegCode}`);
+        }
+
+        function verifyRegistration() {
+            const inputCode = document.getElementById('verification-input').value;
+
+            if (inputCode !== generatedRegCode) {
+                alert("Invalid code! Please try again.");
+                return;
+            }
+
+            // Code is valid, proceed with creation
+            completeRegistration();
+        }
+
+        function closeVerificationModal() {
+            document.getElementById('verification-modal').style.display = 'none';
+            pendingUser = null;
+        }
+
+        function completeRegistration() {
+            if (!pendingUser) return;
+
+            let users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+
             // 1. Get/Init Member ID
-            let nextMemberId = parseInt(localStorage.getItem('nextMemberId') || '1001'); // Start at 1001
+            let nextMemberId = parseInt(localStorage.getItem('nextMemberId') || '1001');
 
             // 2. Create User Object
             users.push({
                 memberId: nextMemberId,
-                name: name,
-                email: email,
-                password: password,
-                registeredDate: new Date().toISOString()
+                name: pendingUser.name,
+                email: pendingUser.email,
+                password: pendingUser.password,
+                registeredDate: new Date().toISOString(),
+                verified: true // Mark as verified
             });
 
             // 3. Create Initial Store
@@ -471,11 +539,10 @@
             const newStore = {
                 id: `${nextMemberId}-1`,
                 memberId: nextMemberId,
-                name: name,
-                businessEmail: email,
-                // Placeholders for fields not in registration form
+                name: pendingUser.name,
+                businessEmail: pendingUser.email,
                 streetAddress: "Pending",
-                entityName: name,
+                entityName: pendingUser.name,
                 city: "Pending",
                 state: "KY",
                 zip: "00000",
@@ -491,10 +558,10 @@
 
             // 4. Increment Member ID
             localStorage.setItem('nextMemberId', (nextMemberId + 1).toString());
-
             localStorage.setItem('storeUsers', JSON.stringify(users));
 
-            showSuccess('Account created successfully! Redirecting to login...');
+            closeVerificationModal();
+            showSuccess('Account verified and created successfully! Redirecting to login...');
 
             setTimeout(() => {
                 document.getElementById('register-form').classList.remove('active');
@@ -502,11 +569,13 @@
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
                 document.querySelectorAll('.tab-btn')[1].classList.remove('active');
 
+                // Clear form
                 document.getElementById('register-name').value = '';
                 document.getElementById('register-email').value = '';
                 document.getElementById('register-password').value = '';
                 document.getElementById('register-confirm-password').value = '';
                 document.getElementById('terms-checkbox').checked = false;
+                document.getElementById('verification-input').value = '';
 
                 document.getElementById('success-message').style.display = 'none';
             }, 2000);
