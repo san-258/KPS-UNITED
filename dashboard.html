@@ -167,7 +167,7 @@
         <h2 style="margin-bottom: 1rem;">Stores</h2>
         <div class="stores-grid">
             <!-- Add New Store -->
-            <div class="store-card add-store-card" onclick="openAddStoreModal()">
+            <div class="store-card add-store-card" onclick="openStoreModal('add')">
                 <div class="add-icon">+</div>
                 <h3>Add New Store</h3>
             </div>
@@ -281,16 +281,74 @@
     </div>
 
     <script>
+        // Static Store Data (Example)
+        const staticStoreData = {
+            id: 'static-1',
+            name: "Hampton's Service Center",
+            streetAddress: "123 Main St", // Example data
+            entityName: "Hampton Services LLC", // Example data
+            city: "Nashville",
+            state: "TN",
+            zip: "37201", // Example data
+            county: "Davidson", // Example data
+            businessEmail: "contact@hamptons.com", // Example data
+            businessPhone: "555-0123", // Example data
+            ein: "12-3456789", // Example data
+            businessType: "Retail", // Example data
+            brand: "Shell", // Example data
+            role: "Owner", // Example data
+            status: "Active"
+        };
+
         // Modal Logic
         const modal = document.getElementById("addStoreModal");
+        const modalTitle = document.querySelector(".modal-header h2");
+        const saveBtn = document.querySelector(".btn-save");
+        const form = document.getElementById("addStoreForm");
+        const inputs = form.querySelectorAll("input, select");
 
-        function openAddStoreModal() {
+        function openStoreModal(mode, storeData = null) {
             modal.style.display = "block";
+
+            if (mode === 'view' && storeData) {
+                // View Mode
+                modalTitle.textContent = "Store Details";
+                saveBtn.style.display = "none";
+
+                // Populate fields
+                document.getElementById("storeName").value = storeData.name || '';
+                document.getElementById("streetAddress").value = storeData.streetAddress || '';
+                document.getElementById("entityName").value = storeData.entityName || '';
+                document.getElementById("city").value = storeData.city || '';
+                document.getElementById("state").value = storeData.state || '';
+                document.getElementById("zip").value = storeData.zip || '';
+                document.getElementById("county").value = storeData.county || '';
+                document.getElementById("businessEmail").value = storeData.businessEmail || '';
+                document.getElementById("businessPhone").value = storeData.businessPhone || '';
+                document.getElementById("ein").value = storeData.ein || '';
+                document.getElementById("businessType").value = storeData.businessType || 'Retail';
+                document.getElementById("brand").value = storeData.brand || '';
+                document.getElementById("role").value = storeData.role || 'Owner';
+
+                // Disable inputs
+                inputs.forEach(input => input.disabled = true);
+
+            } else {
+                // Add Mode
+                modalTitle.textContent = "Business Information";
+                saveBtn.style.display = "block";
+                form.reset();
+
+                // Enable inputs
+                inputs.forEach(input => input.disabled = false);
+            }
         }
 
         function closeAddStoreModal() {
             modal.style.display = "none";
-            document.getElementById("addStoreForm").reset();
+            form.reset();
+            // Re-enable inputs just in case
+            inputs.forEach(input => input.disabled = false);
         }
 
         window.onclick = function (event) {
@@ -301,7 +359,6 @@
 
         // Store Logic
         function saveStore() {
-            const form = document.getElementById("addStoreForm");
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
@@ -310,8 +367,18 @@
             const storeData = {
                 id: Date.now(),
                 name: document.getElementById("storeName").value,
+                streetAddress: document.getElementById("streetAddress").value,
+                entityName: document.getElementById("entityName").value,
                 city: document.getElementById("city").value,
                 state: document.getElementById("state").value,
+                zip: document.getElementById("zip").value,
+                county: document.getElementById("county").value,
+                businessEmail: document.getElementById("businessEmail").value,
+                businessPhone: document.getElementById("businessPhone").value,
+                ein: document.getElementById("ein").value,
+                businessType: document.getElementById("businessType").value,
+                brand: document.getElementById("brand").value,
+                role: document.getElementById("role").value,
                 status: "Pending Approval" // Default status
             };
 
@@ -326,22 +393,17 @@
 
         function renderStores() {
             const storesGrid = document.querySelector(".stores-grid");
-            // Keep the "Add New Store" card and the static example store
-            // Ideally we should clear dynamic stores and re-append.
-            // For simplicity, let's just append new ones or clear everything except the first child?
-            // Better approach: Clear grid, re-add "Add Card", re-add static example, add dynamic stores.
 
-            // Actually, let's just append dynamic stores to the end for now to avoid complexity with the static one.
-            // But to prevent duplicates on re-render, we need to clear dynamic ones.
-            // Let's mark dynamic stores with a class.
-
+            // Clear dynamic stores
             const existingDynamic = document.querySelectorAll(".dynamic-store");
             existingDynamic.forEach(el => el.remove());
 
+            // Render dynamic stores
             const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
             stores.forEach(store => {
                 const storeCard = document.createElement("div");
                 storeCard.className = "store-card dynamic-store";
+                storeCard.onclick = () => openStoreModal('view', store); // Attach click handler
                 storeCard.innerHTML = `
                     <h3>${store.name}</h3>
                     <p>📍 ${store.city}, ${store.state}</p>
@@ -351,8 +413,16 @@
             });
         }
 
-        // Initial Render
-        window.addEventListener('load', renderStores);
+        // Initialize
+        window.addEventListener('load', () => {
+            renderStores();
+
+            // Attach click handler to static store
+            const staticStoreCard = document.querySelector(".store-card:not(.add-store-card):not(.dynamic-store)");
+            if (staticStoreCard) {
+                staticStoreCard.onclick = () => openStoreModal('view', staticStoreData);
+            }
+        });
     </script>
 </body>
 

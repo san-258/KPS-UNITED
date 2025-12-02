@@ -52,6 +52,24 @@
                 <button type="submit" class="btn">Save Changes</button>
             </form>
         </section>
+        <section class="section">
+            <h2>🔒 Change Password</h2>
+            <form id="password-form">
+                <div class="form-group">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm New Password</label>
+                    <input type="password" id="confirm-password" required>
+                </div>
+                <button type="submit" class="btn">Update Password</button>
+            </form>
+        </section>
     </div>
     <footer>
         <p>&copy; 2025 KPS United. All rights reserved.</p>
@@ -85,6 +103,44 @@
             }
             alert('Profile updated successfully!');
             window.location.reload();
+        });
+
+        document.getElementById('password-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (currentPassword !== currentUser.password) {
+                alert('Incorrect current password!');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match!');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                alert('Password must be at least 6 characters long!');
+                return;
+            }
+
+            // Update password
+            currentUser.password = newPassword;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            let users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex].password = newPassword;
+                localStorage.setItem('storeUsers', JSON.stringify(users));
+            }
+
+            alert('Password changed successfully!');
+            document.getElementById('password-form').reset();
         });
     </script>
 </body>
