@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Local Store Owners Hub</title>
+    <title>Admin Dashboard - KPS United</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* KPS UNITED BRAND COLORS */
+        :root {
+            --kps-red: #D84315;
+            --kps-navy: #1A3A52;
+            --kps-yellow: #FDB813;
+            --kps-green: #2E7D60;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--kps-red) 0%, var(--kps-navy) 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -48,19 +52,37 @@
             align-items: center;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 3px solid #667eea;
+            border-bottom: 3px solid var(--kps-red);
+        }
+
+        .admin-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-logo {
+            height: 60px;
+            width: auto;
         }
 
         .admin-header h1 {
-            color: #667eea;
+            color: var(--kps-navy);
             font-size: 2rem;
         }
 
         .logo h1 {
-            color: #667eea;
+            color: var(--kps-navy);
             font-size: 2rem;
             text-align: center;
             margin-bottom: 0.5rem;
+        }
+
+        .logo-image {
+            width: 120px;
+            height: auto;
+            display: block;
+            margin: 0 auto 1rem;
         }
 
         .logo p {
@@ -90,13 +112,13 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--kps-red);
         }
 
         .btn {
             width: 100%;
             padding: 1rem;
-            background: #667eea;
+            background: var(--kps-red);
             color: white;
             border: none;
             border-radius: 10px;
@@ -107,11 +129,11 @@
         }
 
         .btn:hover {
-            background: #764ba2;
+            background: var(--kps-navy);
         }
 
         .btn-secondary {
-            background: #28a745;
+            background: var(--kps-green);
             margin-right: 1rem;
             display: inline-block;
             padding: 0.8rem 1.5rem;
@@ -119,18 +141,18 @@
         }
 
         .btn-secondary:hover {
-            background: #218838;
+            background: #25664D;
         }
 
         .btn-danger {
-            background: #dc3545;
+            background: var(--kps-red);
             display: inline-block;
             padding: 0.8rem 1.5rem;
             width: auto;
         }
 
         .btn-danger:hover {
-            background: #c82333;
+            background: var(--kps-navy);
         }
 
         .error-message {
@@ -150,7 +172,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--kps-red) 0%, var(--kps-navy) 100%);
             color: white;
             padding: 1.5rem;
             border-radius: 10px;
@@ -186,7 +208,7 @@
         }
 
         .users-table th {
-            background: #667eea;
+            background: var(--kps-red);
             color: white;
             font-weight: 600;
         }
@@ -206,7 +228,7 @@
 
         .search-box:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--kps-red);
         }
 
         .no-users {
@@ -224,24 +246,19 @@
                 flex-direction: column;
                 gap: 1rem;
             }
-
-            .users-table {
-                font-size: 0.9rem;
-            }
-
-            .users-table th,
-            .users-table td {
-                padding: 0.75rem 0.5rem;
+            .admin-header-left {
+                flex-direction: column;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Admin Login -->
     <div class="login-container" id="admin-login">
         <div class="logo">
+            <img src="logo.png" alt="KPS United" class="logo-image">
             <h1>🔐 Admin Access</h1>
-            <p>Login to view registered users</p>
+            <p>KPS United - Store Owner Management</p>
         </div>
 
         <div id="error-message" class="error-message"></div>
@@ -261,14 +278,15 @@
         </p>
     </div>
 
-    <!-- Admin Dashboard -->
     <div class="admin-container" id="admin-dashboard">
         <div class="admin-header">
-            <h1>👥 Registered Store Owners</h1>
+            <div class="admin-header-left">
+                <img src="logo.png" alt="KPS United" class="admin-logo">
+                <h1>👥 Registered Store Owners</h1>
+            </div>
             <button class="btn-danger" onclick="handleLogout()">Logout</button>
         </div>
 
-        <!-- Statistics -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number" id="total-users">0</div>
@@ -286,17 +304,14 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="action-buttons">
             <button class="btn btn-secondary" onclick="downloadCSV()">📥 Download CSV</button>
             <button class="btn btn-secondary" onclick="downloadJSON()">📥 Download JSON</button>
             <button class="btn btn-secondary" onclick="copyEmails()">📧 Copy All Emails</button>
         </div>
 
-        <!-- Search -->
         <input type="text" class="search-box" id="search-box" placeholder="🔍 Search by store name or email..." onkeyup="filterUsers()">
 
-        <!-- Users Table -->
         <div style="overflow-x: auto;">
             <table class="users-table" id="users-table">
                 <thead>
@@ -318,13 +333,10 @@
     </div>
 
     <script>
-        // CHANGE THIS PASSWORD FOR SECURITY!
         const ADMIN_PASSWORD = 'admin123';
 
-        // Handle admin login
         function handleAdminLogin(event) {
             event.preventDefault();
-
             const password = document.getElementById('admin-password').value;
 
             if (password === ADMIN_PASSWORD) {
@@ -339,7 +351,6 @@
             }
         }
 
-        // Check if admin is already logged in
         window.onload = function() {
             if (localStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('admin-login').style.display = 'none';
@@ -348,13 +359,11 @@
             }
         };
 
-        // Logout
         function handleLogout() {
             localStorage.removeItem('adminLoggedIn');
             window.location.reload();
         }
 
-        // Load and display users
         function loadUsers() {
             const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
             const tbody = document.getElementById('users-table-body');
@@ -364,7 +373,6 @@
                 return;
             }
 
-            // Update statistics
             document.getElementById('total-users').textContent = users.length;
 
             const today = new Date().setHours(0, 0, 0, 0);
@@ -379,7 +387,6 @@
             const weekUsers = users.filter(u => new Date(u.registeredDate) >= weekAgo).length;
             document.getElementById('this-week-users').textContent = weekUsers;
 
-            // Build table
             tbody.innerHTML = users.map((user, index) => {
                 const regDate = new Date(user.registeredDate);
                 const daysSince = Math.floor((new Date() - regDate) / (1000 * 60 * 60 * 24));
@@ -396,7 +403,6 @@
             }).join('');
         }
 
-        // Filter users by search
         function filterUsers() {
             const searchTerm = document.getElementById('search-box').value.toLowerCase();
             const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
@@ -428,28 +434,24 @@
             }).join('');
         }
 
-        // Download as CSV
         function downloadCSV() {
             const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
-
             if (users.length === 0) {
                 alert('No users to download!');
                 return;
             }
 
-            // Create CSV content
             let csv = 'Store Name,Email,Registered Date\n';
             users.forEach(user => {
                 const regDate = new Date(user.registeredDate).toLocaleDateString('en-US');
                 csv += `"${user.name}","${user.email}","${regDate}"\n`;
             });
 
-            // Download file
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `store-owners-${new Date().toISOString().split('T')[0]}.csv`;
+            a.download = `kps-united-stores-${new Date().toISOString().split('T')[0]}.csv`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -458,16 +460,13 @@
             alert('CSV file downloaded successfully!');
         }
 
-        // Download as JSON
         function downloadJSON() {
             const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
-
             if (users.length === 0) {
                 alert('No users to download!');
                 return;
             }
 
-            // Remove passwords for security
             const sanitizedUsers = users.map(u => ({
                 name: u.name,
                 email: u.email,
@@ -475,13 +474,11 @@
             }));
 
             const json = JSON.stringify(sanitizedUsers, null, 2);
-
-            // Download file
             const blob = new Blob([json], { type: 'application/json' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `store-owners-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `kps-united-stores-${new Date().toISOString().split('T')[0]}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -490,10 +487,8 @@
             alert('JSON file downloaded successfully!');
         }
 
-        // Copy all emails
         function copyEmails() {
             const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
-
             if (users.length === 0) {
                 alert('No users to copy!');
                 return;
@@ -501,11 +496,9 @@
 
             const emails = users.map(u => u.email).join(', ');
 
-            // Copy to clipboard
             navigator.clipboard.writeText(emails).then(() => {
                 alert(`${users.length} email addresses copied to clipboard!\n\nYou can now paste them into your email client.`);
             }).catch(() => {
-                // Fallback for older browsers
                 const textarea = document.createElement('textarea');
                 textarea.value = emails;
                 document.body.appendChild(textarea);

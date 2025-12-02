@@ -1,0 +1,234 @@
+# 🎉 KPS UNITED - COMPLETE BRANDED WEBSITE PACKAGE
+
+## ✅ ALL PAGES ARE READY WITH YOUR LOGO COLORS!
+
+---
+
+## 📦 WHAT'S INCLUDED:
+
+### Your Logo:
+✅ **logo.png** - Your KPS United logo (handshake circle)
+
+### All Branded Pages:
+✅ **index-kps-branded.html** - Login/Register page (RED & NAVY BLUE!)
+✅ **dashboard.html** - Main dashboard (FULL BRANDING!)
+✅ **admin.html** - Admin panel (YOUR COLORS!)
+✅ **reset-password.html** - Password reset (BRANDED!)
+✅ **terms.html** - Terms & Conditions (BRANDED!)
+✅ **support.html** - Support Center (BRANDED!)
+✅ **resources.html** - Resources page (BRANDED!)
+✅ **profile.html** - User Profile (BRANDED!)
+
+---
+
+## 🎨 YOUR COLORS (From Logo):
+
+All pages now use:
+- 🔴 **Red/Orange**: #D84315 (buttons, highlights, headers)
+- 🔵 **Navy Blue**: #1A3A52 (text, hover effects)
+- 🟡 **Yellow**: #FDB813 (accent in charts)
+- 🟢 **Teal**: #2E7D60 (accent in charts)
+
+---
+
+## 🚀 UPLOAD TO GITHUB (Follow These Steps):
+
+### STEP 1: Upload Your Logo
+1. Go to: https://github.com/san-258/KPS-UNITED
+2. Click "Add file" → "Upload files"
+3. Upload **logo.png**
+4. Click "Commit changes"
+5. ✅ Done!
+
+### STEP 2: Replace index.html
+1. In your repository, click on **index.html**
+2. Click the **pencil icon** (Edit this file)
+3. **Delete ALL the old code**
+4. Open **index-kps-branded.html** on your computer
+5. **Select ALL** (Ctrl+A) and **Copy** (Ctrl+C)
+6. **Paste** into GitHub
+7. Click "Commit changes"
+8. ✅ Done!
+
+### STEP 3: Upload All Other Pages
+For each file (dashboard.html, admin.html, etc.):
+
+**If the file EXISTS on GitHub:**
+1. Click on the filename
+2. Click pencil icon (Edit)
+3. Delete all old code
+4. Open the NEW file on your computer
+5. Copy all code (Ctrl+A, Ctrl+C)
+6. Paste into GitHub
+7. Click "Commit changes"
+
+**If the file DOESN'T EXIST yet:**
+1. Click "Add file" → "Upload files"
+2. Upload the file
+3. Click "Commit changes"
+
+### STEP 4: Wait & Test!
+1. Wait **2-3 minutes** for GitHub to update
+2. Go to: **https://san-258.github.io/KPS-UNITED/**
+3. **SEE YOUR BRANDED WEBSITE!** 🎉
+
+---
+
+## 📋 UPLOAD CHECKLIST:
+
+Upload these files to GitHub:
+- [ ] logo.png (your logo image)
+- [ ] index.html (replace with index-kps-branded.html)
+- [ ] dashboard.html (new branded version)
+- [ ] admin.html (new branded version)
+- [ ] reset-password.html (new branded version)
+- [ ] terms.html (new branded version)
+- [ ] support.html (new branded version)
+- [ ] resources.html (new branded version)
+- [ ] profile.html (new branded version)
+
+---
+
+## 🎯 WHAT YOU'LL SEE:
+
+### Every Page Has:
+✅ KPS United logo at the top
+✅ Red/orange and navy blue colors
+✅ "Kentucky Convenience, Liquor, Tobacco Stores" identity
+✅ Professional, trustworthy look
+✅ Mobile-friendly design
+
+### Features:
+✅ Login with your logo
+✅ Dashboard with branded colors
+✅ Admin panel to see all registered stores
+✅ Password reset
+✅ Terms & Conditions (must scroll and check boxes!)
+✅ Support Center
+✅ Resources library
+✅ User Profiles
+
+---
+
+## 💡 QUICK TIPS:
+
+**Logo Too Big/Small?**
+- In any HTML file, find: `width: 150px` or `height: 50px`
+- Change to bigger/smaller number
+
+**Want Different Colors?**
+- In any file, find: `--kps-red: #D84315`
+- Change to your preferred color code
+
+**Change Admin Password:**
+- Open admin.html
+- Find: `const ADMIN_PASSWORD = 'admin123';`
+- Change to your secret password
+
+---
+
+## 🎉 YOU'RE DONE WHEN:
+
+✅ All 9 files uploaded to GitHub
+✅ Wait 2-3 minutes
+✅ Visit: https://san-258.github.io/KPS-UNITED/
+✅ See your logo and colors!
+✅ Test login and registration
+✅ Test admin panel (password: admin123)
+✅ Share with store owners!
+
+---
+
+## 📧 YOUR WEBSITE LINKS:
+
+**Main Website** (for store owners):
+https://san-258.github.io/KPS-UNITED/
+
+**Admin Panel** (for YOU only - keep secret!):
+https://san-258.github.io/KPS-UNITED/admin.html
+Password: admin123 (CHANGE THIS!)
+
+**Pages Available:**
+- Login/Register: /index.html
+- Dashboard: /dashboard.html
+- Support: /support.html
+- Resources: /resources.html
+- Profile: /profile.html
+- Terms: /terms.html
+- Password Reset: /reset-password.html
+
+---
+
+## 🆘 NEED HELP?
+
+**Problem: Logo doesn't show**
+- Make sure logo.png is uploaded
+- Check filename exactly: logo.png (lowercase)
+- Wait 2-3 minutes and refresh
+
+**Problem: Colors didn't change**
+- Make sure you uploaded the NEW files (not old ones)
+- Clear browser cache (Ctrl+Shift+Delete)
+- Hard refresh (Ctrl+F5)
+- Wait 2-3 minutes
+
+**Problem: Admin password doesn't work**
+- Default is: admin123
+- If you changed it, check admin.html file
+
+---
+
+## 📱 TEST ON YOUR PHONE:
+
+After uploading, test on mobile:
+1. Open your website on your phone
+2. Register an account
+3. Check all pages
+4. Make sure logo and colors look good!
+
+---
+
+## 🎊 CONGRATULATIONS!
+
+You now have a COMPLETE, PROFESSIONALLY BRANDED website for KPS United!
+
+**What You've Achieved:**
+✅ Beautiful Kentucky store owner portal
+✅ Your logo and brand colors throughout
+✅ All 8 pages fully functional
+✅ Admin dashboard to manage users
+✅ Password reset feature
+✅ Professional look and feel
+✅ Ready for 200+ store owners!
+
+---
+
+## 📞 FINAL STEPS:
+
+1. **Upload all files to GitHub** (follow steps above)
+2. **Wait 2-3 minutes**
+3. **Test your website**
+4. **Change admin password** from "admin123"
+5. **Share with store owners!**
+
+Your website is at:
+**https://san-258.github.io/KPS-UNITED/**
+
+**YOU DID IT!** 🎉🎊🎈
+
+Kentucky store owners now have a professional portal to:
+- Register and login
+- View prices and contracts
+- Access resources
+- Get support
+- Manage their profiles
+
+And YOU have an admin panel to:
+- See all registered stores
+- Download user lists (CSV/Excel)
+- Copy all emails for mass mailing
+- Track registration stats
+
+**This is REAL professional work!** 
+
+Congratulations! 🏆
