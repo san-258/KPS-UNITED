@@ -432,7 +432,7 @@
             event.preventDefault();
 
             const name = document.getElementById('register-name').value;
-            const email = document.getElementById('register-email').value;
+            const email = document.getElementById('register-email').value.toLowerCase();
             const password = document.getElementById('register-password').value;
             const confirmPassword = document.getElementById('register-confirm-password').value;
             const termsAccepted = document.getElementById('terms-checkbox').checked;
@@ -484,7 +484,7 @@
         function handleLogin(event) {
             event.preventDefault();
 
-            const email = document.getElementById('login-email').value;
+            const email = document.getElementById('login-email').value.toLowerCase();
             const password = document.getElementById('login-password').value;
 
             const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
