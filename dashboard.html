@@ -143,42 +143,36 @@
         <!-- Member Details -->
         <div class="member-card">
             <div class="member-header">
-                <div class="member-info">
-                    <div class="avatar-placeholder">👤</div>
-                    <div>
-                        <h2 style="margin:0; color: var(--kps-blue);">Member ID: 966693</h2>
-                        <button class="btn" style="margin-top:0.5rem; padding: 0.3rem 0.8rem; font-size: 0.9rem;">Edit
-                            Profile</button>
-                    </div>
+                <div class="avatar-placeholder">👤</div>
+                <div>
+                    <h2 style="margin:0; color: var(--kps-blue);">Member ID: 966693</h2>
+                    <a href="profile.html" class="btn"
+                        style="display:inline-block; margin-top:0.5rem; padding: 0.3rem 0.8rem; font-size: 0.9rem; text-decoration: none;">Edit
+                        Profile</a>
                 </div>
             </div>
-            <div class="progress-container">
-                <p style="margin-bottom:0.5rem;">Profile: 100% Completed</p>
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill">100%</div>
-                </div>
-            </div>
-            <div class="confidential-footer">
-                <span>🔒</span> Your Data is kept extremely confidential. Guaranteed.
-            </div>
+        </div>
+        <div class="confidential-footer">
+            <span>🔒</span> Your Data is kept extremely confidential. Guaranteed.
+        </div>
+    </div>
+
+    <!-- Stores Section -->
+    <h2 style="margin-bottom: 1rem;">Stores</h2>
+    <div class="stores-grid">
+        <!-- Add New Store -->
+        <div class="store-card add-store-card" onclick="openStoreModal('add')">
+            <div class="add-icon">+</div>
+            <h3>Add New Store</h3>
         </div>
 
-        <!-- Stores Section -->
-        <h2 style="margin-bottom: 1rem;">Stores</h2>
-        <div class="stores-grid">
-            <!-- Add New Store -->
-            <div class="store-card add-store-card" onclick="openStoreModal('add')">
-                <div class="add-icon">+</div>
-                <h3>Add New Store</h3>
-            </div>
-
-            <!-- Example Store -->
-            <div class="store-card">
-                <h3>Hampton's Service Center</h3>
-                <p>📍 Nashville, TN</p>
-                <p style="margin-top: 0.5rem;">Status: <span style="color: green; font-weight: bold;">Active</span></p>
-            </div>
+        <!-- Example Store -->
+        <div class="store-card">
+            <h3>Hampton's Service Center</h3>
+            <p>📍 Nashville, TN</p>
+            <p style="margin-top: 0.5rem;">Status: <span style="color: green; font-weight: bold;">Active</span></p>
         </div>
+    </div>
     </div>
 
     <footer>
