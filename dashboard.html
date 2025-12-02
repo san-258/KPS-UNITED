@@ -4,252 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - KPS United</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        /* KPS UNITED BRAND COLORS */
-        :root {
-            --kps-red: #D84315;
-            --kps-navy: #1A3A52;
-            --kps-yellow: #FDB813;
-            --kps-green: #2E7D60;
-            --kps-cream: #F5E6D3;
+        .member-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--kps-red) 0%, var(--kps-navy) 100%);
-            color: white;
-            padding: 1.5rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .member-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-
-        .header-left {
+        .member-info {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-
-        .header-logo {
-            height: 50px;
-            width: auto;
-        }
-
-        .header-left h1 {
-            font-size: 2rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .header-left .welcome {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .logout-btn {
-            padding: 0.6rem 1.2rem;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 2px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: white;
-            color: var(--kps-red);
-        }
-
-        nav {
-            background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        nav ul {
-            list-style: none;
+        .avatar-placeholder {
+            width: 60px;
+            height: 60px;
+            background-color: #eee;
+            border-radius: 50%;
             display: flex;
+            align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        nav a {
-            display: block;
-            padding: 1rem 1.5rem;
-            text-decoration: none;
-            color: var(--kps-navy);
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        nav a:hover {
-            background: var(--kps-red);
-            color: white;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 20px;
-        }
-
-        .section {
-            background: white;
-            margin-bottom: 2rem;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .section h2 {
-            color: var(--kps-navy);
-            margin-bottom: 1.5rem;
             font-size: 2rem;
-            border-bottom: 3px solid var(--kps-red);
-            padding-bottom: 0.5rem;
+            color: #ccc;
         }
-
-        .price-table {
-            width: 100%;
-            border-collapse: collapse;
+        .progress-container {
             margin-top: 1rem;
         }
-
-        .price-table th,
-        .price-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        .progress-bar-bg {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            width: 100%;
+            overflow: hidden;
         }
-
-        .price-table th {
-            background: var(--kps-red);
+        .progress-bar-fill {
+            background-color: var(--kps-blue);
+            height: 100%;
+            width: 100%;
+            text-align: center;
             color: white;
-            font-weight: 600;
+            font-size: 0.8rem;
+            line-height: 20px;
         }
-
-        .price-table tr:hover {
-            background: #f8f9ff;
+        .confidential-footer {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
         }
-
-        .doc-grid {
+        .stores-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
-            margin-top: 1.5rem;
         }
-
-        .doc-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-
-        .doc-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(216, 67, 21, 0.3);
-            border-color: var(--kps-red);
-        }
-
-        .doc-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .doc-card h3 {
-            color: var(--kps-navy);
-            margin-bottom: 0.5rem;
-        }
-
-        .article {
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .article:last-child {
-            border-bottom: none;
-        }
-
-        .article h3 {
-            color: var(--kps-red);
-            margin-bottom: 0.5rem;
-            font-size: 1.5rem;
-        }
-
-        .article-meta {
-            color: #999;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .welcome-section {
-            background: linear-gradient(135deg, var(--kps-red) 0%, var(--kps-navy) 100%);
-            color: white;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            border-radius: 10px;
-        }
-
-        .welcome-section h2 {
-            color: white;
-            border: none;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .chart-container {
+        .store-card {
             background: white;
-            padding: 2rem;
             border-radius: 10px;
-            margin-top: 1.5rem;
-        }
-
-        footer {
-            background: var(--kps-navy);
-            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            cursor: pointer;
+            transition: transform 0.2s;
             text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
+            position: relative;
+        }
+        .store-card:hover {
+            transform: translateY(-5px);
+        }
+        .add-store-card {
+            border: 2px dashed var(--kps-blue);
+            background: #f8f9fa;
+        }
+        .add-icon {
+            font-size: 3rem;
+            color: var(--kps-blue);
+            margin-bottom: 1rem;
         }
 
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .header-left {
-                flex-direction: column;
-                text-align: center;
-            }
-            .doc-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 2rem;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #d9534f;
+            cursor: pointer;
+            display: none;
+        }
+        .store-card:hover .delete-btn {
+            display: block;
         }
     </style>
 </head>
@@ -258,10 +171,7 @@
         <div class="header-content">
             <div class="header-left">
                 <img src="logo.png" alt="KPS United" class="header-logo">
-                <div>
-                    <h1>KPS United Dashboard</h1>
-                    <p class="welcome">Welcome back, <span id="user-name">Store Owner</span>!</p>
-                </div>
+                <h1>Dashboard</h1>
             </div>
             <div class="header-right">
                 <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
@@ -271,219 +181,168 @@
 
     <nav>
         <ul>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="support.html">Support Center</a></li>
+            <li><a href="dashboard.html" class="active">Dashboard</a></li>
             <li><a href="resources.html">Resources</a></li>
+            <li><a href="support.html">Support</a></li>
             <li><a href="profile.html">My Profile</a></li>
         </ul>
     </nav>
 
-    <div class="container">
-        <section class="welcome-section">
-            <h2>👋 Welcome to Your Dashboard</h2>
-            <p>Access all your important business information for Kentucky convenience, liquor, and tobacco stores!</p>
-        </section>
+    <div class="container fade-in">
+        <h1>Dashboard</h1>
 
-        <section id="prices" class="section">
-            <h2>📋 Current Price Lists</h2>
-            <p>Here are the latest prices for common products and services:</p>
-            
-            <table class="price-table">
-                <thead>
-                    <tr>
-                        <th>Product/Service</th>
-                        <th>Category</th>
-                        <th>Unit Price</th>
-                        <th>Bulk Price (10+)</th>
-                        <th>Last Updated</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Product A</td>
-                        <td>Supplies</td>
-                        <td>$25.00</td>
-                        <td>$22.00</td>
-                        <td>Dec 1, 2025</td>
-                    </tr>
-                    <tr>
-                        <td>Product B</td>
-                        <td>Equipment</td>
-                        <td>$150.00</td>
-                        <td>$135.00</td>
-                        <td>Dec 1, 2025</td>
-                    </tr>
-                    <tr>
-                        <td>Service Package 1</td>
-                        <td>Services</td>
-                        <td>$500.00</td>
-                        <td>$450.00</td>
-                        <td>Nov 28, 2025</td>
-                    </tr>
-                    <tr>
-                        <td>Product C</td>
-                        <td>Supplies</td>
-                        <td>$45.00</td>
-                        <td>$40.00</td>
-                        <td>Dec 1, 2025</td>
-                    </tr>
-                    <tr>
-                        <td>Monthly Subscription</td>
-                        <td>Services</td>
-                        <td>$99.00</td>
-                        <td>$89.00</td>
-                        <td>Dec 1, 2025</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+        <!-- Member Details -->
+        <div class="member-card">
+            <div class="member-header">
+                <div class="member-info">
+                    <div class="avatar-placeholder">👤</div>
+                    <div>
+                        <h2 style="margin:0; color: var(--kps-blue);">Member ID: 966693</h2>
+                        <button class="btn" style="margin-top:0.5rem; padding: 0.3rem 0.8rem; font-size: 0.9rem;">Edit Profile</button>
+                    </div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <p style="margin-bottom:0.5rem;">Profile: 100% Completed</p>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill">100%</div>
+                </div>
+            </div>
+            <div class="confidential-footer">
+                <span>🔒</span> Your Data is kept extremely confidential. Guaranteed.
+            </div>
+        </div>
 
-        <section id="contracts" class="section">
-            <h2>📄 Contracts & Documents</h2>
-            <p>Access important contracts, agreements, and business documents:</p>
-            
-            <div class="doc-grid">
-                <div class="doc-card" onclick="alert('To add a real PDF: 1) Upload your PDF to GitHub, 2) Update the onclick to window.open(\'your-file.pdf\')')">
-                    <div class="doc-icon">📜</div>
-                    <h3>Standard Contract 2025</h3>
-                    <p>Main agreement template</p>
-                    <p style="margin-top: 0.5rem;"><strong>PDF Document</strong></p>
-                </div>
-                
-                <div class="doc-card" onclick="alert('To add a real PDF: 1) Upload your PDF to GitHub, 2) Update the onclick to window.open(\'your-file.pdf\')')">
-                    <div class="doc-icon">📋</div>
-                    <h3>Terms & Conditions</h3>
-                    <p>Updated November 2025</p>
-                    <p style="margin-top: 0.5rem;"><strong>PDF Document</strong></p>
-                </div>
-                
-                <div class="doc-card" onclick="alert('To add a real PDF: 1) Upload your PDF to GitHub, 2) Update the onclick to window.open(\'your-file.pdf\')')">
-                    <div class="doc-icon">🤝</div>
-                    <h3>Partnership Agreement</h3>
-                    <p>Vendor partnership details</p>
-                    <p style="margin-top: 0.5rem;"><strong>PDF Document</strong></p>
-                </div>
-                
-                <div class="doc-card" onclick="alert('To add a real PDF: 1) Upload your PDF to GitHub, 2) Update the onclick to window.open(\'your-file.pdf\')')">
-                    <div class="doc-icon">💼</div>
-                    <h3>Business Guidelines</h3>
-                    <p>Operating procedures</p>
-                    <p style="margin-top: 0.5rem;"><strong>PDF Document</strong></p>
-                </div>
+        <!-- Stores Section -->
+        <h2 style="margin-bottom: 1rem;">Stores</h2>
+        <div class="stores-grid" id="storesGrid">
+            <!-- Add New Store -->
+            <div class="store-card add-store-card" onclick="openModal()">
+                <div class="add-icon">+</div>
+                <h3>Add New Store</h3>
             </div>
-        </section>
+            
+            <!-- Stores will be rendered here -->
+        </div>
+    </div>
 
-        <section id="news" class="section">
-            <h2>📰 News & Updates</h2>
-            
-            <div class="article">
-                <h3>Welcome to KPS United Store Owners Portal</h3>
-                <p class="article-meta">Posted on December 1, 2025 | By KPS United Team</p>
-                <div class="article-content">
-                    <p>We're excited to launch this new portal for all Kentucky convenience, liquor, and tobacco store owners! This website will be your one-stop resource for pricing information, important contracts, business news, and performance data.</p>
+    <!-- Add Store Modal -->
+    <div id="addStoreModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: var(--kps-blue);">Add New Business</h2>
+            <form id="addStoreForm" onsubmit="handleAddStore(event)">
+                <div class="form-group">
+                    <label for="storeName">Business Name</label>
+                    <input type="text" id="storeName" required placeholder="e.g. Joe's Market">
                 </div>
-            </div>
-            
-            <div class="article">
-                <h3>Updated Price List for December 2025</h3>
-                <p class="article-meta">Posted on November 28, 2025 | By Pricing Team</p>
-                <div class="article-content">
-                    <p>We've updated our price list for the upcoming month. Several items have new bulk pricing options that could help you save money on larger orders.</p>
+                <div class="form-group">
+                    <label for="storeLocation">Location</label>
+                    <input type="text" id="storeLocation" required placeholder="e.g. Louisville, KY">
                 </div>
-            </div>
-        </section>
-
-        <section id="data" class="section">
-            <h2>📊 Business Data & Analytics</h2>
-            <p>Visual overview of important business metrics:</p>
-            
-            <div class="chart-container">
-                <h3 style="text-align: center; color: var(--kps-navy); margin-bottom: 1rem;">Monthly Sales Overview</h3>
-                <canvas id="salesChart"></canvas>
-            </div>
-            
-            <div class="chart-container">
-                <h3 style="text-align: center; color: var(--kps-navy); margin-bottom: 1rem;">Product Category Distribution</h3>
-                <canvas id="categoryChart"></canvas>
-            </div>
-        </section>
+                <div class="form-group">
+                    <label for="storeStatus">Status</label>
+                    <select id="storeStatus">
+                        <option value="Active">Active</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Under Review">Under Review</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" style="width:100%">Add Business</button>
+            </form>
+        </div>
     </div>
 
     <footer>
         <p>&copy; 2025 KPS United. All rights reserved.</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Kentucky Convenience, Liquor, Tobacco Stores</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+    <script src="auth.js"></script>
     <script>
-        window.onload = function() {
-            const currentUser = localStorage.getItem('currentUser');
-            if (!currentUser) {
-                window.location.href = 'index.html';
-                return;
+        // Store Management Logic
+
+        // Default stores
+        const defaultStores = [
+            {
+                name: "Hampton's Service Center",
+                location: "Nashville, TN",
+                status: "Active"
+            }
+        ];
+
+        function loadStores() {
+            const stores = JSON.parse(localStorage.getItem('kps_stores')) || defaultStores;
+            const grid = document.getElementById('storesGrid');
+            const addBtn = grid.firstElementChild; // Keep the 'Add' button
+
+            // Clear existing store cards (but keep the add button)
+            while (grid.children.length > 1) {
+                grid.removeChild(grid.lastChild);
             }
 
-            const user = JSON.parse(currentUser);
-            document.getElementById('user-name').textContent = user.name;
-        };
+            stores.forEach((store, index) => {
+                const card = document.createElement('div');
+                card.className = 'store-card';
+                card.innerHTML = `
+                    <div class="delete-btn" onclick="deleteStore(${index})" title="Remove Store">✕</div>
+                    <h3>${store.name}</h3>
+                    <p>📍 ${store.location}</p>
+                    <p style="margin-top: 0.5rem;">Status: <span style="color: ${getStatusColor(store.status)}; font-weight: bold;">${store.status}</span></p>
+                `;
+                grid.appendChild(card);
+            });
+        }
 
-        function handleLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('currentUser');
-                window.location.href = 'index.html';
+        function getStatusColor(status) {
+            if (status === 'Active') return 'green';
+            if (status === 'Pending') return 'orange';
+            return 'red';
+        }
+
+        function handleAddStore(event) {
+            event.preventDefault();
+            const name = document.getElementById('storeName').value;
+            const location = document.getElementById('storeLocation').value;
+            const status = document.getElementById('storeStatus').value;
+
+            const stores = JSON.parse(localStorage.getItem('kps_stores')) || defaultStores;
+            stores.push({ name, location, status });
+
+            localStorage.setItem('kps_stores', JSON.stringify(stores));
+
+            closeModal();
+            loadStores();
+            document.getElementById('addStoreForm').reset();
+        }
+
+        function deleteStore(index) {
+            if(confirm('Are you sure you want to remove this store?')) {
+                let stores = JSON.parse(localStorage.getItem('kps_stores')) || defaultStores;
+                stores.splice(index, 1);
+                localStorage.setItem('kps_stores', JSON.stringify(stores));
+                loadStores();
             }
         }
 
-        const salesCtx = document.getElementById('salesChart').getContext('2d');
-        const salesChart = new Chart(salesCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Sales ($1000s)',
-                    data: [45, 52, 48, 65, 70, 68, 75, 80, 78, 85, 90, 95],
-                    borderColor: '#D84315',
-                    backgroundColor: 'rgba(216, 67, 21, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    }
-                }
-            }
-        });
+        // Modal Logic
+        const modal = document.getElementById("addStoreModal");
 
-        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-        const categoryChart = new Chart(categoryCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Supplies', 'Equipment', 'Services', 'Other'],
-                datasets: [{
-                    data: [35, 25, 30, 10],
-                    backgroundColor: [
-                        '#D84315',
-                        '#1A3A52',
-                        '#FDB813',
-                        '#2E7D60'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
+        function openModal() {
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
-        });
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', loadStores);
     </script>
 </body>
 </html>
