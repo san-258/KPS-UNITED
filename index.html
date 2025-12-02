@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - KPS United</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="auth.js"></script>
     <style>
         /* ============================================
            🎨 KPS UNITED BRAND COLORS (From Your Logo!)
         ============================================ */
         :root {
-            --kps-red: #D84315;         /* Main red/orange from logo */
-            --kps-navy: #1A3A52;        /* Navy blue from Kentucky banner */
-            --kps-yellow: #FDB813;      /* Yellow from center circle */
-            --kps-green: #2E7D60;       /* Green from handshake */
-            --kps-cream: #F5E6D3;       /* Cream text color */
+            --kps-red: #D84315;
+            /* Main red/orange from logo */
+            --kps-navy: #1A3A52;
+            /* Navy blue from Kentucky banner */
+            --kps-yellow: #FDB813;
+            /* Yellow from center circle */
+            --kps-green: #2E7D60;
+            /* Green from handshake */
+            --kps-cream: #F5E6D3;
+            /* Cream text color */
         }
+
         /* ============================================ */
 
         * {
@@ -39,7 +47,7 @@
             background: white;
             padding: 3rem;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             max-width: 450px;
             width: 100%;
         }
@@ -215,6 +223,85 @@
             color: var(--kps-navy);
         }
 
+        .social-login-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #666;
+        }
+
+        .social-login-divider::before,
+        .social-login-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .social-login-divider span {
+            padding: 0 10px;
+            font-size: 0.9rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .social-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .social-btn.google {
+            color: #DB4437;
+            border-color: #DB4437;
+        }
+
+        .social-btn.google:hover {
+            background: #DB4437;
+            color: white;
+        }
+
+        .social-btn.facebook {
+            color: #4267B2;
+            border-color: #4267B2;
+        }
+
+        .social-btn.facebook:hover {
+            background: #4267B2;
+            color: white;
+        }
+
+        .social-btn.apple {
+            color: #000;
+            border-color: #000;
+        }
+
+        .social-btn.apple:hover {
+            background: #000;
+            color: white;
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 padding: 2rem 1.5rem;
@@ -230,6 +317,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="logo">
@@ -260,10 +348,26 @@
                 </div>
 
                 <button type="submit" class="btn">Login</button>
-                
+
                 <p class="forgot-password">
                     <a href="reset-password.html">Forgot Password?</a>
                 </p>
+
+                <div class="social-login-divider">
+                    <span>Or continue with</span>
+                </div>
+
+                <div class="social-buttons">
+                    <button type="button" class="social-btn google" onclick="handleSocialLogin('Google')">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button type="button" class="social-btn facebook" onclick="handleSocialLogin('Facebook')">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </button>
+                    <button type="button" class="social-btn apple" onclick="handleSocialLogin('Apple')">
+                        <i class="fab fa-apple"></i> Apple
+                    </button>
+                </div>
             </form>
         </div>
 
@@ -282,18 +386,21 @@
 
                 <div class="form-group">
                     <label for="register-password">Password <span class="required">*</span></label>
-                    <input type="password" id="register-password" placeholder="Create a password (min 6 characters)" minlength="6" required>
+                    <input type="password" id="register-password" placeholder="Create a password (min 6 characters)"
+                        minlength="6" required>
                 </div>
 
                 <div class="form-group">
                     <label for="register-confirm-password">Confirm Password <span class="required">*</span></label>
-                    <input type="password" id="register-confirm-password" placeholder="Confirm your password" minlength="6" required>
+                    <input type="password" id="register-confirm-password" placeholder="Confirm your password"
+                        minlength="6" required>
                 </div>
 
                 <div class="checkbox-group">
                     <input type="checkbox" id="terms-checkbox" required>
                     <label for="terms-checkbox">
-                        I agree to the <a href="terms.html" target="_blank">Terms and Conditions</a> <span class="required">*</span>
+                        I agree to the <a href="terms.html" target="_blank">Terms and Conditions</a> <span
+                            class="required">*</span>
                     </label>
                 </div>
 
@@ -313,7 +420,7 @@
 
             document.getElementById('login-form').classList.remove('active');
             document.getElementById('register-form').classList.remove('active');
-            
+
             if (tab === 'login') {
                 document.getElementById('login-form').classList.add('active');
             } else {
@@ -377,13 +484,13 @@
                 document.getElementById('login-form').classList.add('active');
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
                 document.querySelectorAll('.tab-btn')[1].classList.remove('active');
-                
+
                 document.getElementById('register-name').value = '';
                 document.getElementById('register-email').value = '';
                 document.getElementById('register-password').value = '';
                 document.getElementById('register-confirm-password').value = '';
                 document.getElementById('terms-checkbox').checked = false;
-                
+
                 document.getElementById('success-message').style.display = 'none';
             }, 2000);
         }
@@ -402,9 +509,9 @@
                 // Add login time
                 user.loginTime = new Date().getTime();
                 localStorage.setItem('currentUser', JSON.stringify(user));
-                
+
                 showSuccess('Login successful! Redirecting...');
-                
+
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 1000);
@@ -413,7 +520,27 @@
             }
         }
 
+        function handleSocialLogin(provider) {
+            // Simulate social login
+            const mockUser = {
+                name: `Test User (${provider})`,
+                email: `test.${provider.toLowerCase()}@example.com`,
+                provider: provider,
+                loginTime: new Date().getTime(),
+                avatar: 'https://ui-avatars.com/api/?name=Test+User&background=random'
+            };
+
+            localStorage.setItem('currentUser', JSON.stringify(mockUser));
+
+            showSuccess(`Successfully logged in with ${provider}! Redirecting...`);
+
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        }
+
         // Removed inline window.onload as it is handled by auth.js
     </script>
 </body>
+
 </html>

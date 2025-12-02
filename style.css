@@ -5,7 +5,50 @@
     --kps-yellow: #FDB813;
     --kps-green: #2E7D60;
     --kps-cream: #F5E6D3;
+    --kps-blue: #1A3A52;
+    /* Alias for navy */
 }
+
+/* Utility Classes */
+.text-kps-blue {
+    color: var(--kps-blue);
+}
+
+.text-green {
+    color: green;
+}
+
+.text-orange {
+    color: orange;
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.btn-sm {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+}
+
+.btn-danger-custom {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: auto;
+}
+
 
 * {
     margin: 0;

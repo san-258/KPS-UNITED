@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,11 @@
             --kps-green: #2E7D60;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,7 +31,7 @@
             background: white;
             padding: 3rem;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             max-width: 450px;
             width: 100%;
             margin: 100px auto;
@@ -38,7 +43,7 @@
             background: white;
             padding: 2rem;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             display: none;
         }
 
@@ -197,7 +202,7 @@
             background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .users-table th,
@@ -246,6 +251,7 @@
                 flex-direction: column;
                 gap: 1rem;
             }
+
             .admin-header-left {
                 flex-direction: column;
                 text-align: center;
@@ -253,6 +259,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container" id="admin-login">
         <div class="logo">
@@ -282,50 +289,52 @@
         <div class="admin-header">
             <div class="admin-header-left">
                 <img src="logo.png" alt="KPS United" class="admin-logo">
-                <h1>👥 Registered Store Owners</h1>
+                <h1>🏪 Registered Stores</h1>
             </div>
             <button class="btn-danger" onclick="handleLogout()">Logout</button>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number" id="total-users">0</div>
-                <div class="stat-label">Total Registered Users</div>
+                <div class="stat-number" id="total-stores">0</div>
+                <div class="stat-label">Total Stores</div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-number" id="today-users">0</div>
-                <div class="stat-label">Registered Today</div>
+                <div class="stat-number" id="active-stores">0</div>
+                <div class="stat-label">Active Stores</div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-number" id="this-week-users">0</div>
-                <div class="stat-label">This Week</div>
+                <div class="stat-number" id="retail-stores">0</div>
+                <div class="stat-label">Retail Stores</div>
             </div>
         </div>
 
         <div class="action-buttons">
             <button class="btn btn-secondary" onclick="downloadCSV()">📥 Download CSV</button>
             <button class="btn btn-secondary" onclick="downloadJSON()">📥 Download JSON</button>
-            <button class="btn btn-secondary" onclick="copyEmails()">📧 Copy All Emails</button>
+            <button class="btn btn-secondary" onclick="copyEmails()">📧 Copy Store Emails</button>
         </div>
 
-        <input type="text" class="search-box" id="search-box" placeholder="🔍 Search by store name or email..." onkeyup="filterUsers()">
+        <input type="text" class="search-box" id="search-box" placeholder="🔍 Search by store name, phone or email..."
+            onkeyup="filterStores()">
 
         <div style="overflow-x: auto;">
             <table class="users-table" id="users-table">
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Member ID</th>
+                        <th>Store ID</th>
                         <th>Store Name</th>
-                        <th>Email</th>
-                        <th>Registered Date</th>
-                        <th>Days Since Registration</th>
+                        <th>Store Phone Number</th>
+                        <th>Store Email</th>
                     </tr>
                 </thead>
                 <tbody id="users-table-body">
                     <tr>
-                        <td colspan="5" class="no-users">No users registered yet</td>
+                        <td colspan="6" class="no-users">No stores registered yet</td>
                     </tr>
                 </tbody>
             </table>
@@ -343,7 +352,7 @@
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-dashboard').classList.add('active');
                 localStorage.setItem('adminLoggedIn', 'true');
-                loadUsers();
+                loadStores();
             } else {
                 const errorDiv = document.getElementById('error-message');
                 errorDiv.textContent = 'Incorrect password!';
@@ -351,11 +360,11 @@
             }
         }
 
-        window.onload = function() {
+        window.onload = function () {
             if (localStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-dashboard').classList.add('active');
-                loadUsers();
+                loadStores();
             }
         };
 
@@ -364,87 +373,73 @@
             window.location.reload();
         }
 
-        function loadUsers() {
-            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+        function loadStores() {
+            const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
             const tbody = document.getElementById('users-table-body');
 
-            if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="no-users">No users registered yet</td></tr>';
+            if (stores.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-users">No stores registered yet</td></tr>';
                 return;
             }
 
-            document.getElementById('total-users').textContent = users.length;
+            document.getElementById('total-stores').textContent = stores.length;
+            document.getElementById('active-stores').textContent = stores.filter(s => s.status === 'Active').length;
+            document.getElementById('retail-stores').textContent = stores.filter(s => s.businessType === 'Retail').length;
 
-            const today = new Date().setHours(0, 0, 0, 0);
-            const todayUsers = users.filter(u => {
-                const regDate = new Date(u.registeredDate).setHours(0, 0, 0, 0);
-                return regDate === today;
-            }).length;
-            document.getElementById('today-users').textContent = todayUsers;
-
-            const weekAgo = new Date();
-            weekAgo.setDate(weekAgo.getDate() - 7);
-            const weekUsers = users.filter(u => new Date(u.registeredDate) >= weekAgo).length;
-            document.getElementById('this-week-users').textContent = weekUsers;
-
-            tbody.innerHTML = users.map((user, index) => {
-                const regDate = new Date(user.registeredDate);
-                const daysSince = Math.floor((new Date() - regDate) / (1000 * 60 * 60 * 24));
-
+            tbody.innerHTML = stores.map((store, index) => {
                 return `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${user.name}</td>
-                        <td>${user.email}</td>
-                        <td>${regDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
-                        <td>${daysSince} day${daysSince !== 1 ? 's' : ''}</td>
+                        <td>${store.memberId || 'N/A'}</td>
+                        <td>${store.id || 'N/A'}</td>
+                        <td>${store.name || 'N/A'}</td>
+                        <td>${store.businessPhone || 'N/A'}</td>
+                        <td>${store.businessEmail || 'N/A'}</td>
                     </tr>
                 `;
             }).join('');
         }
 
-        function filterUsers() {
+        function filterStores() {
             const searchTerm = document.getElementById('search-box').value.toLowerCase();
-            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+            const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
             const tbody = document.getElementById('users-table-body');
 
-            const filteredUsers = users.filter(user => 
-                user.name.toLowerCase().includes(searchTerm) || 
-                user.email.toLowerCase().includes(searchTerm)
+            const filteredStores = stores.filter(store =>
+                (store.name && store.name.toLowerCase().includes(searchTerm)) ||
+                (store.businessEmail && store.businessEmail.toLowerCase().includes(searchTerm)) ||
+                (store.businessPhone && store.businessPhone.includes(searchTerm))
             );
 
-            if (filteredUsers.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="no-users">No users match your search</td></tr>';
+            if (filteredStores.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-users">No stores match your search</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = filteredUsers.map((user, index) => {
-                const regDate = new Date(user.registeredDate);
-                const daysSince = Math.floor((new Date() - regDate) / (1000 * 60 * 60 * 24));
-
+            tbody.innerHTML = filteredStores.map((store, index) => {
                 return `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${user.name}</td>
-                        <td>${user.email}</td>
-                        <td>${regDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
-                        <td>${daysSince} day${daysSince !== 1 ? 's' : ''}</td>
+                        <td>${store.memberId || 'N/A'}</td>
+                        <td>${store.id || 'N/A'}</td>
+                        <td>${store.name || 'N/A'}</td>
+                        <td>${store.businessPhone || 'N/A'}</td>
+                        <td>${store.businessEmail || 'N/A'}</td>
                     </tr>
                 `;
             }).join('');
         }
 
         function downloadCSV() {
-            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
-            if (users.length === 0) {
-                alert('No users to download!');
+            const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            if (stores.length === 0) {
+                alert('No stores to download!');
                 return;
             }
 
-            let csv = 'Store Name,Email,Registered Date\n';
-            users.forEach(user => {
-                const regDate = new Date(user.registeredDate).toLocaleDateString('en-US');
-                csv += `"${user.name}","${user.email}","${regDate}"\n`;
+            let csv = 'Member ID,Store ID,Store Name,Store Phone,Store Email\n';
+            stores.forEach(store => {
+                csv += `"${store.memberId || ''}","${store.id || ''}","${store.name || ''}","${store.businessPhone || ''}","${store.businessEmail || ''}"\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv' });
@@ -461,19 +456,21 @@
         }
 
         function downloadJSON() {
-            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
-            if (users.length === 0) {
-                alert('No users to download!');
+            const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            if (stores.length === 0) {
+                alert('No stores to download!');
                 return;
             }
 
-            const sanitizedUsers = users.map(u => ({
-                name: u.name,
-                email: u.email,
-                registeredDate: u.registeredDate
+            const sanitizedStores = stores.map(s => ({
+                memberId: s.memberId,
+                storeId: s.id,
+                storeName: s.name,
+                phone: s.businessPhone,
+                email: s.businessEmail
             }));
 
-            const json = JSON.stringify(sanitizedUsers, null, 2);
+            const json = JSON.stringify(sanitizedStores, null, 2);
             const blob = new Blob([json], { type: 'application/json' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -488,16 +485,16 @@
         }
 
         function copyEmails() {
-            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
-            if (users.length === 0) {
-                alert('No users to copy!');
+            const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            if (stores.length === 0) {
+                alert('No stores to copy!');
                 return;
             }
 
-            const emails = users.map(u => u.email).join(', ');
+            const emails = stores.map(s => s.businessEmail).filter(e => e).join(', ');
 
             navigator.clipboard.writeText(emails).then(() => {
-                alert(`${users.length} email addresses copied to clipboard!\n\nYou can now paste them into your email client.`);
+                alert(`${stores.length} email addresses copied to clipboard!\n\nYou can now paste them into your email client.`);
             }).catch(() => {
                 const textarea = document.createElement('textarea');
                 textarea.value = emails;
@@ -505,9 +502,10 @@
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                alert(`${users.length} email addresses copied to clipboard!`);
+                alert(`${stores.length} email addresses copied to clipboard!`);
             });
         }
     </script>
 </body>
+
 </html>

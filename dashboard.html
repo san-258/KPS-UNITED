@@ -145,34 +145,34 @@
             <div class="member-header">
                 <div class="avatar-placeholder">👤</div>
                 <div>
-                    <h2 style="margin:0; color: var(--kps-blue);">Member ID: 966693</h2>
-                    <a href="profile.html" class="btn"
-                        style="display:inline-block; margin-top:0.5rem; padding: 0.3rem 0.8rem; font-size: 0.9rem; text-decoration: none;">Edit
+                    <h2 class="text-kps-blue" style="margin:0;">Member ID: 1000</h2>
+                    <a href="profile.html" class="btn btn-sm mt-2"
+                        style="display:inline-block; text-decoration: none;">Edit
                         Profile</a>
                 </div>
             </div>
         </div>
+        <!-- Stores Section -->
+        <h2 style="margin-bottom: 1rem;">Stores</h2>
+        <div class="stores-grid">
+            <!-- Add New Store -->
+            <div class="store-card add-store-card" onclick="openStoreModal('add')">
+                <div class="add-icon">+</div>
+                <h3>Add New Store</h3>
+            </div>
+
+            <!-- Example Store -->
+            <div class="store-card">
+                <h3>Hampton's Service Center</h3>
+                <p>📍 Nashville, TN</p>
+                <p>📍 Nashville, TN</p>
+                <p class="mt-2">Status: <span class="text-green font-bold">Active</span></p>
+            </div>
+        </div>
+
         <div class="confidential-footer">
             <span>🔒</span> Your Data is kept extremely confidential. Guaranteed.
         </div>
-    </div>
-
-    <!-- Stores Section -->
-    <h2 style="margin-bottom: 1rem;">Stores</h2>
-    <div class="stores-grid">
-        <!-- Add New Store -->
-        <div class="store-card add-store-card" onclick="openStoreModal('add')">
-            <div class="add-icon">+</div>
-            <h3>Add New Store</h3>
-        </div>
-
-        <!-- Example Store -->
-        <div class="store-card">
-            <h3>Hampton's Service Center</h3>
-            <p>📍 Nashville, TN</p>
-            <p style="margin-top: 0.5rem;">Status: <span style="color: green; font-weight: bold;">Active</span></p>
-        </div>
-    </div>
     </div>
 
     <footer>
@@ -198,7 +198,6 @@
                         <div class="form-group">
                             <label>Street Address *</label>
                             <input type="text" id="streetAddress" required>
-                            <span class="required-icon">📍</span>
                         </div>
                         <div class="form-group">
                             <label>Enter Entity Name (LLC / Corp Name) *</label>
@@ -207,22 +206,18 @@
                         <div class="form-group">
                             <label>Enter City *</label>
                             <input type="text" id="city" required>
-                            <span class="required-icon">📍</span>
                         </div>
                         <div class="form-group">
                             <label>Enter State *</label>
                             <input type="text" id="state" required>
-                            <span class="required-icon">📍</span>
                         </div>
                         <div class="form-group">
                             <label>Enter Zip *</label>
                             <input type="text" id="zip" required>
-                            <span class="required-icon">📍</span>
                         </div>
                         <div class="form-group">
                             <label>Enter County *</label>
                             <input type="text" id="county" required>
-                            <span class="required-icon">📍</span>
                         </div>
                         <div class="form-group">
                             <label>Enter Business Email *</label>
@@ -231,11 +226,13 @@
                         </div>
                         <div class="form-group">
                             <label>Enter Business Phone *</label>
-                            <input type="tel" id="businessPhone" required>
+                            <input type="tel" id="businessPhone" placeholder="111-111-1111" pattern="\d{3}-\d{3}-\d{4}"
+                                title="Format: 111-111-1111" required oninput="formatPhoneNumber(this)">
                         </div>
                         <div class="form-group">
                             <label>Enter EIN *</label>
-                            <input type="text" id="ein" required>
+                            <input type="text" id="ein" placeholder="11-1111111" pattern="\d{2}-\d{7}"
+                                title="Format: 11-1111111" required oninput="formatEIN(this)">
                         </div>
 
                         <div class="form-group">
@@ -250,13 +247,7 @@
                             <label>Brand</label>
                             <input type="text" id="brand" placeholder="Enter Brand Name">
                         </div>
-                        <div class="form-group">
-                            <label>Role</label>
-                            <select id="role">
-                                <option>Owner</option>
-                                <option>Manager</option>
-                            </select>
-                        </div>
+
 
 
 
@@ -269,6 +260,8 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-save" onclick="saveStore()">Save</button>
+                <button class="btn-delete btn-danger-custom" onclick="deleteStore()"
+                    style="display:none;">Delete</button>
                 <button class="btn-cancel" onclick="closeAddStoreModal()">Cancel</button>
             </div>
         </div>
@@ -290,7 +283,6 @@
             ein: "12-3456789", // Example data
             businessType: "Retail", // Example data
             brand: "Shell", // Example data
-            role: "Owner", // Example data
             status: "Active"
         };
 
@@ -298,6 +290,7 @@
         const modal = document.getElementById("addStoreModal");
         const modalTitle = document.querySelector(".modal-header h2");
         const saveBtn = document.querySelector(".btn-save");
+        const deleteBtn = document.querySelector(".btn-delete");
         const form = document.getElementById("addStoreForm");
         const inputs = form.querySelectorAll("input, select");
 
@@ -308,6 +301,15 @@
                 // View Mode
                 modalTitle.textContent = "Store Details";
                 saveBtn.style.display = "none";
+
+                // Hide delete button for static store
+                if (storeData.id === 'static-1') {
+                    deleteBtn.style.display = "none";
+                } else {
+                    deleteBtn.style.display = "block";
+                }
+
+                deleteBtn.dataset.storeId = storeData.id; // Store ID for deletion
 
                 // Populate fields
                 document.getElementById("storeName").value = storeData.name || '';
@@ -322,7 +324,6 @@
                 document.getElementById("ein").value = storeData.ein || '';
                 document.getElementById("businessType").value = storeData.businessType || 'Retail';
                 document.getElementById("brand").value = storeData.brand || '';
-                document.getElementById("role").value = storeData.role || 'Owner';
 
                 // Disable inputs
                 inputs.forEach(input => input.disabled = true);
@@ -331,6 +332,7 @@
                 // Add Mode
                 modalTitle.textContent = "Business Information";
                 saveBtn.style.display = "block";
+                deleteBtn.style.display = "none";
                 form.reset();
 
                 // Enable inputs
@@ -358,8 +360,13 @@
                 return;
             }
 
+            // Auto-increment ID logic
+            let nextId = parseInt(localStorage.getItem("nextStoreId") || "1001");
+            localStorage.setItem("nextStoreId", (nextId + 1).toString());
+
             const storeData = {
-                id: Date.now(),
+                id: nextId,
+                memberId: 1000,
                 name: document.getElementById("storeName").value,
                 streetAddress: document.getElementById("streetAddress").value,
                 entityName: document.getElementById("entityName").value,
@@ -372,8 +379,7 @@
                 ein: document.getElementById("ein").value,
                 businessType: document.getElementById("businessType").value,
                 brand: document.getElementById("brand").value,
-                role: document.getElementById("role").value,
-                status: "Pending Approval" // Default status
+                status: "Active" // Default status
             };
 
             let stores = JSON.parse(localStorage.getItem("userStores") || "[]");
@@ -383,6 +389,30 @@
             renderStores();
             closeAddStoreModal();
             alert("Store added successfully!");
+        }
+
+        function deleteStore() {
+            const storeId = document.querySelector(".btn-delete").dataset.storeId;
+
+            if (!storeId) return;
+
+            if (confirm("Are you sure you want to delete this store? This action cannot be undone.")) {
+                let stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+                const initialLength = stores.length;
+                stores = stores.filter(store => store.id.toString() !== storeId.toString());
+
+                if (stores.length === initialLength) {
+                    // Try to delete static store (simulation)
+                    if (storeId === 'static-1') {
+                        alert("Cannot delete the demo static store.");
+                        return;
+                    }
+                }
+
+                localStorage.setItem("userStores", JSON.stringify(stores));
+                renderStores();
+                closeAddStoreModal();
+            }
         }
 
         function renderStores() {
@@ -401,7 +431,7 @@
                 storeCard.innerHTML = `
                     <h3>${store.name}</h3>
                     <p>📍 ${store.city}, ${store.state}</p>
-                    <p style="margin-top: 0.5rem;">Status: <span style="color: orange; font-weight: bold;">${store.status}</span></p>
+                    <p class="mt-2">Status: <span class="text-orange font-bold">${store.status}</span></p>
                 `;
                 storesGrid.appendChild(storeCard);
             });
@@ -417,6 +447,31 @@
                 staticStoreCard.onclick = () => openStoreModal('view', staticStoreData);
             }
         });
+
+        // Input Masking Functions
+        function formatPhoneNumber(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 10) value = value.slice(0, 10);
+
+            if (value.length > 6) {
+                value = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6);
+            } else if (value.length > 3) {
+                value = value.slice(0, 3) + '-' + value.slice(3);
+            }
+
+            input.value = value;
+        }
+
+        function formatEIN(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 9) value = value.slice(0, 9);
+
+            if (value.length > 2) {
+                value = value.slice(0, 2) + '-' + value.slice(2);
+            }
+
+            input.value = value;
+        }
     </script>
 </body>
 
