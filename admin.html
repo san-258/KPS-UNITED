@@ -375,7 +375,31 @@
         }
 
         function loadStores() {
-            const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            // Self-healing: Fix Member IDs in Admin View
+            let stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            let users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+            let dataChanged = false;
+
+            users.forEach(user => {
+                if (user.memberId && !user.memberId.toString().includes('-')) {
+                    user.memberId = `${user.memberId}-1`;
+                    dataChanged = true;
+                }
+            });
+
+            stores.forEach(store => {
+                if (store.memberId && !store.memberId.toString().includes('-')) {
+                    store.memberId = `${store.memberId}-1`;
+                    dataChanged = true;
+                }
+            });
+
+            if (dataChanged) {
+                localStorage.setItem('storeUsers', JSON.stringify(users));
+                localStorage.setItem('userStores', JSON.stringify(stores));
+                console.log('Admin: Repaired legacy Member IDs.');
+            }
+
             const tbody = document.getElementById('users-table-body');
 
             if (stores.length === 0) {

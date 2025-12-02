@@ -161,12 +161,7 @@
                 <h3>Add New Store</h3>
             </div>
 
-            <!-- Example Store -->
-            <div class="store-card">
-                <h3>Hampton's Service Center</h3>
-                <p>📍 Nashville, TN</p>
-                <p class="mt-2">Status: <span class="text-green font-bold">Active</span></p>
-            </div>
+
         </div>
 
         <div class="confidential-footer">
@@ -265,23 +260,7 @@
     </div>
 
     <script>
-        // Static Store Data (Example)
-        const staticStoreData = {
-            id: '1000-1',
-            name: "Hampton's Service Center",
-            streetAddress: "123 Main St", // Example data
-            entityName: "Hampton Services LLC", // Example data
-            city: "Nashville",
-            state: "TN",
-            zip: "37201", // Example data
-            county: "Davidson", // Example data
-            businessEmail: "contact@hamptons.com", // Example data
-            businessPhone: "555-0123", // Example data
-            ein: "12-3456789", // Example data
-            businessType: "Retail", // Example data
-            brand: "Shell", // Example data
-            status: "Active"
-        };
+
 
         // Modal Logic
         const modal = document.getElementById("addStoreModal");
@@ -294,11 +273,7 @@
             modal.style.display = "block";
 
             if (mode === 'view' && storeData) {
-                // Hide delete button for static store
-                if (storeData.id === '1000-1') {
-                    // Assuming a delete button exists and needs to be hidden
-                    // For now, we'll just proceed with populating fields
-                }
+
                 // View Mode
                 modalTitle.textContent = "Store Details";
                 saveBtn.style.display = "none";
@@ -424,7 +399,7 @@
             // The user said "registering member means... one member id".
             // So let's filter strictly.
 
-            const memberStores = stores.filter(store => store.memberId === currentMemberId || store.id === '1000-1'); // Keep static for demo
+            const memberStores = stores.filter(store => store.memberId === currentMemberId);
 
             memberStores.forEach(store => {
                 const storeCard = document.createElement("div");
@@ -437,6 +412,12 @@
                 `;
                 storesGrid.appendChild(storeCard);
             });
+
+            // Move "Add New Store" card to the end
+            const addStoreCard = document.querySelector(".add-store-card");
+            if (addStoreCard) {
+                storesGrid.appendChild(addStoreCard);
+            }
         }
 
         // Initialize
@@ -454,11 +435,7 @@
 
             renderStores();
 
-            // Attach click handler to static store
-            const staticStoreCard = document.querySelector(".store-card:not(.add-store-card):not(.dynamic-store)");
-            if (staticStoreCard) {
-                staticStoreCard.onclick = () => openStoreModal('view', staticStoreData);
-            }
+
         });
 
         // Input Masking Functions
