@@ -1,0 +1,19 @@
+/* Common Styles */
+.fade-in {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+body.loaded .fade-in {
+    opacity: 1;
+}
+
+/* Ensure body starts invisible if using body directly */
+body {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+body.loaded {
+    opacity: 1;
+}

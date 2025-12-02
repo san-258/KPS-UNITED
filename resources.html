@@ -1,2 +1,78 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Resources - KPS United</title><style>:root{--kps-red:#D84315;--kps-navy:#1A3A52}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:#f4f4f4}header{background:linear-gradient(135deg,var(--kps-red),var(--kps-navy));color:white;padding:1.5rem 0}.header-content{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center}.header-logo{height:50px}.logout-btn{padding:0.6rem 1.2rem;background:rgba(255,255,255,0.2);color:white;border:2px solid white;border-radius:5px;cursor:pointer;font-weight:600}nav{background:white;box-shadow:0 2px 5px rgba(0,0,0,0.1)}nav ul{list-style:none;display:flex;justify-content:center;flex-wrap:wrap;max-width:1200px;margin:0 auto}nav a{display:block;padding:1rem 1.5rem;text-decoration:none;color:var(--kps-navy);font-weight:600}nav a:hover{background:var(--kps-red);color:white}.container{max-width:1200px;margin:2rem auto;padding:0 20px}.section{background:white;margin-bottom:2rem;padding:2rem;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}.section h2{color:var(--kps-navy);margin-bottom:1.5rem;font-size:2rem;border-bottom:3px solid var(--kps-red);padding-bottom:0.5rem}.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem;margin-top:1.5rem}.resource-card{background:linear-gradient(135deg,#f5f7fa,#c3cfe2);padding:1.5rem;border-radius:10px;text-align:center;cursor:pointer;border:2px solid transparent}.resource-card:hover{border-color:var(--kps-red);transform:translateY(-5px)}footer{background:var(--kps-navy);color:white;text-align:center;padding:2rem}</style></head><body><header><div class="header-content"><div style="display:flex;align-items:center;gap:1rem"><img src="logo.png" alt="KPS United" class="header-logo"><h1>Resources</h1></div><button class="logout-btn" onclick="localStorage.removeItem('currentUser');window.location.href='index.html'">Logout</button></div></header><nav><ul><li><a href="dashboard.html">Dashboard</a></li><li><a href="support.html">Support</a></li><li><a href="resources.html">Resources</a></li><li><a href="profile.html">Profile</a></li></ul></nav><div class="container"><section class="section"><h2>📥 Downloads & Templates</h2><div class="resource-grid"><div class="resource-card"><div style="font-size:3rem">📊</div><h3 style="color:var(--kps-navy)">Business Plan</h3><p>Template for store planning</p></div><div class="resource-card"><div style="font-size:3rem">💰</div><h3 style="color:var(--kps-navy)">Budget Calculator</h3><p>Track expenses and revenue</p></div><div class="resource-card"><div style="font-size:3rem">📝</div><h3 style="color:var(--kps-navy)">Invoice Template</h3><p>Professional invoices</p></div><div class="resource-card"><div style="font-size:3rem">✅</div><h3 style="color:var(--kps-navy)">Inventory Checklist</h3><p>Track your stock</p></div></div></section></div><footer><p>&copy; 2025 KPS United. All rights reserved.</p></footer><script>window.onload=function(){if(!localStorage.getItem('currentUser'))window.location.href='index.html'}</script></body></html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Resources - KPS United</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
+    <style>
+        :root{--kps-red:#D84315;--kps-navy:#1A3A52}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',sans-serif;background:#f4f4f4}
+        header{background:linear-gradient(135deg,var(--kps-red),var(--kps-navy));color:white;padding:1.5rem 0}
+        .header-content{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center}
+        .header-logo{height:50px}
+        .logout-btn{padding:0.6rem 1.2rem;background:rgba(255,255,255,0.2);color:white;border:2px solid white;border-radius:5px;cursor:pointer;font-weight:600}
+        nav{background:white;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+        nav ul{list-style:none;display:flex;justify-content:center;flex-wrap:wrap;max-width:1200px;margin:0 auto}
+        nav a{display:block;padding:1rem 1.5rem;text-decoration:none;color:var(--kps-navy);font-weight:600}
+        nav a:hover{background:var(--kps-red);color:white}
+        .container{max-width:1200px;margin:2rem auto;padding:0 20px}
+        .section{background:white;margin-bottom:2rem;padding:2rem;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+        .section h2{color:var(--kps-navy);margin-bottom:1.5rem;font-size:2rem;border-bottom:3px solid var(--kps-red);padding-bottom:0.5rem}
+        .resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem;margin-top:1.5rem}
+        .resource-card{background:linear-gradient(135deg,#f5f7fa,#c3cfe2);padding:1.5rem;border-radius:10px;text-align:center;cursor:pointer;border:2px solid transparent}
+        .resource-card:hover{border-color:var(--kps-red);transform:translateY(-5px)}
+        footer{background:var(--kps-navy);color:white;text-align:center;padding:2rem}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div style="display:flex;align-items:center;gap:1rem">
+                <img src="logo.png" alt="KPS United" class="header-logo">
+                <h1>Resources</h1>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="support.html">Support</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="profile.html">Profile</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <section class="section">
+            <h2>📥 Downloads & Templates</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div style="font-size:3rem">📊</div>
+                    <h3 style="color:var(--kps-navy)">Business Plan</h3>
+                    <p>Template for store planning</p>
+                </div>
+                <div class="resource-card">
+                    <div style="font-size:3rem">💰</div>
+                    <h3 style="color:var(--kps-navy)">Budget Calculator</h3>
+                    <p>Track expenses and revenue</p>
+                </div>
+                <div class="resource-card">
+                    <div style="font-size:3rem">📝</div>
+                    <h3 style="color:var(--kps-navy)">Invoice Template</h3>
+                    <p>Professional invoices</p>
+                </div>
+                <div class="resource-card">
+                    <div style="font-size:3rem">✅</div>
+                    <h3 style="color:var(--kps-navy)">Inventory Checklist</h3>
+                    <p>Track your stock</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2025 KPS United. All rights reserved.</p>
+    </footer>
+</body>
+</html>
