@@ -118,15 +118,24 @@
 
 <body>
     <header>
-        <div class="logo">KPS United</div>
-        <nav>
-            <a href="dashboard.html" class="active">Dashboard</a>
-            <a href="support.html">Support Center</a>
-            <a href="resources.html">Resources</a>
-            <a href="profile.html">My Profile</a>
-            <a href="#" id="logoutBtn" class="logout-btn" onclick="handleLogout()">Logout</a>
-        </nav>
+        <div class="header-content">
+            <div class="header-left">
+                <img src="logo.png" alt="KPS United" class="header-logo">
+                <h1>Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </div>
     </header>
+    <nav>
+        <ul>
+            <li><a href="dashboard.html" class="active">Dashboard</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="support.html">Support Center</a></li>
+            <li><a href="profile.html">My Profile</a></li>
+        </ul>
+    </nav>
 
     <div class="container fade-in">
         <h1>Dashboard</h1>
@@ -158,7 +167,7 @@
         <h2 style="margin-bottom: 1rem;">Stores</h2>
         <div class="stores-grid">
             <!-- Add New Store -->
-            <div class="store-card add-store-card" onclick="alert('Add Store feature coming soon!')">
+            <div class="store-card add-store-card" onclick="openAddStoreModal()">
                 <div class="add-icon">+</div>
                 <h3>Add New Store</h3>
             </div>
@@ -174,9 +183,181 @@
 
     <footer>
         <p>&copy; 2025 KPS United. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Kentucky Convenience, Liquor, Tobacco Stores</p>
     </footer>
 
 
+    <!-- Add Store Modal -->
+    <div id="addStoreModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Business Information</h2>
+            </div>
+            <div class="modal-body">
+                <form id="addStoreForm">
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Enter DBA / Store Name *</label>
+                            <input type="text" id="storeName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Street Address *</label>
+                            <input type="text" id="streetAddress" required>
+                            <span class="required-icon">📍</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Enter Entity Name (LLC / Corp Name) *</label>
+                            <input type="text" id="entityName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Enter City *</label>
+                            <input type="text" id="city" required>
+                            <span class="required-icon">📍</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Enter State *</label>
+                            <input type="text" id="state" required>
+                            <span class="required-icon">📍</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Enter Zip *</label>
+                            <input type="text" id="zip" required>
+                            <span class="required-icon">📍</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Enter County *</label>
+                            <input type="text" id="county" required>
+                            <span class="required-icon">📍</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Enter Business Email *</label>
+                            <input type="email" id="businessEmail" required>
+                            <span class="required-icon">📧</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Enter Business Phone *</label>
+                            <input type="tel" id="businessPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Enter EIN *</label>
+                            <input type="text" id="ein" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Business Type *</label>
+                            <select id="businessType">
+                                <option>Retail</option>
+                                <option>Wholesale</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Brand</label>
+                            <select id="brand">
+                                <option>Shell</option>
+                                <option>BP</option>
+                                <option>Exxon</option>
+                                <option>Independent</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Role</label>
+                            <select id="role">
+                                <option>Owner</option>
+                                <option>Manager</option>
+                            </select>
+                        </div>
+
+
+
+
+
+
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-save" onclick="saveStore()">Save</button>
+                <button class="btn-cancel" onclick="closeAddStoreModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Logic
+        const modal = document.getElementById("addStoreModal");
+
+        function openAddStoreModal() {
+            modal.style.display = "block";
+        }
+
+        function closeAddStoreModal() {
+            modal.style.display = "none";
+            document.getElementById("addStoreForm").reset();
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeAddStoreModal();
+            }
+        }
+
+        // Store Logic
+        function saveStore() {
+            const form = document.getElementById("addStoreForm");
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const storeData = {
+                id: Date.now(),
+                name: document.getElementById("storeName").value,
+                city: document.getElementById("city").value,
+                state: document.getElementById("state").value,
+                status: "Pending Approval" // Default status
+            };
+
+            let stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+            stores.push(storeData);
+            localStorage.setItem("userStores", JSON.stringify(stores));
+
+            renderStores();
+            closeAddStoreModal();
+            alert("Store added successfully!");
+        }
+
+        function renderStores() {
+            const storesGrid = document.querySelector(".stores-grid");
+            // Keep the "Add New Store" card and the static example store
+            // Ideally we should clear dynamic stores and re-append.
+            // For simplicity, let's just append new ones or clear everything except the first child?
+            // Better approach: Clear grid, re-add "Add Card", re-add static example, add dynamic stores.
+
+            // Actually, let's just append dynamic stores to the end for now to avoid complexity with the static one.
+            // But to prevent duplicates on re-render, we need to clear dynamic ones.
+            // Let's mark dynamic stores with a class.
+
+            const existingDynamic = document.querySelectorAll(".dynamic-store");
+            existingDynamic.forEach(el => el.remove());
+
+            const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+            stores.forEach(store => {
+                const storeCard = document.createElement("div");
+                storeCard.className = "store-card dynamic-store";
+                storeCard.innerHTML = `
+                    <h3>${store.name}</h3>
+                    <p>📍 ${store.city}, ${store.state}</p>
+                    <p style="margin-top: 0.5rem;">Status: <span style="color: orange; font-weight: bold;">${store.status}</span></p>
+                `;
+                storesGrid.appendChild(storeCard);
+            });
+        }
+
+        // Initial Render
+        window.addEventListener('load', renderStores);
+    </script>
 </body>
 
 </html>
