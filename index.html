@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Local Store Owners Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-top: 0.3rem;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .checkbox-group a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+        }
+
+        .error-message {
+            background: #ffe6e6;
+            color: #cc0000;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .success-message {
+            background: #e6ffe6;
+            color: #00cc00;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .required {
+            color: red;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>🏪 Store Owners Hub</h1>
+            <p>Welcome! Please sign in or create an account</p>
+        </div>
+
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="showTab('login')">Login</button>
+            <button class="tab-btn" onclick="showTab('register')">Register</button>
+        </div>
+
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="form-section active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="login-email" placeholder="your@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Password <span class="required">*</span></label>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn">Login</button>
+                
+                <p style="text-align: center; margin-top: 1rem;">
+                    <a href="reset-password.html" style="color: #667eea; text-decoration: none;">Forgot Password?</a>
+                </p>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="form-section">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="register-name">Store Name <span class="required">*</span></label>
+                    <input type="text" id="register-name" placeholder="Your Store Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="register-email" placeholder="your@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password">Password <span class="required">*</span></label>
+                    <input type="password" id="register-password" placeholder="Create a password (min 6 characters)" minlength="6" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-confirm-password">Confirm Password <span class="required">*</span></label>
+                    <input type="password" id="register-confirm-password" placeholder="Confirm your password" minlength="6" required>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms-checkbox" required>
+                    <label for="terms-checkbox">
+                        I agree to the <a href="terms.html" target="_blank">Terms and Conditions</a> <span class="required">*</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Show different tabs
+        function showTab(tab) {
+            // Clear messages
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+
+            // Update tab buttons
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show correct form
+            document.getElementById('login-form').classList.remove('active');
+            document.getElementById('register-form').classList.remove('active');
+            
+            if (tab === 'login') {
+                document.getElementById('login-form').classList.add('active');
+            } else {
+                document.getElementById('register-form').classList.add('active');
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        // Handle registration
+        function handleRegister(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const termsAccepted = document.getElementById('terms-checkbox').checked;
+
+            // Validation
+            if (password !== confirmPassword) {
+                showError('Passwords do not match!');
+                return;
+            }
+
+            if (!termsAccepted) {
+                showError('You must accept the Terms and Conditions!');
+                return;
+            }
+
+            // Get existing users or create empty array
+            let users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+
+            // Check if email already exists
+            if (users.find(user => user.email === email)) {
+                showError('This email is already registered! Please login instead.');
+                return;
+            }
+
+            // Add new user
+            users.push({
+                name: name,
+                email: email,
+                password: password, // In real app, this would be encrypted!
+                registeredDate: new Date().toISOString()
+            });
+
+            // Save to localStorage
+            localStorage.setItem('storeUsers', JSON.stringify(users));
+
+            showSuccess('Account created successfully! Redirecting to login...');
+
+            // Switch to login tab after 2 seconds
+            setTimeout(() => {
+                document.getElementById('register-form').classList.remove('active');
+                document.getElementById('login-form').classList.add('active');
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.querySelectorAll('.tab-btn')[1].classList.remove('active');
+                
+                // Clear register form
+                document.getElementById('register-name').value = '';
+                document.getElementById('register-email').value = '';
+                document.getElementById('register-password').value = '';
+                document.getElementById('register-confirm-password').value = '';
+                document.getElementById('terms-checkbox').checked = false;
+                
+                document.getElementById('success-message').style.display = 'none';
+            }, 2000);
+        }
+
+        // Handle login
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+
+            // Find user
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                // Save logged in user info
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                showSuccess('Login successful! Redirecting...');
+                
+                // Redirect to main page after 1 second
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                showError('Invalid email or password! Please try again.');
+            }
+        }
+
+        // Check if user is already logged in
+        window.onload = function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                // User is already logged in, redirect to dashboard
+                window.location.href = 'dashboard.html';
+            }
+        };
+    </script>
+</body>
+</html>

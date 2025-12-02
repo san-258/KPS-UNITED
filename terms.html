@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Conditions - Local Store Owners Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+        }
+
+        .scroll-notice {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            color: #856404;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .scroll-notice.hidden {
+            display: none;
+        }
+
+        .outer-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-height: 500px;
+            overflow-y: auto;
+            border: 3px solid #667eea;
+        }
+
+        .container::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .important {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 2rem;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #764ba2;
+        }
+
+        .date {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+
+        .agreement-section {
+            background: #f8f9ff;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            border: 2px solid #667eea;
+        }
+
+        .agreement-section h2 {
+            margin-top: 0;
+        }
+
+        .checkbox-wrapper {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .checkbox-wrapper:hover {
+            background: #f0f0f0;
+        }
+
+        .checkbox-wrapper label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            margin-right: 0.75rem;
+            margin-top: 0.3rem;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1.5rem;
+                margin: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📜 Terms and Conditions</h1>
+    </header>
+
+    <div class="scroll-notice" id="scroll-notice">
+        ⬇️ Please scroll down and read the entire document ⬇️
+    </div>
+
+    <div class="outer-container">
+        <div class="container" id="terms-container">
+            <p class="date">Last Updated: December 1, 2025</p>
+
+            <p>Welcome to Local Store Owners Hub. By accessing and using this platform, you agree to be bound by these Terms and Conditions. Please read them carefully.</p>
+
+            <div class="important">
+                <strong>⚠️ Important:</strong> By registering for an account, you confirm that you have read, understood, and agree to these Terms and Conditions.
+            </div>
+
+            <h2>1. Acceptance of Terms</h2>
+            <p>By creating an account and accessing the Local Store Owners Hub platform, you acknowledge that you have read and understood these terms and agree to be bound by them.</p>
+
+            <h2>2. Eligibility</h2>
+            <p>To use this platform, you must:</p>
+            <ul>
+                <li>Be at least 18 years of age</li>
+                <li>Be a registered local store owner or authorized representative</li>
+                <li>Provide accurate and complete registration information</li>
+                <li>Maintain the security of your account credentials</li>
+            </ul>
+
+            <h2>3. Account Registration</h2>
+            <h3>3.1 Account Creation</h3>
+            <p>You agree to:</p>
+            <ul>
+                <li>Provide truthful and accurate information during registration</li>
+                <li>Keep your login credentials confidential</li>
+                <li>Notify us immediately of any unauthorized access to your account</li>
+                <li>Be responsible for all activities that occur under your account</li>
+            </ul>
+
+            <h3>3.2 Account Security</h3>
+            <p>You are solely responsible for maintaining the confidentiality of your password. We recommend using a strong, unique password and enabling any additional security features we may offer.</p>
+
+            <h2>4. Use of Platform</h2>
+            <h3>4.1 Permitted Use</h3>
+            <p>You may use this platform to:</p>
+            <ul>
+                <li>Access current price lists and contracts</li>
+                <li>View business documents and resources</li>
+                <li>Read news and updates relevant to your business</li>
+                <li>Access business analytics and data</li>
+            </ul>
+
+            <h3>4.2 Prohibited Use</h3>
+            <p>You agree NOT to:</p>
+            <ul>
+                <li>Share your account credentials with others</li>
+                <li>Use the platform for any illegal purposes</li>
+                <li>Attempt to gain unauthorized access to any part of the platform</li>
+                <li>Copy, distribute, or modify any content without permission</li>
+                <li>Use automated systems to access the platform</li>
+                <li>Interfere with the proper functioning of the platform</li>
+            </ul>
+
+            <h2>5. Pricing and Contracts</h2>
+            <p>All prices and contract terms displayed on this platform are:</p>
+            <ul>
+                <li>Subject to change without prior notice</li>
+                <li>Accurate as of the date listed</li>
+                <li>Not binding until a formal contract is executed</li>
+            </ul>
+
+            <p>For official quotes and binding agreements, please contact us directly using the contact information provided on the platform.</p>
+
+            <h2>6. Intellectual Property</h2>
+            <p>All content on this platform, including but not limited to text, graphics, logos, documents, and software, is the property of Local Store Owners Hub or its licensors and is protected by copyright and intellectual property laws.</p>
+
+            <h2>7. Privacy and Data Protection</h2>
+            <p>We are committed to protecting your privacy. Your personal information will be:</p>
+            <ul>
+                <li>Used only for the purposes of providing our services</li>
+                <li>Protected using industry-standard security measures</li>
+                <li>Not sold or shared with third parties without your consent</li>
+                <li>Handled in accordance with applicable data protection laws</li>
+            </ul>
+
+            <h2>8. Limitation of Liability</h2>
+            <p>To the fullest extent permitted by law:</p>
+            <ul>
+                <li>We provide this platform "as is" without warranties of any kind</li>
+                <li>We are not liable for any indirect, incidental, or consequential damages</li>
+                <li>Our total liability shall not exceed the fees paid by you, if any</li>
+                <li>We do not guarantee uninterrupted or error-free access to the platform</li>
+            </ul>
+
+            <h2>9. Changes to Terms</h2>
+            <p>We reserve the right to modify these Terms and Conditions at any time. When we make changes:</p>
+            <ul>
+                <li>We will update the "Last Updated" date at the top of this page</li>
+                <li>Continued use of the platform constitutes acceptance of the new terms</li>
+                <li>We will notify you of significant changes via email or platform notification</li>
+            </ul>
+
+            <h2>10. Termination</h2>
+            <p>We reserve the right to:</p>
+            <ul>
+                <li>Suspend or terminate your account for violation of these terms</li>
+                <li>Discontinue the platform at any time</li>
+                <li>Remove any content that violates these terms</li>
+            </ul>
+
+            <p>You may terminate your account at any time by contacting us.</p>
+
+            <h2>11. Governing Law</h2>
+            <p>These Terms and Conditions shall be governed by and construed in accordance with the laws of your jurisdiction, without regard to its conflict of law provisions.</p>
+
+            <h2>12. Contact Information</h2>
+            <p>If you have any questions about these Terms and Conditions, please contact us at:</p>
+            <ul>
+                <li>Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1d6e686d6d726f695d6e69726f78726a73786f6e75687f337e7270">[email&#160;protected]</a></li>
+                <li>Phone: (555) 123-4567</li>
+            </ul>
+
+            <div class="important">
+                <strong>📝 Remember:</strong> During registration, you must check the agreement box to confirm you have read and accepted these terms.
+            </div>
+        </div>
+
+        <!-- Agreement Checkboxes Section -->
+        <div class="agreement-section">
+            <h2>✅ Confirm Your Understanding</h2>
+            <p style="margin-bottom: 1.5rem; color: #555;">Please confirm that you have read and understood these terms by checking the boxes below:</p>
+            
+            <div class="checkbox-wrapper">
+                <label>
+                    <input type="checkbox" id="check1" disabled>
+                    <span><strong>I have scrolled through and read the complete Terms and Conditions document above</strong></span>
+                </label>
+            </div>
+
+            <div class="checkbox-wrapper">
+                <label>
+                    <input type="checkbox" id="check2" disabled>
+                    <span>I agree to comply with all terms regarding account usage and prohibited activities</span>
+                </label>
+            </div>
+
+            <div class="checkbox-wrapper">
+                <label>
+                    <input type="checkbox" id="check3" disabled>
+                    <span>I understand that prices and contracts are subject to change and are not binding until formally executed</span>
+                </label>
+            </div>
+
+            <div class="checkbox-wrapper">
+                <label>
+                    <input type="checkbox" id="check4" disabled>
+                    <span>I acknowledge the limitation of liability and understand that the platform is provided "as is"</span>
+                </label>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding: 1rem; background: white; border-radius: 5px; border-left: 4px solid #667eea;">
+                <p style="color: #666; font-size: 0.95rem; margin: 0;" id="scroll-instruction">
+                    <strong>Note:</strong> You must scroll to the bottom of the Terms and Conditions document above to enable these checkboxes. Once enabled, you can check all boxes to proceed with registration.
+                </p>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-btn">← Back to Login</a>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        const container = document.getElementById('terms-container');
+        const scrollNotice = document.getElementById('scroll-notice');
+        const checkboxes = [
+            document.getElementById('check1'),
+            document.getElementById('check2'),
+            document.getElementById('check3'),
+            document.getElementById('check4')
+        ];
+        const scrollInstruction = document.getElementById('scroll-instruction');
+
+        let hasScrolledToBottom = false;
+
+        // Detect when user scrolls to bottom
+        container.addEventListener('scroll', function() {
+            const scrollTop = container.scrollTop;
+            const scrollHeight = container.scrollHeight;
+            const clientHeight = container.clientHeight;
+
+            // Check if scrolled to bottom (with small tolerance)
+            if (scrollTop + clientHeight >= scrollHeight - 20) {
+                if (!hasScrolledToBottom) {
+                    hasScrolledToBottom = true;
+                    
+                    // Hide scroll notice
+                    scrollNotice.classList.add('hidden');
+                    
+                    // Enable checkboxes
+                    checkboxes.forEach(checkbox => {
+                        checkbox.disabled = false;
+                    });
+                    
+                    // Update instruction
+                    scrollInstruction.innerHTML = '<strong style="color: #28a745;">✅ Great job!</strong> You have read the entire document. The checkboxes above are now enabled. You can check them and proceed with registration.';
+                }
+            }
+        });
+
+        // Track checkbox states
+        checkboxes.forEach((checkbox, index) => {
+            checkbox.addEventListener('change', function() {
+                const allChecked = checkboxes.every(cb => cb.checked);
+                if (allChecked) {
+                    scrollInstruction.innerH

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Local Store Owners Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 450px;
+            width: 100%;
+            margin: 100px auto;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .admin-container.active {
+            display: block;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .admin-header h1 {
+            color: #667eea;
+            font-size: 2rem;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            background: #28a745;
+            margin-right: 1rem;
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            width: auto;
+        }
+
+        .btn-secondary:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            width: auto;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .error-message {
+            background: #ffe6e6;
+            color: #cc0000;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .users-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .users-table tr:hover {
+            background: #f8f9ff;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .no-users {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .action-buttons {
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .users-table {
+                font-size: 0.9rem;
+            }
+
+            .users-table th,
+            .users-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login -->
+    <div class="login-container" id="admin-login">
+        <div class="logo">
+            <h1>🔐 Admin Access</h1>
+            <p>Login to view registered users</p>
+        </div>
+
+        <div id="error-message" class="error-message"></div>
+
+        <form onsubmit="handleAdminLogin(event)">
+            <div class="form-group">
+                <label for="admin-password">Admin Password</label>
+                <input type="password" id="admin-password" placeholder="Enter admin password" required>
+            </div>
+
+            <button type="submit" class="btn">Access Admin Dashboard</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 1.5rem; color: #666; font-size: 0.9rem;">
+            Default password: <strong>admin123</strong><br>
+            (Change this in the code!)
+        </p>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-container" id="admin-dashboard">
+        <div class="admin-header">
+            <h1>👥 Registered Store Owners</h1>
+            <button class="btn-danger" onclick="handleLogout()">Logout</button>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-users">0</div>
+                <div class="stat-label">Total Registered Users</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number" id="today-users">0</div>
+                <div class="stat-label">Registered Today</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number" id="this-week-users">0</div>
+                <div class="stat-label">This Week</div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="downloadCSV()">📥 Download CSV</button>
+            <button class="btn btn-secondary" onclick="downloadJSON()">📥 Download JSON</button>
+            <button class="btn btn-secondary" onclick="copyEmails()">📧 Copy All Emails</button>
+        </div>
+
+        <!-- Search -->
+        <input type="text" class="search-box" id="search-box" placeholder="🔍 Search by store name or email..." onkeyup="filterUsers()">
+
+        <!-- Users Table -->
+        <div style="overflow-x: auto;">
+            <table class="users-table" id="users-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Store Name</th>
+                        <th>Email</th>
+                        <th>Registered Date</th>
+                        <th>Days Since Registration</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    <tr>
+                        <td colspan="5" class="no-users">No users registered yet</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // CHANGE THIS PASSWORD FOR SECURITY!
+        const ADMIN_PASSWORD = 'admin123';
+
+        // Handle admin login
+        function handleAdminLogin(event) {
+            event.preventDefault();
+
+            const password = document.getElementById('admin-password').value;
+
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-dashboard').classList.add('active');
+                localStorage.setItem('adminLoggedIn', 'true');
+                loadUsers();
+            } else {
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.textContent = 'Incorrect password!';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Check if admin is already logged in
+        window.onload = function() {
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-dashboard').classList.add('active');
+                loadUsers();
+            }
+        };
+
+        // Logout
+        function handleLogout() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.reload();
+        }
+
+        // Load and display users
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+            const tbody = document.getElementById('users-table-body');
+
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="no-users">No users registered yet</td></tr>';
+                return;
+            }
+
+            // Update statistics
+            document.getElementById('total-users').textContent = users.length;
+
+            const today = new Date().setHours(0, 0, 0, 0);
+            const todayUsers = users.filter(u => {
+                const regDate = new Date(u.registeredDate).setHours(0, 0, 0, 0);
+                return regDate === today;
+            }).length;
+            document.getElementById('today-users').textContent = todayUsers;
+
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const weekUsers = users.filter(u => new Date(u.registeredDate) >= weekAgo).length;
+            document.getElementById('this-week-users').textContent = weekUsers;
+
+            // Build table
+            tbody.innerHTML = users.map((user, index) => {
+                const regDate = new Date(user.registeredDate);
+                const daysSince = Math.floor((new Date() - regDate) / (1000 * 60 * 60 * 24));
+
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${regDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                        <td>${daysSince} day${daysSince !== 1 ? 's' : ''}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Filter users by search
+        function filterUsers() {
+            const searchTerm = document.getElementById('search-box').value.toLowerCase();
+            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+            const tbody = document.getElementById('users-table-body');
+
+            const filteredUsers = users.filter(user => 
+                user.name.toLowerCase().includes(searchTerm) || 
+                user.email.toLowerCase().includes(searchTerm)
+            );
+
+            if (filteredUsers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="no-users">No users match your search</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filteredUsers.map((user, index) => {
+                const regDate = new Date(user.registeredDate);
+                const daysSince = Math.floor((new Date() - regDate) / (1000 * 60 * 60 * 24));
+
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${regDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                        <td>${daysSince} day${daysSince !== 1 ? 's' : ''}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Download as CSV
+        function downloadCSV() {
+            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+
+            if (users.length === 0) {
+                alert('No users to download!');
+                return;
+            }
+
+            // Create CSV content
+            let csv = 'Store Name,Email,Registered Date\n';
+            users.forEach(user => {
+                const regDate = new Date(user.registeredDate).toLocaleDateString('en-US');
+                csv += `"${user.name}","${user.email}","${regDate}"\n`;
+            });
+
+            // Download file
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `store-owners-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            alert('CSV file downloaded successfully!');
+        }
+
+        // Download as JSON
+        function downloadJSON() {
+            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+
+            if (users.length === 0) {
+                alert('No users to download!');
+                return;
+            }
+
+            // Remove passwords for security
+            const sanitizedUsers = users.map(u => ({
+                name: u.name,
+                email: u.email,
+                registeredDate: u.registeredDate
+            }));
+
+            const json = JSON.stringify(sanitizedUsers, null, 2);
+
+            // Download file
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `store-owners-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            alert('JSON file downloaded successfully!');
+        }
+
+        // Copy all emails
+        function copyEmails() {
+            const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+
+            if (users.length === 0) {
+                alert('No users to copy!');
+                return;
+            }
+
+            const emails = users.map(u => u.email).join(', ');
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(emails).then(() => {
+                alert(`${users.length} email addresses copied to clipboard!\n\nYou can now paste them into your email client.`);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = emails;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert(`${users.length} email addresses copied to clipboard!`);
+            });
+        }
+    </script>
+</body>
+</html>
