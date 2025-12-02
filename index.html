@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - KPS United</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
     <style>
         /* ============================================
            🎨 KPS UNITED BRAND COLORS (From Your Logo!)
@@ -397,6 +399,8 @@
             const user = users.find(u => u.email === email && u.password === password);
 
             if (user) {
+                // Add login time
+                user.loginTime = new Date().getTime();
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 
                 showSuccess('Login successful! Redirecting...');
@@ -409,12 +413,7 @@
             }
         }
 
-        window.onload = function() {
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-                window.location.href = 'dashboard.html';
-            }
-        };
+        // Removed inline window.onload as it is handled by auth.js
     </script>
 </body>
 </html>
