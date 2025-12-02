@@ -1,2 +1,97 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Resources - KPS United</title><style>:root{--kps-red:#D84315;--kps-navy:#1A3A52}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:#f4f4f4}header{background:linear-gradient(135deg,var(--kps-red),var(--kps-navy));color:white;padding:1.5rem 0}.header-content{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center}.header-logo{height:50px}.logout-btn{padding:0.6rem 1.2rem;background:rgba(255,255,255,0.2);color:white;border:2px solid white;border-radius:5px;cursor:pointer;font-weight:600}nav{background:white;box-shadow:0 2px 5px rgba(0,0,0,0.1)}nav ul{list-style:none;display:flex;justify-content:center;flex-wrap:wrap;max-width:1200px;margin:0 auto}nav a{display:block;padding:1rem 1.5rem;text-decoration:none;color:var(--kps-navy);font-weight:600}nav a:hover{background:var(--kps-red);color:white}.container{max-width:1200px;margin:2rem auto;padding:0 20px}.section{background:white;margin-bottom:2rem;padding:2rem;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}.section h2{color:var(--kps-navy);margin-bottom:1.5rem;font-size:2rem;border-bottom:3px solid var(--kps-red);padding-bottom:0.5rem}.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem;margin-top:1.5rem}.resource-card{background:linear-gradient(135deg,#f5f7fa,#c3cfe2);padding:1.5rem;border-radius:10px;text-align:center;cursor:pointer;border:2px solid transparent}.resource-card:hover{border-color:var(--kps-red);transform:translateY(-5px)}footer{background:var(--kps-navy);color:white;text-align:center;padding:2rem}</style></head><body><header><div class="header-content"><div style="display:flex;align-items:center;gap:1rem"><img src="logo.png" alt="KPS United" class="header-logo"><h1>Resources</h1></div><button class="logout-btn" onclick="localStorage.removeItem('currentUser');window.location.href='index.html'">Logout</button></div></header><nav><ul><li><a href="dashboard.html">Dashboard</a></li><li><a href="support.html">Support</a></li><li><a href="resources.html">Resources</a></li><li><a href="profile.html">Profile</a></li></ul></nav><div class="container"><section class="section"><h2>📥 Downloads & Templates</h2><div class="resource-grid"><div class="resource-card"><div style="font-size:3rem">📊</div><h3 style="color:var(--kps-navy)">Business Plan</h3><p>Template for store planning</p></div><div class="resource-card"><div style="font-size:3rem">💰</div><h3 style="color:var(--kps-navy)">Budget Calculator</h3><p>Track expenses and revenue</p></div><div class="resource-card"><div style="font-size:3rem">📝</div><h3 style="color:var(--kps-navy)">Invoice Template</h3><p>Professional invoices</p></div><div class="resource-card"><div style="font-size:3rem">✅</div><h3 style="color:var(--kps-navy)">Inventory Checklist</h3><p>Track your stock</p></div></div></section></div><footer><p>&copy; 2025 KPS United. All rights reserved.</p></footer><script>window.onload=function(){if(!localStorage.getItem('currentUser'))window.location.href='index.html'}</script></body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - KPS United</title>
+    <link rel="stylesheet" href="style.css?v=2.0">
+    <script src="auth.js?v=2.0"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-left">
+                <img src="logo.png" alt="KPS United" class="header-logo">
+                <h1>Resources</h1>
+            </div>
+            <div class="header-right">
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="support.html">Support Center</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="profile.html">My Profile</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <section class="section">
+            <h2>📥 Downloads & Templates</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div style="font-size:3rem">📊</div>
+                    <h3 style="color:var(--kps-navy)">Business Plan</h3>
+                    <p>Template for store planning</p>
+                </div>
+                <div class="resource-card">
+                    <div style="font-size:3rem">💰</div>
+                    <h3 style="color:var(--kps-navy)">Budget Calculator</h3>
+                    <p>Track expenses and revenue</p>
+                </div>
+                <div class="resource-card">
+                    <div style="font-size:3rem">📝</div>
+                    <h3 style="color:var(--kps-navy)">Invoice Template</h3>
+                    <p>Professional invoices</p>
+                </div>
+                <div class="resource-card">
+                    <div style="font-size:3rem">✅</div>
+                    <h3 style="color:var(--kps-navy)">Inventory Checklist</h3>
+                    <p>Track your stock</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="news">
+            <h2>📰 News & Updates</h2>
+            <div class="article">
+                <h3>KPS United Expands to Tennessee</h3>
+                <div class="article-meta">Published on Oct 15, 2025</div>
+                <p>We are thrilled to announce our expansion into the Tennessee market...</p>
+            </div>
+            <div class="article">
+                <h3>New Tobacco Regulations 2026</h3>
+                <div class="article-meta">Published on Oct 10, 2025</div>
+                <p>Important updates regarding federal tobacco compliance...</p>
+            </div>
+        </section>
+
+        <section class="section" id="contracts">
+            <h2>📑 Contracts & Documents</h2>
+            <div class="doc-grid">
+                <div class="doc-card">
+                    <div class="doc-icon">📄</div>
+                    <h3>Q4 Marketing Agreement</h3>
+                    <p>Standard terms for Q4 2025</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-icon">📜</div>
+                    <h3>Vendor Compliance Form</h3>
+                    <p>Required for all new suppliers</p>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-icon">📋</div>
+                    <h3>Inventory Audit Sheet</h3>
+                    <p>Monthly tracking template</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2025 KPS United. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Kentucky Convenience, Liquor, Tobacco Stores</p>
+    </footer>
+</body>
+</html>

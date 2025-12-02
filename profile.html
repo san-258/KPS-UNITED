@@ -1,2 +1,89 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Profile - KPS United</title><style>:root{--kps-red:#D84315;--kps-navy:#1A3A52}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:#f4f4f4}header{background:linear-gradient(135deg,var(--kps-red),var(--kps-navy));color:white;padding:1.5rem 0}.header-content{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center}.header-logo{height:50px}.logout-btn{padding:0.6rem 1.2rem;background:rgba(255,255,255,0.2);color:white;border:2px solid white;border-radius:5px;cursor:pointer;font-weight:600}nav{background:white;box-shadow:0 2px 5px rgba(0,0,0,0.1)}nav ul{list-style:none;display:flex;justify-content:center;flex-wrap:wrap;max-width:1200px;margin:0 auto}nav a{display:block;padding:1rem 1.5rem;text-decoration:none;color:var(--kps-navy);font-weight:600}nav a:hover{background:var(--kps-red);color:white}.container{max-width:900px;margin:2rem auto;padding:0 20px}.section{background:white;margin-bottom:2rem;padding:2rem;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}.section h2{color:var(--kps-navy);margin-bottom:1.5rem;font-size:2rem;border-bottom:3px solid var(--kps-red);padding-bottom:0.5rem}.profile-avatar{width:120px;height:120px;background:linear-gradient(135deg,var(--kps-red),var(--kps-navy));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:white;margin:0 auto 1rem}.form-group{margin-bottom:1.5rem}.form-group label{display:block;margin-bottom:0.5rem;color:var(--kps-navy);font-weight:600}.form-group input{width:100%;padding:1rem;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem}.form-group input:focus{outline:none;border-color:var(--kps-red)}.btn{padding:1rem 2rem;background:var(--kps-red);color:white;border:none;border-radius:10px;font-size:1.1rem;font-weight:600;cursor:pointer}footer{background:var(--kps-navy);color:white;text-align:center;padding:2rem}</style></head><body><header><div class="header-content"><div style="display:flex;align-items:center;gap:1rem"><img src="logo.png" alt="KPS United" class="header-logo"><h1>My Profile</h1></div><button class="logout-btn" onclick="localStorage.removeItem('currentUser');window.location.href='index.html'">Logout</button></div></header><nav><ul><li><a href="dashboard.html">Dashboard</a></li><li><a href="support.html">Support</a></li><li><a href="resources.html">Resources</a></li><li><a href="profile.html">Profile</a></li></ul></nav><div class="container"><section class="section"><div style="text-align:center;padding:2rem 0"><div class="profile-avatar" id="avatar">👤</div><h2 style="color:var(--kps-navy);border:none;margin:0" id="profile-name">Store Name</h2><p style="color:#666" id="profile-email">email@example.com</p></div></section><section class="section"><h2>✏️ Edit Profile</h2><form id="edit-form"><div class="form-group"><label for="edit-store-name">Store Name</label><input type="text" id="edit-store-name" required></div><div class="form-group"><label for="edit-email">Email Address</label><input type="email" id="edit-email" disabled><small style="color:#666">Contact support to change email</small></div><button type="submit" class="btn">Save Changes</button></form></section></div><footer><p>&copy; 2025 KPS United. All rights reserved.</p></footer><script>window.onload=function(){const userData=localStorage.getItem('currentUser');if(!userData){window.location.href='index.html';return}const user=JSON.parse(userData);document.getElementById('profile-name').textContent=user.name;document.getElementById('profile-email').textContent=user.email;document.getElementById('edit-store-name').value=user.name;document.getElementById('edit-email').value=user.email;document.getElementById('avatar').textContent=user.name.charAt(0).toUpperCase()};document.getElementById('edit-form').addEventListener('submit',function(e){e.preventDefault();const newName=document.getElementById('edit-store-name').value;let currentUser=JSON.parse(localStorage.getItem('currentUser'));currentUser.name=newName;localStorage.setItem('currentUser',JSON.stringify(currentUser));let users=JSON.parse(localStorage.getItem('storeUsers')||'[]');const userIndex=users.findIndex(u=>u.email===currentUser.email);if(userIndex!==-1){users[userIndex].name=newName;localStorage.setItem('storeUsers',JSON.stringify(users))}alert('Profile updated successfully!');window.location.reload()})</script></body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - KPS United</title>
+    <link rel="stylesheet" href="style.css?v=2.0">
+    <script src="auth.js?v=2.0"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-left">
+                <img src="logo.png" alt="KPS United" class="header-logo">
+                <h1>My Profile</h1>
+            </div>
+            <div class="header-right">
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="support.html">Support Center</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="profile.html">My Profile</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <section class="section">
+            <div style="text-align:center;padding:2rem 0">
+                <div class="profile-avatar" id="avatar">👤</div>
+                <h2 style="color:var(--kps-navy);border:none;margin:0" id="profile-name">Store Name</h2>
+                <p style="color:#666" id="profile-email">email@example.com</p>
+            </div>
+        </section>
+        <section class="section">
+            <h2>✏️ Edit Profile</h2>
+            <form id="edit-form">
+                <div class="form-group">
+                    <label for="edit-store-name">Store Name</label>
+                    <input type="text" id="edit-store-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-email">Email Address</label>
+                    <input type="email" id="edit-email" disabled>
+                    <small style="color:#666">Contact support to change email</small>
+                </div>
+                <button type="submit" class="btn">Save Changes</button>
+            </form>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2025 KPS United. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Kentucky Convenience, Liquor, Tobacco Stores</p>
+    </footer>
+    <script>
+        window.addEventListener('load', function(){
+            const userData = localStorage.getItem('currentUser');
+            if(userData){
+                const user = JSON.parse(userData);
+                document.getElementById('profile-name').textContent = user.name;
+                document.getElementById('profile-email').textContent = user.email;
+                document.getElementById('edit-store-name').value = user.name;
+                document.getElementById('edit-email').value = user.email;
+                document.getElementById('avatar').textContent = user.name.charAt(0).toUpperCase();
+            }
+        });
+
+        document.getElementById('edit-form').addEventListener('submit', function(e){
+            e.preventDefault();
+            const newName = document.getElementById('edit-store-name').value;
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            currentUser.name = newName;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            let users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if(userIndex !== -1){
+                users[userIndex].name = newName;
+                localStorage.setItem('storeUsers', JSON.stringify(users));
+            }
+            alert('Profile updated successfully!');
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>
