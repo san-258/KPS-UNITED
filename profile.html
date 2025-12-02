@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="auth.js"></script>
 </head>
+
 <body>
     <header>
         <div class="header-content">
@@ -56,9 +58,9 @@
         <p style="margin-top: 0.5rem; font-size: 0.9rem;">Kentucky Convenience, Liquor, Tobacco Stores</p>
     </footer>
     <script>
-        window.addEventListener('load', function(){
+        window.addEventListener('load', function () {
             const userData = localStorage.getItem('currentUser');
-            if(userData){
+            if (userData) {
                 const user = JSON.parse(userData);
                 document.getElementById('profile-name').textContent = user.name;
                 document.getElementById('profile-email').textContent = user.email;
@@ -68,7 +70,7 @@
             }
         });
 
-        document.getElementById('edit-form').addEventListener('submit', function(e){
+        document.getElementById('edit-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const newName = document.getElementById('edit-store-name').value;
             let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -77,7 +79,7 @@
 
             let users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
             const userIndex = users.findIndex(u => u.email === currentUser.email);
-            if(userIndex !== -1){
+            if (userIndex !== -1) {
                 users[userIndex].name = newName;
                 localStorage.setItem('storeUsers', JSON.stringify(users));
             }
@@ -86,4 +88,5 @@
         });
     </script>
 </body>
+
 </html>
