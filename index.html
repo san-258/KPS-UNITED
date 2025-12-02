@@ -353,21 +353,7 @@
                     <a href="reset-password.html">Forgot Password?</a>
                 </p>
 
-                <div class="social-login-divider">
-                    <span>Or continue with</span>
-                </div>
 
-                <div class="social-buttons">
-                    <button type="button" class="social-btn google" onclick="handleSocialLogin('Google')">
-                        <i class="fab fa-google"></i> Google
-                    </button>
-                    <button type="button" class="social-btn facebook" onclick="handleSocialLogin('Facebook')">
-                        <i class="fab fa-facebook-f"></i> Facebook
-                    </button>
-                    <button type="button" class="social-btn apple" onclick="handleSocialLogin('Apple')">
-                        <i class="fab fa-apple"></i> Apple
-                    </button>
-                </div>
             </form>
         </div>
 
@@ -520,24 +506,7 @@
             }
         }
 
-        function handleSocialLogin(provider) {
-            // Simulate social login
-            const mockUser = {
-                name: `Test User (${provider})`,
-                email: `test.${provider.toLowerCase()}@example.com`,
-                provider: provider,
-                loginTime: new Date().getTime(),
-                avatar: 'https://ui-avatars.com/api/?name=Test+User&background=random'
-            };
 
-            localStorage.setItem('currentUser', JSON.stringify(mockUser));
-
-            showSuccess(`Successfully logged in with ${provider}! Redirecting...`);
-
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
-        }
 
         // Removed inline window.onload as it is handled by auth.js
     </script>
