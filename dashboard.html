@@ -165,7 +165,6 @@
             <div class="store-card">
                 <h3>Hampton's Service Center</h3>
                 <p>📍 Nashville, TN</p>
-                <p>📍 Nashville, TN</p>
                 <p class="mt-2">Status: <span class="text-green font-bold">Active</span></p>
             </div>
         </div>
@@ -354,19 +353,25 @@
 
             // Auto-increment ID logic
             const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-            const memberId = currentUser ? currentUser.memberId : 1000; // Fallback to 1000 if issue
+            // Member ID is like "1000-1", we want the base "1000"
+            const memberIdStr = currentUser ? currentUser.memberId.toString() : "1000-1";
+            const baseMemberId = memberIdStr.split('-')[0];
+
             let stores = JSON.parse(localStorage.getItem("userStores") || "[]");
 
             // Find max sequence number
-            let maxSeq = 1; // Start at 1 (for static store)
+            let maxSeq = 0;
             stores.forEach(store => {
-                if (store.id && store.id.toString().startsWith(memberId + '-')) {
-                    const seq = parseInt(store.id.split('-')[1]);
-                    if (seq > maxSeq) maxSeq = seq;
+                if (store.id && store.id.toString().startsWith(baseMemberId + '-')) {
+                    const parts = store.id.toString().split('-');
+                    if (parts.length > 1) {
+                        const seq = parseInt(parts[1]);
+                        if (seq > maxSeq) maxSeq = seq;
+                    }
                 }
             });
 
-            const newId = `${memberId}-${maxSeq + 1}`;
+            const newId = `${baseMemberId}-${maxSeq + 1}`;
 
             const storeData = {
                 id: newId,
@@ -436,6 +441,17 @@
 
         // Initialize
         window.addEventListener('load', () => {
+            // Self-healing: Check for missing Member ID
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            if (currentUser && !currentUser.memberId) {
+                console.warn("Member ID missing. Repairing...");
+                let nextMemberId = parseInt(localStorage.getItem('nextMemberId') || '1001');
+                currentUser.memberId = `${nextMemberId}-1`;
+                localStorage.setItem("currentUser", JSON.stringify(currentUser));
+                localStorage.setItem('nextMemberId', (nextMemberId + 1).toString());
+                console.log(`Repaired Member ID: ${currentUser.memberId}`);
+            }
+
             renderStores();
 
             // Attach click handler to static store

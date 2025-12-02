@@ -526,7 +526,7 @@
 
             // 2. Create User Object
             users.push({
-                memberId: nextMemberId,
+                memberId: `${nextMemberId}-1`,
                 name: pendingUser.name,
                 email: pendingUser.email,
                 password: pendingUser.password,
@@ -538,7 +538,7 @@
             let stores = JSON.parse(localStorage.getItem('userStores') || '[]');
             const newStore = {
                 id: `${nextMemberId}-1`,
-                memberId: nextMemberId,
+                memberId: `${nextMemberId}-1`,
                 name: pendingUser.name,
                 businessEmail: pendingUser.email,
                 streetAddress: "Pending",
