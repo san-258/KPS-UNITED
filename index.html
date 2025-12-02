@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Local Store Owners Hub</title>
+    <title>Login - KPS United</title>
     <style>
+        /* ============================================
+           🎨 KPS UNITED BRAND COLORS (From Your Logo!)
+        ============================================ */
+        :root {
+            --kps-red: #D84315;         /* Main red/orange from logo */
+            --kps-navy: #1A3A52;        /* Navy blue from Kentucky banner */
+            --kps-yellow: #FDB813;      /* Yellow from center circle */
+            --kps-green: #2E7D60;       /* Green from handshake */
+            --kps-cream: #F5E6D3;       /* Cream text color */
+        }
+        /* ============================================ */
+
         * {
             margin: 0;
             padding: 0;
@@ -13,7 +25,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--kps-red) 0%, var(--kps-navy) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -25,7 +37,7 @@
             background: white;
             padding: 3rem;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             max-width: 450px;
             width: 100%;
         }
@@ -35,8 +47,17 @@
             margin-bottom: 2rem;
         }
 
+        .logo-image {
+            width: 150px;
+            height: auto;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .logo h1 {
-            color: #667eea;
+            color: var(--kps-navy);
             font-size: 2rem;
             margin-bottom: 0.5rem;
         }
@@ -66,7 +87,12 @@
         }
 
         .tab-btn.active {
-            background: #667eea;
+            background: var(--kps-red);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: var(--kps-navy);
             color: white;
         }
 
@@ -85,7 +111,7 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #333;
+            color: var(--kps-navy);
             font-weight: 600;
         }
 
@@ -100,7 +126,7 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--kps-red);
         }
 
         .checkbox-group {
@@ -123,8 +149,9 @@
         }
 
         .checkbox-group a {
-            color: #667eea;
+            color: var(--kps-red);
             text-decoration: none;
+            font-weight: 600;
         }
 
         .checkbox-group a:hover {
@@ -134,7 +161,7 @@
         .btn {
             width: 100%;
             padding: 1rem;
-            background: #667eea;
+            background: var(--kps-red);
             color: white;
             border: none;
             border-radius: 10px;
@@ -145,7 +172,7 @@
         }
 
         .btn:hover {
-            background: #764ba2;
+            background: var(--kps-navy);
         }
 
         .error-message {
@@ -167,7 +194,23 @@
         }
 
         .required {
-            color: red;
+            color: var(--kps-red);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .forgot-password a {
+            color: var(--kps-red);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+            color: var(--kps-navy);
         }
 
         @media (max-width: 480px) {
@@ -178,14 +221,19 @@
             .logo h1 {
                 font-size: 1.5rem;
             }
+
+            .logo-image {
+                width: 120px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="logo">
-            <h1>🏪 Store Owners Hub</h1>
-            <p>Welcome! Please sign in or create an account</p>
+            <img src="logo.png" alt="KPS United Logo" class="logo-image">
+            <h1>KPS United</h1>
+            <p>Convenience, Liquor, Tobacco Stores - Kentucky</p>
         </div>
 
         <div class="tab-buttons">
@@ -211,8 +259,8 @@
 
                 <button type="submit" class="btn">Login</button>
                 
-                <p style="text-align: center; margin-top: 1rem;">
-                    <a href="reset-password.html" style="color: #667eea; text-decoration: none;">Forgot Password?</a>
+                <p class="forgot-password">
+                    <a href="reset-password.html">Forgot Password?</a>
                 </p>
             </form>
         </div>
@@ -253,18 +301,14 @@
     </div>
 
     <script>
-        // Show different tabs
         function showTab(tab) {
-            // Clear messages
             document.getElementById('error-message').style.display = 'none';
             document.getElementById('success-message').style.display = 'none';
 
-            // Update tab buttons
             const tabButtons = document.querySelectorAll('.tab-btn');
             tabButtons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            // Show correct form
             document.getElementById('login-form').classList.remove('active');
             document.getElementById('register-form').classList.remove('active');
             
@@ -275,7 +319,6 @@
             }
         }
 
-        // Show error message
         function showError(message) {
             const errorDiv = document.getElementById('error-message');
             errorDiv.textContent = message;
@@ -283,7 +326,6 @@
             document.getElementById('success-message').style.display = 'none';
         }
 
-        // Show success message
         function showSuccess(message) {
             const successDiv = document.getElementById('success-message');
             successDiv.textContent = message;
@@ -291,7 +333,6 @@
             document.getElementById('error-message').style.display = 'none';
         }
 
-        // Handle registration
         function handleRegister(event) {
             event.preventDefault();
 
@@ -301,7 +342,6 @@
             const confirmPassword = document.getElementById('register-confirm-password').value;
             const termsAccepted = document.getElementById('terms-checkbox').checked;
 
-            // Validation
             if (password !== confirmPassword) {
                 showError('Passwords do not match!');
                 return;
@@ -312,36 +352,30 @@
                 return;
             }
 
-            // Get existing users or create empty array
             let users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
 
-            // Check if email already exists
             if (users.find(user => user.email === email)) {
                 showError('This email is already registered! Please login instead.');
                 return;
             }
 
-            // Add new user
             users.push({
                 name: name,
                 email: email,
-                password: password, // In real app, this would be encrypted!
+                password: password,
                 registeredDate: new Date().toISOString()
             });
 
-            // Save to localStorage
             localStorage.setItem('storeUsers', JSON.stringify(users));
 
             showSuccess('Account created successfully! Redirecting to login...');
 
-            // Switch to login tab after 2 seconds
             setTimeout(() => {
                 document.getElementById('register-form').classList.remove('active');
                 document.getElementById('login-form').classList.add('active');
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
                 document.querySelectorAll('.tab-btn')[1].classList.remove('active');
                 
-                // Clear register form
                 document.getElementById('register-name').value = '';
                 document.getElementById('register-email').value = '';
                 document.getElementById('register-password').value = '';
@@ -352,26 +386,21 @@
             }, 2000);
         }
 
-        // Handle login
         function handleLogin(event) {
             event.preventDefault();
 
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
-            // Get users from localStorage
             const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
 
-            // Find user
             const user = users.find(u => u.email === email && u.password === password);
 
             if (user) {
-                // Save logged in user info
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 
                 showSuccess('Login successful! Redirecting...');
                 
-                // Redirect to main page after 1 second
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 1000);
@@ -380,11 +409,9 @@
             }
         }
 
-        // Check if user is already logged in
         window.onload = function() {
             const currentUser = localStorage.getItem('currentUser');
             if (currentUser) {
-                // User is already logged in, redirect to dashboard
                 window.location.href = 'dashboard.html';
             }
         };
