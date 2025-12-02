@@ -5,7 +5,14 @@
 const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 function checkSession() {
-    const currentUserJSON = localStorage.getItem('currentUser');
+    let currentUserJSON = null;
+    try {
+        currentUserJSON = localStorage.getItem('currentUser');
+    } catch (e) {
+        console.error('LocalStorage access denied:', e);
+        return; // Stop execution if storage is disabled (e.g., Safari Private)
+    }
+
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const isLoginPage = currentPage === 'index.html' || currentPage === 'reset-password.html' || currentPage === 'terms.html';
 
