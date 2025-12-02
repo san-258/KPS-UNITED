@@ -515,21 +515,47 @@
 
         function deleteStore(storeId) {
             if (confirm('Are you sure you want to delete this store? This action cannot be undone.')) {
+                // 1. Get current stores
                 let stores = JSON.parse(localStorage.getItem('userStores') || '[]');
-                const initialLength = stores.length;
-                stores = stores.filter(store => store.id.toString() !== storeId.toString());
 
-                if (stores.length === initialLength) {
-                    // Try to delete static store (simulation)
+                // 2. Find the store to delete
+                const storeToDelete = stores.find(store => store.id.toString() === storeId.toString());
+
+                // Handle static store or not found
+                if (!storeToDelete) {
                     if (storeId === '1000-1') {
                         alert("Cannot delete the demo static store.");
                         return;
                     }
+                    return; // Should not happen if ID is valid
                 }
 
+                const memberIdToDelete = storeToDelete.memberId;
+
+                // 3. Remove the store
+                stores = stores.filter(store => store.id.toString() !== storeId.toString());
                 localStorage.setItem('userStores', JSON.stringify(stores));
+
+                // 4. Check if user has any other stores left
+                const remainingStoresForMember = stores.filter(store => store.memberId === memberIdToDelete);
+
+                if (remainingStoresForMember.length === 0) {
+                    // 5. No stores left, delete the user account
+                    let users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+                    const initialUserCount = users.length;
+                    users = users.filter(user => user.memberId !== memberIdToDelete);
+
+                    if (users.length < initialUserCount) {
+                        localStorage.setItem('storeUsers', JSON.stringify(users));
+                        alert('Store deleted. Since this was the only store for this member, the user account has also been deleted.');
+                    } else {
+                        alert('Store deleted successfully.');
+                    }
+                } else {
+                    alert('Store deleted successfully.');
+                }
+
                 loadStores(); // Re-render table
-                alert('Store deleted successfully.');
             }
         }
     </script>

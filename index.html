@@ -454,12 +454,43 @@
                 return;
             }
 
+            // 1. Get/Init Member ID
+            let nextMemberId = parseInt(localStorage.getItem('nextMemberId') || '1001'); // Start at 1001
+
+            // 2. Create User Object
             users.push({
+                memberId: nextMemberId,
                 name: name,
                 email: email,
                 password: password,
                 registeredDate: new Date().toISOString()
             });
+
+            // 3. Create Initial Store
+            let stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            const newStore = {
+                id: `${nextMemberId}-1`,
+                memberId: nextMemberId,
+                name: name,
+                businessEmail: email,
+                // Placeholders for fields not in registration form
+                streetAddress: "Pending",
+                entityName: name,
+                city: "Pending",
+                state: "KY",
+                zip: "00000",
+                county: "Pending",
+                businessPhone: "Pending",
+                ein: "Pending",
+                businessType: "Retail",
+                brand: "Pending",
+                status: "Active"
+            };
+            stores.push(newStore);
+            localStorage.setItem('userStores', JSON.stringify(stores));
+
+            // 4. Increment Member ID
+            localStorage.setItem('nextMemberId', (nextMemberId + 1).toString());
 
             localStorage.setItem('storeUsers', JSON.stringify(users));
 

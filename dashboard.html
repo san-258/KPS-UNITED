@@ -145,7 +145,7 @@
             <div class="member-header">
                 <div class="avatar-placeholder">👤</div>
                 <div>
-                    <h2 class="text-kps-blue" style="margin:0;">Member ID: 1000</h2>
+                    <h2 class="text-kps-blue" style="margin:0;" id="member-id-display">Member ID: Loading...</h2>
                     <a href="profile.html" class="btn btn-sm mt-2"
                         style="display:inline-block; text-decoration: none;">Edit
                         Profile</a>
@@ -353,7 +353,8 @@
             }
 
             // Auto-increment ID logic
-            const memberId = 1000;
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            const memberId = currentUser ? currentUser.memberId : 1000; // Fallback to 1000 if issue
             let stores = JSON.parse(localStorage.getItem("userStores") || "[]");
 
             // Find max sequence number
@@ -401,8 +402,26 @@
             existingDynamic.forEach(el => el.remove());
 
             // Render dynamic stores
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            const currentMemberId = currentUser ? currentUser.memberId : 1000;
+
+            // Update Member ID Display
+            document.getElementById('member-id-display').textContent = `Member ID: ${currentMemberId}`;
+
             const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
-            stores.forEach(store => {
+
+            // Filter stores for current member (include static store for demo purposes if needed, or just member stores)
+            // For this requirement, we should probably show stores belonging to this member.
+            // However, to keep the "demo" feel, we might want to keep showing the static one? 
+            // Let's filter by memberId OR if it's the static one (optional, but good for demo).
+            // Actually, let's strictly filter by memberId to support the "multi-tenant" feel the user wants.
+            // BUT, if I filter strictly, the static store (1000-1) won't show for new users (1001).
+            // The user said "registering member means... one member id".
+            // So let's filter strictly.
+
+            const memberStores = stores.filter(store => store.memberId === currentMemberId || store.id === '1000-1'); // Keep static for demo
+
+            memberStores.forEach(store => {
                 const storeCard = document.createElement("div");
                 storeCard.className = "store-card dynamic-store";
                 storeCard.onclick = () => openStoreModal('view', store); // Attach click handler
