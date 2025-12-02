@@ -260,8 +260,6 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-save" onclick="saveStore()">Save</button>
-                <button class="btn-delete btn-danger-custom" onclick="deleteStore()"
-                    style="display:none;">Delete</button>
                 <button class="btn-cancel" onclick="closeAddStoreModal()">Cancel</button>
             </div>
         </div>
@@ -270,7 +268,7 @@
     <script>
         // Static Store Data (Example)
         const staticStoreData = {
-            id: 'static-1',
+            id: '1000-1',
             name: "Hampton's Service Center",
             streetAddress: "123 Main St", // Example data
             entityName: "Hampton Services LLC", // Example data
@@ -290,7 +288,6 @@
         const modal = document.getElementById("addStoreModal");
         const modalTitle = document.querySelector(".modal-header h2");
         const saveBtn = document.querySelector(".btn-save");
-        const deleteBtn = document.querySelector(".btn-delete");
         const form = document.getElementById("addStoreForm");
         const inputs = form.querySelectorAll("input, select");
 
@@ -298,18 +295,14 @@
             modal.style.display = "block";
 
             if (mode === 'view' && storeData) {
+                // Hide delete button for static store
+                if (storeData.id === '1000-1') {
+                    // Assuming a delete button exists and needs to be hidden
+                    // For now, we'll just proceed with populating fields
+                }
                 // View Mode
                 modalTitle.textContent = "Store Details";
                 saveBtn.style.display = "none";
-
-                // Hide delete button for static store
-                if (storeData.id === 'static-1') {
-                    deleteBtn.style.display = "none";
-                } else {
-                    deleteBtn.style.display = "block";
-                }
-
-                deleteBtn.dataset.storeId = storeData.id; // Store ID for deletion
 
                 // Populate fields
                 document.getElementById("storeName").value = storeData.name || '';
@@ -332,7 +325,6 @@
                 // Add Mode
                 modalTitle.textContent = "Business Information";
                 saveBtn.style.display = "block";
-                deleteBtn.style.display = "none";
                 form.reset();
 
                 // Enable inputs
@@ -361,12 +353,23 @@
             }
 
             // Auto-increment ID logic
-            let nextId = parseInt(localStorage.getItem("nextStoreId") || "1001");
-            localStorage.setItem("nextStoreId", (nextId + 1).toString());
+            const memberId = 1000;
+            let stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+
+            // Find max sequence number
+            let maxSeq = 1; // Start at 1 (for static store)
+            stores.forEach(store => {
+                if (store.id && store.id.toString().startsWith(memberId + '-')) {
+                    const seq = parseInt(store.id.split('-')[1]);
+                    if (seq > maxSeq) maxSeq = seq;
+                }
+            });
+
+            const newId = `${memberId}-${maxSeq + 1}`;
 
             const storeData = {
-                id: nextId,
-                memberId: 1000,
+                id: newId,
+                memberId: memberId,
                 name: document.getElementById("storeName").value,
                 streetAddress: document.getElementById("streetAddress").value,
                 entityName: document.getElementById("entityName").value,
@@ -382,37 +385,12 @@
                 status: "Active" // Default status
             };
 
-            let stores = JSON.parse(localStorage.getItem("userStores") || "[]");
             stores.push(storeData);
             localStorage.setItem("userStores", JSON.stringify(stores));
 
             renderStores();
             closeAddStoreModal();
             alert("Store added successfully!");
-        }
-
-        function deleteStore() {
-            const storeId = document.querySelector(".btn-delete").dataset.storeId;
-
-            if (!storeId) return;
-
-            if (confirm("Are you sure you want to delete this store? This action cannot be undone.")) {
-                let stores = JSON.parse(localStorage.getItem("userStores") || "[]");
-                const initialLength = stores.length;
-                stores = stores.filter(store => store.id.toString() !== storeId.toString());
-
-                if (stores.length === initialLength) {
-                    // Try to delete static store (simulation)
-                    if (storeId === 'static-1') {
-                        alert("Cannot delete the demo static store.");
-                        return;
-                    }
-                }
-
-                localStorage.setItem("userStores", JSON.stringify(stores));
-                renderStores();
-                closeAddStoreModal();
-            }
         }
 
         function renderStores() {
