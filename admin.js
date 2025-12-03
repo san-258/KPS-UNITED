@@ -1,10 +1,7 @@
 const ADMIN_PASSWORD = 'admin123';
 
 // Global error handler
-window.onerror = function (msg, url, line, col, error) {
-    alert('Global Error: ' + msg + '\nLine: ' + line);
-    return false;
-};
+// Global error handler removed for production
 
 // Self-healing: Clear storage if requested
 const urlParams = new URLSearchParams(window.location.search);
@@ -15,7 +12,7 @@ if (urlParams.get('force_reload') === 'true') {
 
 function handleAdminLogin(event) {
     try {
-        alert('Starting login...'); // Aggressive Alert 1
+        // alert('Starting login...'); // Removed
         console.log('handleAdminLogin called');
         event.preventDefault();
 
@@ -43,7 +40,7 @@ function handleAdminLogin(event) {
         errorDiv.innerHTML += 'Debug: Password length: ' + (password ? password.length : 0) + '<br>';
 
         if (password === ADMIN_PASSWORD) {
-            alert('Password check passed...'); // Aggressive Alert 2
+            // alert('Password check passed...'); // Removed
             errorDiv.innerHTML += 'Debug: Password correct. Loading dashboard...<br>';
 
             // Small delay to let user see the message
@@ -59,7 +56,7 @@ function handleAdminLogin(event) {
 
                     if (typeof loadAllData === 'function') {
                         loadAllData();
-                        alert('Data loaded!'); // Aggressive Alert 3
+                        // alert('Data loaded!'); // Removed
                     } else {
                         throw new Error('loadAllData function is missing!');
                     }
