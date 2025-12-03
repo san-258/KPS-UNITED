@@ -1100,30 +1100,52 @@
                     users = users.filter(user => user.memberId !== memberIdToDelete);
 
                     if (users.length < initialUserCount) {
-                        localStorage.setItem('storeUsers', JSON.stringify(users)); alert('Store
-        deleted.Since this was the only store for this member, the user account has also been deleted.'); } else {
+                        localStorage.setItem('storeUsers', JSON.stringify(users));
+                        alert('Store deleted. Since this was the only store for this member, the user account has also been deleted.');
+                    } else {
                         alert('Store deleted successfully.');
                     }
-                } else { alert('Store deleted successfully.'); } loadStores(); //
-                Re - render table
+                } else {
+                    alert('Store deleted successfully.');
+                }
+                loadStores(); // Re-render table
             }
-        } // --- VENDOR LOGIC --- function loadVendors() { const
-        vendors = JSON.parse(localStorage.getItem('adminVendors') || '[]'); const
-            tbody = document.getElementById('vendors-table-body'); if (vendors.length === 0) { // Initialize with default
-        vendors if empty const defaultVendors = [{
-                    id: 1, name: 'Pepsi', pricing: 'Call for pricing',
-                    contactName: 'John Doe', contactEmail: 'john@pepsi.com', contactPhone: '555-0101'
+        }
+
+        // --- VENDOR LOGIC ---
+        function loadVendors() {
+            const vendors = JSON.parse(localStorage.getItem('adminVendors') || '[]');
+            const tbody = document.getElementById('vendors-table-body');
+
+            if (vendors.length === 0) {
+                // Initialize with default vendors if empty
+                const defaultVendors = [{
+                    id: 1,
+                    name: 'Pepsi',
+                    pricing: 'Call for pricing',
+                    contactName: 'John Doe',
+                    contactEmail: 'john@pepsi.com',
+                    contactPhone: '555-0101'
                 }, {
-                    id: 2, name: 'Coke',
-                    pricing: 'Call for pricing', contactName: 'Jane Smith', contactEmail: 'jane@coke.com',
+                    id: 2,
+                    name: 'Coke',
+                    pricing: 'Call for pricing',
+                    contactName: 'Jane Smith',
+                    contactEmail: 'jane@coke.com',
                     contactPhone: '555-0102'
-                }]; // Only set defaults if we really want to seed data. For now let's just show empty
-        or defaults. // Let's seed if empty for demo purposes if (!localStorage.getItem('adminVendors')) {
-                    localStorage.setItem('adminVendors', JSON.stringify(defaultVendors)); loadVendors(); // Reload return; }
-                tbody.innerHTML = '<tr><td colspan="4" class="no-users">No vendors added yet</td></tr>'; return;
+                }];
+                // Only set defaults if we really want to seed data. For now let's just show empty
+                // Let's seed if empty for demo purposes
+                if (!localStorage.getItem('adminVendors')) {
+                    localStorage.setItem('adminVendors', JSON.stringify(defaultVendors));
+                    loadVendors(); // Reload
+                    return;
+                }
+                tbody.innerHTML = '<tr><td colspan="4" class="no-users">No vendors added yet</td></tr>';
+                return;
             }
-        tbody.innerHTML = vendors.map((vendor) => {
-            return `
+            tbody.innerHTML = vendors.map((vendor) => {
+                return `
         <tr>
             <td>${vendor.name}</td>
             <td>${vendor.pricing || 'N/A'}</td>
@@ -1140,7 +1162,7 @@
             </td>
         </tr>
         `;
-        }).join('');
+            }).join('');
         }
 
         function openVendorModal(vendorId = null) {
@@ -1715,27 +1737,7 @@
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
         }
-        const password = document.getElementById('admin-password').value;
 
-        if (password === ADMIN_PASSWORD_FIX) {
-            console.log("Password correct!");
-            document.getElementById('admin-login').style.display = 'none';
-            document.getElementById('admin-dashboard').classList.add('active');
-            localStorage.setItem('adminLoggedIn', 'true');
-            if (typeof loadAllData === 'function') {
-                loadAllData();
-            } else {
-                console.error("loadAllData is not defined!");
-            }
-        } else {
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.textContent = 'Incorrect password!';
-            errorDiv.style.display = 'block';
-        }
-        }
-
-        // Attach to form
-        document.querySelector('#admin-login form').setAttribute('onsubmit', 'handleAdminLoginFix(event)');
     </script>
 </body>
 
