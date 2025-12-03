@@ -256,6 +256,7 @@
                 flex-direction: column;
                 text-align: center;
             }
+
         }
     </style>
 </head>
@@ -285,63 +286,463 @@
         </p>
     </div>
 
+    <!-- ADD PROMOTION MODAL -->
+    <div id="addPromoModal" class="modal"
+        style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+        <div class="modal-content"
+            style="background-color:#fefefe; margin:10% auto; padding:20px; border:1px solid #888; width:50%; border-radius:10px;">
+            <div class="modal-header"
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h2>Add New Promotion</h2>
+                <span onclick="document.getElementById('addPromoModal').style.display='none'"
+                    style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addPromoForm" onsubmit="savePromo(event)">
+                    <div class="form-group">
+                        <label>Promotion Title</label>
+                        <input type="text" id="promoTitle" required
+                            style="width:100%; padding:10px; margin-bottom:10px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="promoDesc" rows="3"
+                            style="width:100%; padding:10px; margin-bottom:10px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Linked Vendor</label>
+                        <select id="promoVendor" required style="width:100%; padding:10px; margin-bottom:10px;">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Image (Optional)</label>
+                        <input type="file" id="promoImage" accept="image/*" onchange="handlePromoImage(this)">
+                        <input type="hidden" id="promoImageData">
+                        <div id="promoImagePreview" style="margin-top:10px; max-width:100px;"></div>
+                    </div>
+                    <button type="submit" class="btn" style="width:100%;">Create Promotion</button>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="admin-container" id="admin-dashboard">
         <div class="admin-header">
             <div class="admin-header-left">
                 <img src="logo.png" alt="KPS United" class="admin-logo">
-                <h1>🏪 Registered Stores</h1>
+                <h1>Admin Dashboard</h1>
             </div>
             <button class="btn-danger" onclick="handleLogout()">Logout</button>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="total-stores">0</div>
-                <div class="stat-label">Total Stores</div>
+        <div class="tab-nav">
+            <button class="active" onclick="switchTab('stores')">🏪 Registered Stores</button>
+            <button onclick="switchTab('vendors')">🏢 Vendors</button>
+            <button onclick="switchTab('queries')">💬 Store Queries</button>
+            <button onclick="switchTab('vendor-comm')">📞 Vendor Comm</button>
+            <button onclick="switchTab('documents')">📂 Documents</button>
+            <button onclick="switchTab('terms')">📜 Terms</button>
+            <button onclick="switchTab('promotions')">🏷️ Promotions</button>
+            <button onclick="switchTab('reporting')">📊 Reporting</button>
+        </div>
+
+        <!-- STORES TAB -->
+        <div id="tab-stores" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-stores">0</div>
+                    <div class="stat-label">Total Stores</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number" id="active-stores">0</div>
+                    <div class="stat-label">Active Stores</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number" id="retail-stores">0</div>
+                    <div class="stat-label">Retail Stores</div>
+                </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-number" id="active-stores">0</div>
-                <div class="stat-label">Active Stores</div>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="downloadCSV()">📥 Download CSV</button>
+                <button class="btn btn-secondary" onclick="downloadJSON()">📥 Download JSON</button>
+                <button class="btn btn-secondary" onclick="copyEmails()">📧 Copy Store Emails</button>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-number" id="retail-stores">0</div>
-                <div class="stat-label">Retail Stores</div>
+            <input type="text" class="search-box" id="search-box"
+                placeholder="🔍 Search by store name, phone or email..." onkeyup="filterStores()">
+
+            <div style="overflow-x: auto;">
+                <table class="users-table" id="users-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Member ID</th>
+                            <th>Store ID</th>
+                            <th>Store Name</th>
+                            <th>Store Phone Number</th>
+                            <th>Store Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr>
+                            <td colspan="7" class="no-users">No stores registered yet</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <div class="action-buttons">
-            <button class="btn btn-secondary" onclick="downloadCSV()">📥 Download CSV</button>
-            <button class="btn btn-secondary" onclick="downloadJSON()">📥 Download JSON</button>
-            <button class="btn btn-secondary" onclick="copyEmails()">📧 Copy Store Emails</button>
+        <!-- VENDORS TAB -->
+        <div id="tab-vendors" class="tab-content">
+            <div class="admin-header" style="border-bottom: none; margin-bottom: 1rem;">
+                <h2>Manage Vendors</h2>
+                <button class="btn" style="width: auto;" onclick="openVendorModal()">+ Add New Vendor</button>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Vendor Name</th>
+                            <th>Pricing Info / URL</th>
+                            <th>Contact Info</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vendors-table-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <input type="text" class="search-box" id="search-box" placeholder="🔍 Search by store name, phone or email..."
-            onkeyup="filterStores()">
+        <!-- QUERIES TAB -->
+        <div id="tab-queries" class="tab-content">
+            <h2>Store Queries</h2>
+            <div style="overflow-x: auto;">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Store</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="queries-table-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-        <div style="overflow-x: auto;">
-            <table class="users-table" id="users-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Member ID</th>
-                        <th>Store ID</th>
-                        <th>Store Name</th>
-                        <th>Store Phone Number</th>
-                        <th>Store Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="users-table-body">
-                    <tr>
-                        <td colspan="7" class="no-users">No stores registered yet</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- VENDOR COMM TAB -->
+        <div id="tab-vendor-comm" class="tab-content">
+            <div class="admin-header" style="border-bottom: none; margin-bottom: 1rem;">
+                <h2>Vendor Communication Log</h2>
+                <button class="btn" style="width: auto;" onclick="openCommModal()">+ Log Communication</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Vendor</th>
+                            <th>Type</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comm-table-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- DOCUMENTS TAB -->
+        <div id="tab-documents" class="tab-content">
+            <div class="admin-header" style="border-bottom: none; margin-bottom: 1rem;">
+                <h2>Admin Documents</h2>
+                <button class="btn" style="width: auto;" onclick="document.getElementById('doc-upload').click()">+
+                    Upload Document</button>
+                <input type="file" id="doc-upload" style="display: none;" onchange="handleDocUpload(this)">
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Document Name</th>
+                            <th>Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="docs-table-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TERMS TAB -->
+        <div id="tab-terms" class="tab-content">
+            <div class="admin-header" style="border-bottom: none; margin-bottom: 1rem;">
+                <h2>Manage Terms & Conditions</h2>
+                <button class="btn" style="width: auto;" onclick="publishTerms()">Publish New Version</button>
+            </div>
+            <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <div class="form-group">
+                    <label>Current Version: <span id="terms-version">Loading...</span></label>
+                    <label>Last Updated: <span id="terms-date">Loading...</span></label>
+                </div>
+                <div class="form-group">
+                    <label>Terms Content</label>
+                    <textarea id="terms-content" rows="20"
+                        style="width:100%; padding:15px; border-radius:5px; border:1px solid #ccc; font-family: monospace;"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROMOTIONS TAB -->
+        <div id="tab-promotions" class="tab-content">
+            <div class="admin-header" style="border-bottom: none; margin-bottom: 1rem;">
+                <h2>Manage Promotions</h2>
+                <button class="btn" style="width: auto;" onclick="openAddPromoModal()">+ Add Promotion</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Vendor</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="promos-table-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- REPORTING TAB -->
+        <div id="tab-reporting" class="tab-content">
+            <div class="report-filters">
+                <div>
+                    <label>Filter by Town</label>
+                    <select id="report-town">
+                        <option value="">All Towns</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Filter by Vendors</label>
+                    <div class="multi-select-container" id="report-vendors">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div style="display: flex; align-items: flex-end;">
+                    <button class="btn" onclick="generateReport()">Generate Report</button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="downloadReportCSV()">📥 Download Report CSV</button>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Store Name</th>
+                            <th>City</th>
+                            <th>Vendors</th>
+                            <th>Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody id="report-table-body">
+                        <tr>
+                            <td colspan="5" class="no-users">Select filters and click Generate Report</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Add Vendor Modal -->
+    <div id="addVendorModal" class="modal"
+        style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+        <div class="modal-content"
+            style="background-color:#fefefe; margin:15% auto; padding:20px; border:1px solid #888; width:50%; border-radius:10px;">
+            <div class="modal-header"
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h2 id="vendorModalTitle">Add New Vendor</h2>
+                <span onclick="closeVendorModal()"
+                    style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addVendorForm" onsubmit="saveVendor(event)">
+                    <input type="hidden" id="vendorId">
+                    <div class="form-group">
+                        <label>Vendor Name *</label>
+                        <input type="text" id="vendorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pricing Info / URL</label>
+                        <input type="text" id="vendorPricing"
+                            placeholder="e.g., https://pricing.com or 'Call for price'">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Name</label>
+                        <input type="text" id="vendorContactName">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Email</label>
+                        <input type="email" id="vendorContactEmail">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Phone</label>
+                        <input type="tel" id="vendorContactPhone">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn">Save Vendor</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
+    <!-- Reply Query Modal -->
+    <div id="replyModal" class="modal"
+        style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+        <div class="modal-content"
+            style="background-color:#fefefe; margin:15% auto; padding:20px; border:1px solid #888; width:50%; border-radius:10px;">
+            <div class="modal-header"
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h2>Reply to Query</h2>
+                <span onclick="closeReplyModal()"
+                    style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="query-details" style="margin-bottom:1rem; color:#666;"></p>
+                <form id="replyForm" onsubmit="sendReply(event)">
+                    <input type="hidden" id="replyQueryId">
+                    <div class="form-group">
+                        <label>Your Reply</label>
+                        <textarea id="replyMessage" rows="5"
+                            style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;"
+                            required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn">Send Reply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Communication Modal -->
+    <div id="commModal" class="modal"
+        style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+        <div class="modal-content"
+            style="background-color:#fefefe; margin:15% auto; padding:20px; border:1px solid #888; width:50%; border-radius:10px;">
+            <div class="modal-header"
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h2>Log Vendor Communication</h2>
+                <span onclick="closeCommModal()"
+                    style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="commForm" onsubmit="saveComm(event)">
+                    <div class="form-group">
+                        <label>Select Vendor</label>
+                        <select id="commVendorId" required
+                            style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Communication Type</label>
+                        <select id="commType" required
+                            style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;">
+                            <option value="Email">Email</option>
+                            <option value="Phone">Phone</option>
+                            <option value="Meeting">Meeting</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes / Message</label>
+                        <textarea id="commMessage" rows="5"
+                            style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;"
+                            required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn">Log Communication</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Store Modal -->
+    <div id="editStoreModal" class="modal"
+        style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+        <div class="modal-content"
+            style="background-color:#fefefe; margin:10% auto; padding:20px; border:1px solid #888; width:60%; border-radius:10px;">
+            <div class="modal-header"
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h2>Edit Store Details</h2>
+                <span onclick="closeEditStoreModal()"
+                    style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editStoreForm" onsubmit="saveStoreChanges(event)">
+                    <input type="hidden" id="editStoreId">
+
+                    <div class="form-group">
+                        <label>Store Name</label>
+                        <input type="text" id="editStoreName" disabled style="background:#eee;">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Store Status</label>
+                        <select id="editStoreStatus"
+                            style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;">
+                            <option value="Pending">Pending Approval</option>
+                            <option value="Active">Active</option>
+                            <option value="Suspended">Suspended</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Member ID (Owner)</label>
+                        <input type="text" id="editMemberId" required>
+                        <small style="color:#666;">Change this to re-assign the store to a different owner.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Allowed Vendors</label>
+                        <div id="editStoreVendors"
+                            style="display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:10px; margin-top:10px;">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <script>
         const ADMIN_PASSWORD = 'admin123';
 
@@ -353,7 +754,7 @@
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-dashboard').classList.add('active');
                 localStorage.setItem('adminLoggedIn', 'true');
-                loadStores();
+                loadAllData();
             } else {
                 const errorDiv = document.getElementById('error-message');
                 errorDiv.textContent = 'Incorrect password!';
@@ -365,15 +766,44 @@
             if (localStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-dashboard').classList.add('active');
-                loadStores();
+                loadAllData();
             }
         };
+
+        function loadAllData() {
+            loadStores();
+            loadVendors();
+            loadQueries();
+            loadComm();
+            // loadDocs(); // To be implemented
+            loadReportingFilters();
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-nav button').forEach(el => el.classList.remove('active'));
+
+            // Show selected tab
+            const tab = document.getElementById(`tab-${tabName}`);
+            if (tab) tab.classList.add('active');
+
+            // Update button style
+            // Simple logic to find the button index based on tabName
+            const buttons = document.querySelectorAll('.tab-nav button');
+            const tabNames = ['stores', 'vendors', 'queries', 'vendor-comm', 'documents', 'terms', 'promotions', 'reporting'];
+            const index = tabNames.indexOf(tabName);
+            if (index >= 0 && buttons[index]) {
+                buttons[index].classList.add('active');
+            }
+        }
 
         function handleLogout() {
             localStorage.removeItem('adminLoggedIn');
             window.location.reload();
         }
 
+        // --- STORES LOGIC ---
         function loadStores() {
             // Self-healing: Fix Member IDs in Admin View
             let stores = JSON.parse(localStorage.getItem('userStores') || '[]');
@@ -403,7 +833,9 @@
             const tbody = document.getElementById('users-table-body');
 
             if (stores.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="no-users">No stores registered yet</td></tr>';
+                tbody.innerHTML = '<tr>
+                    < td colspan = "8" class="no-users" > No stores registered yet</td >
+    </tr > ';
                 return;
             }
 
@@ -411,21 +843,99 @@
             document.getElementById('active-stores').textContent = stores.filter(s => s.status === 'Active').length;
             document.getElementById('retail-stores').textContent = stores.filter(s => s.businessType === 'Retail').length;
 
+            // Update Table Header if needed (we need to add Status column)
+            const thead = document.querySelector('#users-table thead tr');
+            if (thead.children.length === 7) {
+                const statusTh = document.createElement('th');
+                statusTh.textContent = 'Status';
+                thead.insertBefore(statusTh, thead.children[6]); // Insert before Actions
+            }
+
             tbody.innerHTML = stores.map((store, index) => {
-                return `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${store.memberId || 'N/A'}</td>
-                        <td>${store.id || 'N/A'}</td>
-                        <td>${store.name || 'N/A'}</td>
-                        <td>${store.businessPhone || 'N/A'}</td>
-                        <td>${store.businessEmail || 'N/A'}</td>
-                        <td>
-                            <button onclick="deleteStore('${store.id}')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Delete</button>
-                        </td>
-                    </tr>
-                `;
+                const statusColor = store.status === 'Active' ? 'green' : (store.status === 'Suspended' ? 'red' : 'orange');
+                const statusLabel = store.status || 'Pending';
+
+                return ` <tr>
+        <td>${index + 1}</td>
+        <td>${store.memberId || 'N/A'}</td>
+        <td>${store.id || 'N/A'}</td>
+        <td>${store.name || 'N/A'}</td>
+        <td>${store.businessPhone || 'N/A'}</td>
+        <td>${store.businessEmail || 'N/A'}</td>
+        <td style="color:${statusColor}; font-weight:bold;">${statusLabel}</td>
+        <td>
+            <button onclick="openEditStoreModal('${store.id}')"
+                style="background: var(--kps-yellow); color: black; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-right:5px;">Edit</button>
+            <button onclick="deleteStore('${store.id}')"
+                style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Delete</button>
+        </td>
+    </tr> `;
             }).join('');
+        }
+
+        function openEditStoreModal(storeId) {
+            const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            const store = stores.find(s => s.id.toString() === storeId.toString());
+
+            if (!store) return;
+
+            document.getElementById('editStoreModal').style.display = 'block';
+            document.getElementById('editStoreId').value = store.id;
+            document.getElementById('editStoreName').value = store.name;
+            document.getElementById('editStoreStatus').value = store.status || 'Pending';
+            document.getElementById('editMemberId').value = store.memberId;
+
+            // Populate Vendors
+            const allVendors = JSON.parse(localStorage.getItem('adminVendors') || '[]');
+            const container = document.getElementById('editStoreVendors');
+            const storeVendors = store.vendors || [];
+
+            if (allVendors.length === 0) {
+                container.innerHTML = '<p>No vendors defined in system.</p>';
+            } else {
+                container.innerHTML = allVendors.map(v => `
+    <label style="display:flex; align-items:center; gap:5px; font-weight:normal;">
+        <input type="checkbox" value="${v.name}" ${storeVendors.includes(v.name) ? 'checked' : ''}>
+        ${v.name}
+    </label>
+    `).join('');
+            }
+        }
+
+        function closeEditStoreModal() {
+            document.getElementById('editStoreModal').style.display = 'none';
+        }
+
+        function saveStoreChanges(event) {
+            event.preventDefault();
+            const storeId = document.getElementById('editStoreId').value;
+            const newStatus = document.getElementById('editStoreStatus').value;
+            const newMemberId = document.getElementById('editMemberId').value;
+
+            // Get selected vendors
+            const checkboxes = document.querySelectorAll('#editStoreVendors input[type="checkbox"]:checked');
+            const selectedVendors = Array.from(checkboxes).map(cb => cb.value);
+
+            let stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            const index = stores.findIndex(s => s.id.toString() === storeId.toString());
+
+            if (index !== -1) {
+                // Update store
+                stores[index].status = newStatus;
+                stores[index].memberId = newMemberId;
+                stores[index].vendors = selectedVendors;
+
+                localStorage.setItem('userStores', JSON.stringify(stores));
+
+                // Also update user record if member ID changed?
+                // Complex: If member ID changes, we might need to move it to another user bucket or create a new user?
+                // For now, let's assume the admin knows what they are doing re-assigning IDs.
+                // Ideally we should check if the new Member ID exists in storeUsers.
+
+                alert('Store updated successfully!');
+                closeEditStoreModal();
+                loadStores();
+            }
         }
 
         function filterStores() {
@@ -433,50 +943,60 @@
             const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
             const tbody = document.getElementById('users-table-body');
 
-            const filteredStores = stores.filter(store =>
-                (store.name && store.name.toLowerCase().includes(searchTerm)) ||
-                (store.businessEmail && store.businessEmail.toLowerCase().includes(searchTerm)) ||
-                (store.businessPhone && store.businessPhone.includes(searchTerm))
-            );
+            const filteredStores = stores.filter(store => (store.name && store.name.toLowerCase().includes(searchTerm)) ||
+                (store.businessEmail && store.businessEmail.toLowerCase().includes(searchTerm)) || (store.businessPhone &&
+                    store.businessPhone.includes(searchTerm)));
 
             if (filteredStores.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="no-users">No stores match your search</td></tr>';
+                tbody.innerHTML = '<tr>
+                    < td colspan = "8" class="no-users" > No stores match your search</td >
+    </tr > ';
                 return;
             }
 
             tbody.innerHTML = filteredStores.map((store, index) => {
-                return `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${store.memberId || 'N/A'}</td>
-                        <td>${store.id || 'N/A'}</td>
-                        <td>${store.name || 'N/A'}</td>
-                        <td>${store.businessPhone || 'N/A'}</td>
-                        <td>${store.businessEmail || 'N/A'}</td>
-                        <td>
-                            <button onclick="deleteStore('${store.id}')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Delete</button>
-                        </td>
-                    </tr>
-                `;
+                const statusColor = store.status === 'Active' ? 'green' : (store.status === 'Suspended' ? 'red' : 'orange');
+                const statusLabel = store.status || 'Pending';
+                return ` <tr>
+        <td>${index + 1}</td>
+        <td>${store.memberId || 'N/A'}</td>
+        <td>${store.id || 'N/A'}</td>
+        <td>${store.name || 'N/A'}</td>
+        <td>${store.businessPhone || 'N/A'}</td>
+        <td>${store.businessEmail || 'N/A'}</td>
+        <td style="color:${statusColor}; font-weight:bold;">${statusLabel}</td>
+        <td>
+            <button onclick="openEditStoreModal('${store.id}')"
+                style="background: var(--kps-yellow); color: black; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-right:5px;">Edit</button>
+            <button onclick="deleteStore('${store.id}')"
+                style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Delete</button>
+        </td>
+    </tr> `;
             }).join('');
         }
 
         function downloadCSV() {
             const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+
             if (stores.length === 0) {
                 alert('No stores to download!');
                 return;
             }
 
-            let csv = 'Member ID,Store ID,Store Name,Store Phone,Store Email\n';
+            let csv = 'Member ID,Store ID,Store Name,Status,Store Phone,Store Email\n';
+
             stores.forEach(store => {
-                csv += `"${store.memberId || ''}","${store.id || ''}","${store.name || ''}","${store.businessPhone || ''}","${store.businessEmail || ''}"\n`;
+                csv += `"${store.memberId || ''}", "${store.id || ''}", "${store.name || ''}", "${store.status || 'Pending'}",
+    "${store.businessPhone || ''}", "${store.businessEmail || ''}" \n`;
             });
 
-            const blob = new Blob([csv], { type: 'text/csv' });
+            const blob = new Blob([csv], {
+                type: 'text/csv'
+            });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
+
             a.download = `kps-united-stores-${new Date().toISOString().split('T')[0]}.csv`;
             document.body.appendChild(a);
             a.click();
@@ -488,6 +1008,7 @@
 
         function downloadJSON() {
             const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+
             if (stores.length === 0) {
                 alert('No stores to download!');
                 return;
@@ -497,15 +1018,20 @@
                 memberId: s.memberId,
                 storeId: s.id,
                 storeName: s.name,
+                status: s.status || 'Pending',
                 phone: s.businessPhone,
                 email: s.businessEmail
             }));
 
             const json = JSON.stringify(sanitizedStores, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
+
+            const blob = new Blob([json], {
+                type: 'application/json'
+            });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
+
             a.download = `kps-united-stores-${new Date().toISOString().split('T')[0]}.json`;
             document.body.appendChild(a);
             a.click();
@@ -517,6 +1043,7 @@
 
         function copyEmails() {
             const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+
             if (stores.length === 0) {
                 alert('No stores to copy!');
                 return;
@@ -525,7 +1052,8 @@
             const emails = stores.map(s => s.businessEmail).filter(e => e).join(', ');
 
             navigator.clipboard.writeText(emails).then(() => {
-                alert(`${stores.length} email addresses copied to clipboard!\n\nYou can now paste them into your email client.`);
+                alert(`${stores.length} email addresses copied to clipboard !\n\nYou can now paste them into your email client.`);
+
             }).catch(() => {
                 const textarea = document.createElement('textarea');
                 textarea.value = emails;
@@ -533,7 +1061,8 @@
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                alert(`${stores.length} email addresses copied to clipboard!`);
+
+                alert(`${stores.length} email addresses copied to clipboard !`);
             });
         }
 
@@ -551,6 +1080,7 @@
                         alert("Cannot delete the demo static store.");
                         return;
                     }
+
                     return; // Should not happen if ID is valid
                 }
 
@@ -570,17 +1100,627 @@
                     users = users.filter(user => user.memberId !== memberIdToDelete);
 
                     if (users.length < initialUserCount) {
-                        localStorage.setItem('storeUsers', JSON.stringify(users));
-                        alert('Store deleted. Since this was the only store for this member, the user account has also been deleted.');
-                    } else {
+                        localStorage.setItem('storeUsers', JSON.stringify(users)); alert('Store
+        deleted.Since this was the only store for this member, the user account has also been deleted.'); } else {
                         alert('Store deleted successfully.');
                     }
-                } else {
-                    alert('Store deleted successfully.');
+                } else { alert('Store deleted successfully.'); } loadStores(); //
+                Re - render table
+            }
+        } // --- VENDOR LOGIC --- function loadVendors() { const
+        vendors = JSON.parse(localStorage.getItem('adminVendors') || '[]'); const
+            tbody = document.getElementById('vendors-table-body'); if (vendors.length === 0) { // Initialize with default
+        vendors if empty const defaultVendors = [{
+                    id: 1, name: 'Pepsi', pricing: 'Call for pricing',
+                    contactName: 'John Doe', contactEmail: 'john@pepsi.com', contactPhone: '555-0101'
+                }, {
+                    id: 2, name: 'Coke',
+                    pricing: 'Call for pricing', contactName: 'Jane Smith', contactEmail: 'jane@coke.com',
+                    contactPhone: '555-0102'
+                }]; // Only set defaults if we really want to seed data. For now let's just show empty
+        or defaults. // Let's seed if empty for demo purposes if (!localStorage.getItem('adminVendors')) {
+                    localStorage.setItem('adminVendors', JSON.stringify(defaultVendors)); loadVendors(); // Reload return; }
+                tbody.innerHTML = '<tr><td colspan="4" class="no-users">No vendors added yet</td></tr>'; return;
+            }
+        tbody.innerHTML = vendors.map((vendor) => {
+            return `
+        <tr>
+            <td>${vendor.name}</td>
+            <td>${vendor.pricing || 'N/A'}</td>
+            <td>
+                ${vendor.contactName || ''}<br>
+                <small>${vendor.contactEmail || ''}</small><br>
+                <small>${vendor.contactPhone || ''}</small>
+            </td>
+            <td>
+                <button onclick="editVendor(${vendor.id})"
+                    style="background: var(--kps-yellow); color: black; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-right:5px;">Edit</button>
+                <button onclick="deleteVendor(${vendor.id})"
+                    style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Delete</button>
+            </td>
+        </tr>
+        `;
+        }).join('');
+        }
+
+        function openVendorModal(vendorId = null) {
+            const modal = document.getElementById('addVendorModal');
+            const title = document.getElementById('vendorModalTitle');
+            const form = document.getElementById('addVendorForm');
+
+            modal.style.display = 'block';
+
+            if (vendorId) {
+                // Edit Mode
+                title.textContent = 'Edit Vendor';
+                const vendors = JSON.parse(localStorage.getItem('adminVendors') || '[]');
+                const vendor = vendors.find(v => v.id === vendorId);
+                if (vendor) {
+                    document.getElementById('vendorId').value = vendor.id;
+                    document.getElementById('vendorName').value = vendor.name;
+                    document.getElementById('vendorPricing').value = vendor.pricing || '';
+                    document.getElementById('vendorContactName').value = vendor.contactName || '';
+                    document.getElementById('vendorContactEmail').value = vendor.contactEmail || '';
+                    document.getElementById('vendorContactPhone').value = vendor.contactPhone || '';
+                }
+            } else {
+                // Add Mode
+                title.textContent = 'Add New Vendor';
+                form.reset();
+                document.getElementById('vendorId').value = '';
+            }
+        }
+
+        function closeVendorModal() {
+            document.getElementById('addVendorModal').style.display = 'none';
+        }
+
+        function saveVendor(event) {
+            event.preventDefault();
+            const id = document.getElementById('vendorId').value;
+            const name = document.getElementById('vendorName').value;
+            const pricing = document.getElementById('vendorPricing').value;
+            const contactName = document.getElementById('vendorContactName').value;
+            const contactEmail = document.getElementById('vendorContactEmail').value;
+            const contactPhone = document.getElementById('vendorContactPhone').value;
+
+            let vendors = JSON.parse(localStorage.getItem('adminVendors') || '[]');
+
+            if (id) {
+                // Update
+                const index = vendors.findIndex(v => v.id == id);
+                if (index !== -1) {
+                    vendors[index] = { ...vendors[index], name, pricing, contactName, contactEmail, contactPhone };
+                }
+            } else {
+                // Create
+                const newId = Date.now(); // Simple ID generation
+                vendors.push({ id: newId, name, pricing, contactName, contactEmail, contactPhone });
+            }
+
+            localStorage.setItem('adminVendors', JSON.stringify(vendors));
+            closeVendorModal();
+            loadVendors();
+        }
+
+        function editVendor(id) {
+            openVendorModal(id);
+        }
+
+        function deleteVendor(id) {
+            if (confirm('Are you sure you want to delete this vendor?')) {
+                let vendors = JSON.parse(localStorage.getItem('adminVendors') || '[]');
+                vendors = vendors.filter(v => v.id !== id);
+                localStorage.setItem('adminVendors', JSON.stringify(vendors));
+                loadVendors();
+            }
+        }
+
+        // --- QUERIES LOGIC ---
+        function loadQueries() {
+            const queries = JSON.parse(localStorage.getItem('storeQueries') || '[]');
+            const tbody = document.getElementById('queries-table-body');
+
+            if (queries.length === 0) {
+                tbody.innerHTML = '<tr>
+                    < td colspan = "5" class="no-users" > No queries submitted yet</td >
+        </tr > ';
+                return;
+            }
+
+            // Sort by date desc
+            queries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            tbody.innerHTML = queries.map((query) => {
+                const statusColor = query.status === 'Replied' ? 'green' : '#dc3545';
+                return `
+        <tr>
+            <td>${new Date(query.date).toLocaleDateString()}</td>
+            <td>${query.storeName || 'Unknown Store'}</td>
+            <td>${query.subject}</td>
+            <td style="color:${statusColor}; font-weight:bold;">${query.status}</td>
+            <td>
+                <button onclick="openReplyModal(${query.id})"
+                    style="background: var(--kps-navy); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                    ${query.status === 'Replied' ? 'View/Edit Reply' : 'Reply'}
+                </button>
+            </td>
+        </tr>
+        `;
+            }).join('');
+        }
+
+        function openReplyModal(queryId) {
+            const queries = JSON.parse(localStorage.getItem('storeQueries') || '[]');
+            const query = queries.find(q => q.id === queryId);
+
+            if (!query) return;
+
+            document.getElementById('replyModal').style.display = 'block';
+            document.getElementById('replyQueryId').value = queryId;
+            document.getElementById('query-details').innerHTML = `
+        <strong>From:</strong> ${query.storeName}<br>
+        <strong>Subject:</strong> ${query.subject}<br>
+        <strong>Message:</strong> ${query.message}
+        `;
+            document.getElementById('replyMessage').value = query.reply || '';
+        }
+
+        function closeReplyModal() {
+            document.getElementById('replyModal').style.display = 'none';
+        }
+
+        function sendReply(event) {
+            event.preventDefault();
+            const queryId = parseInt(document.getElementById('replyQueryId').value);
+            const replyMsg = document.getElementById('replyMessage').value;
+
+            let queries = JSON.parse(localStorage.getItem('storeQueries') || '[]');
+            const index = queries.findIndex(q => q.id === queryId);
+
+            if (index !== -1) {
+                queries[index].reply = replyMsg;
+                queries[index].status = 'Replied';
+                queries[index].replyDate = new Date().toISOString();
+                localStorage.setItem('storeQueries', JSON.stringify(queries));
+
+                alert('Reply sent successfully!');
+                closeReplyModal();
+                loadQueries();
+            }
+        }
+
+        // --- VENDOR COMM LOGIC ---
+        function loadComm() {
+            const comms = JSON.parse(localStorage.getItem('vendorComm') || '[]');
+            const tbody = document.getElementById('comm-table-body');
+
+            if (comms.length === 0) {
+                tbody.innerHTML = '<tr>
+                    < td colspan = "4" class="no-users" > No communications logged yet</td >
+        </tr > ';
+                return;
+            }
+
+            // Sort by date desc
+            comms.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            tbody.innerHTML = comms.map((comm) => {
+                return `
+        <tr>
+            <td>${new Date(comm.date).toLocaleDateString()}</td>
+            <td>${comm.vendorName}</td>
+            <td>${comm.type}</td>
+            <td>${comm.message}</td>
+        </tr>
+        `;
+            }).join('');
+        }
+
+        function openCommModal() {
+            const modal = document.getElementById('commModal');
+            const vendorSelect = document.getElementById('commVendorId');
+
+            // Populate vendors
+            const vendors = JSON.parse(localStorage.getItem('adminVendors') || '[]');
+            if (vendors.length === 0) {
+                alert("Please add vendors first!");
+                return;
+            }
+
+            vendorSelect.innerHTML = vendors.map(v => `<option value="${v.id}">${v.name}</option>`).join('');
+
+            document.getElementById('commForm').reset();
+            modal.style.display = 'block';
+        }
+
+        function closeCommModal() {
+            document.getElementById('commModal').style.display = 'none';
+        }
+
+        function saveComm(event) {
+            event.preventDefault();
+            const vendorId = document.getElementById('commVendorId').value;
+            const type = document.getElementById('commType').value;
+            const message = document.getElementById('commMessage').value;
+
+            const vendors = JSON.parse(localStorage.getItem('adminVendors') || '[]');
+            const vendor = vendors.find(v => v.id == vendorId);
+            const vendorName = vendor ? vendor.name : 'Unknown Vendor';
+
+            const newComm = {
+                id: Date.now(),
+                vendorId: vendorId,
+                vendorName: vendorName,
+                type: type,
+                message: message,
+                date: new Date().toISOString()
+            };
+
+            let comms = JSON.parse(localStorage.getItem('vendorComm') || '[]');
+            comms.push(newComm);
+            localStorage.setItem('vendorComm', JSON.stringify(comms));
+
+            alert('Communication logged!');
+            closeCommModal();
+            loadComm();
+        }
+
+        // --- DOCUMENTS LOGIC ---
+        function loadDocs() {
+            const docs = JSON.parse(localStorage.getItem('adminDocs') || '[]');
+            const tbody = document.getElementById('docs-table-body');
+
+            if (docs.length === 0) {
+                tbody.innerHTML = '<tr>
+                    < td colspan = "4" class="no-users" > No documents uploaded yet</td >
+        </tr > ';
+                return;
+            }
+
+            // Sort by date desc
+            docs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            tbody.innerHTML = docs.map((doc) => {
+                return `
+        <tr>
+            <td>${new Date(doc.date).toLocaleDateString()}</td>
+            <td>${doc.name}</td>
+            <td>${doc.type}</td>
+            <td>
+                <button onclick="downloadDoc(${doc.id})"
+                    style="background: var(--kps-green); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-right:5px;">Download</button>
+                <button onclick="deleteDoc(${doc.id})"
+                    style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Delete</button>
+            </td>
+        </tr>
+        `;
+            }).join('');
+        }
+
+        function handleDocUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+
+                // Limit size to 2MB to avoid localStorage quota issues
+                if (file.size > 2 * 1024 * 1024) {
+                    alert("File is too large! Please upload files smaller than 2MB.");
+                    return;
                 }
 
-                loadStores(); // Re-render table
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const base64Data = e.target.result;
+
+                    const newDoc = {
+                        id: Date.now(),
+                        name: file.name,
+                        type: file.type,
+                        data: base64Data,
+                        date: new Date().toISOString()
+                    };
+
+                    let docs = JSON.parse(localStorage.getItem('adminDocs') || '[]');
+                    docs.push(newDoc);
+
+                    try {
+                        localStorage.setItem('adminDocs', JSON.stringify(docs));
+                        alert("Document uploaded successfully!");
+                        loadDocs();
+                    } catch (err) {
+                        alert("Storage quota exceeded! Cannot save this file. Please delete old files or upload smaller ones.");
+                        console.error(err);
+                    }
+                };
+                reader.readAsDataURL(file);
             }
+        }
+
+        function deleteDoc(id) {
+            if (confirm('Are you sure you want to delete this document?')) {
+                let docs = JSON.parse(localStorage.getItem('adminDocs') || '[]');
+                docs = docs.filter(d => d.id !== id);
+                localStorage.setItem('adminDocs', JSON.stringify(docs));
+                loadDocs();
+            }
+        }
+
+        function downloadDoc(id) {
+            const docs = JSON.parse(localStorage.getItem('adminDocs') || '[]');
+            const doc = docs.find(d => d.id === id);
+
+            if (doc) {
+                const a = document.createElement('a');
+                a.href = doc.data;
+                a.download = doc.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }
+
+        function loadAllData() {
+            loadStores();
+            loadVendors();
+            loadQueries();
+            loadComm();
+            loadDocs();
+            loadTerms();
+            loadPromos();
+            loadReportingFilters();
+        }
+
+        // ... (existing functions) ...
+
+        // TERMS LOGIC
+        function loadTerms() {
+            const termsData = JSON.parse(localStorage.getItem('appTerms') || 'null');
+
+            if (termsData) {
+                document.getElementById('terms-version').textContent = termsData.version;
+                document.getElementById('terms-date').textContent = new Date(termsData.date).toLocaleString();
+                document.getElementById('terms-content').value = termsData.text;
+            } else {
+                document.getElementById('terms-version').textContent = '1.0';
+                document.getElementById('terms-date').textContent = 'Never';
+                document.getElementById('terms-content').value = 'Welcome to KPS United! Please read our terms...';
+            }
+        }
+
+        function publishTerms() {
+            const content = document.getElementById('terms-content').value;
+            if (!content.trim()) {
+                alert("Terms content cannot be empty!");
+                return;
+            }
+
+            if (!confirm("Are you sure you want to publish new terms? All users will be required to accept them on next
+        login.")) {
+        return;
+        }
+
+        let currentTerms = JSON.parse(localStorage.getItem('appTerms') || 'null');
+        let newVersion = 1.0;
+
+        if (currentTerms) {
+            newVersion = parseFloat(currentTerms.version) + 0.1;
+        }
+
+        const newTerms = {
+            version: newVersion.toFixed(1),
+            text: content,
+            date: new Date().toISOString()
+        };
+
+        localStorage.setItem('appTerms', JSON.stringify(newTerms));
+
+        // Update UI
+        loadTerms();
+        alert(`Terms v${newTerms.version} published successfully!`);
+        }
+
+        // PROMOTIONS LOGIC
+        function loadPromos() {
+            const promos = JSON.parse(localStorage.getItem('adminPromos') || '[]');
+            const tbody = document.getElementById('promos-table-body');
+
+            if (promos.length === 0) {
+                tbody.innerHTML = '<tr>
+                    < td colspan = "5" class="no-users" > No promotions active</td >
+        </tr > ';
+                return;
+            }
+
+            tbody.innerHTML = promos.map(p => `
+        <tr>
+            <td>${p.image ? `<img src="${p.image}"
+                    style="width:50px; height:50px; object-fit:cover; border-radius:5px;">` : 'No Image'}</td>
+            <td>${p.title}</td>
+            <td>${p.vendor}</td>
+            <td>Active</td>
+            <td>
+                <button onclick="deletePromo(${p.id})"
+                    style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Delete</button>
+            </td>
+        </tr>
+        `).join('');
+        }
+
+        function openAddPromoModal() {
+            // Populate Vendors Dropdown
+            const vendors = JSON.parse(localStorage.getItem('adminVendors') || '[]');
+            const select = document.getElementById('promoVendor');
+
+            if (vendors.length === 0) {
+                alert("Please add vendors first!");
+                return;
+            }
+
+            select.innerHTML = vendors.map(v => `<option value="${v.name}">${v.name}</option>`).join('');
+            document.getElementById('addPromoModal').style.display = 'block';
+        }
+
+        function handlePromoImage(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.size > 500 * 1024) { // 500KB limit
+                    alert("Image too large! Max 500KB.");
+                    input.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('promoImageData').value = e.target.result;
+                    document.getElementById('promoImagePreview').innerHTML = `<img src="${e.target.result}"
+            style="width:100%; border-radius:5px;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function savePromo(event) {
+            event.preventDefault();
+            const title = document.getElementById('promoTitle').value;
+            const desc = document.getElementById('promoDesc').value;
+            const vendor = document.getElementById('promoVendor').value;
+            const image = document.getElementById('promoImageData').value;
+
+            const newPromo = {
+                id: Date.now(),
+                title,
+                description: desc,
+                vendor,
+                image,
+                date: new Date().toISOString()
+            };
+
+            let promos = JSON.parse(localStorage.getItem('adminPromos') || '[]');
+            promos.push(newPromo);
+            localStorage.setItem('adminPromos', JSON.stringify(promos));
+
+            document.getElementById('addPromoModal').style.display = 'none';
+            document.getElementById('addPromoForm').reset();
+            document.getElementById('promoImagePreview').innerHTML = '';
+            loadPromos();
+            alert("Promotion added successfully!");
+        }
+
+        function deletePromo(id) {
+            if (confirm("Delete this promotion?")) {
+                let promos = JSON.parse(localStorage.getItem('adminPromos') || '[]');
+                promos = promos.filter(p => p.id !== id);
+                localStorage.setItem('adminPromos', JSON.stringify(promos));
+                loadPromos();
+            }
+        }
+
+        // REPORTING LOGIC
+        function loadReportingFilters() {
+            const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+
+            // Populate Towns
+            const towns = [...new Set(stores.map(s => s.city).filter(c => c))].sort();
+            const townSelect = document.getElementById('report-town');
+
+            townSelect.innerHTML = '<option value="">All Towns</option>' + towns.map(town => `<option value="${town}">
+            ${town}</option>`).join('');
+
+            // Populate Vendors (from adminVendors now!)
+            let adminVendors = JSON.parse(localStorage.getItem('adminVendors') || '[]');
+            // If empty, fallback to hardcoded or default
+            if (adminVendors.length === 0) {
+                const defaultVendors = ['Pepsi', 'Coke', 'Dr. Pepper', '7Up', 'Budweiser', 'Miller', 'Coors', 'Other'];
+                adminVendors = defaultVendors.map(v => ({ name: v }));
+            }
+
+            const vendorContainer = document.getElementById('report-vendors');
+            vendorContainer.innerHTML = adminVendors.map(v => ` <div class="multi-select-option"> <input type="checkbox"
+                value="${v.name}" id="vendor-${v.name}"> <label for="vendor-${v.name}"
+                style="margin:0; font-weight:normal;">${v.name}</label> </div> `).join('');
+        }
+
+        function generateReport() {
+            const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            const selectedTown = document.getElementById('report-town').value;
+            const selectedVendors = Array.from(document.querySelectorAll('#report-vendors input:checked')).map(cb =>
+                cb.value);
+
+            const filteredStores = stores.filter(store => {
+                // Filter by Town
+                if (selectedTown && store.city !== selectedTown) return false;
+
+                // Filter by Vendors (OR logic: if store has ANY of the selected vendors)
+                // If no vendors selected, show all (unless town filter applies)
+                if (selectedVendors.length > 0) {
+                    if (!store.vendors || !Array.isArray(store.vendors)) return false;
+                    // Check if store has at least one of the selected vendors
+                    const hasVendor = selectedVendors.some(v => store.vendors.includes(v));
+                    if (!hasVendor) return false;
+                }
+
+                return true;
+            });
+
+            const tbody = document.getElementById('report-table-body');
+
+            if (filteredStores.length === 0) {
+                tbody.innerHTML = '<tr>
+                    < td colspan = "5" class="no-users" > No stores match the selected criteria</td >
+        </tr > ';
+                return;
+            }
+
+            tbody.innerHTML = filteredStores.map((store, index) => {
+                const vendorsStr = store.vendors ? store.vendors.join(', ') : 'None';
+                return `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${store.name || 'N/A'}</td>
+            <td>${store.city || 'N/A'}</td>
+            <td>${vendorsStr}</td>
+            <td>${store.businessPhone || 'N/A'} <br> ${store.businessEmail || 'N/A'}</td>
+        </tr>
+        `;
+            }).join('');
+        }
+
+        function downloadReportCSV() {
+            const stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            const selectedTown = document.getElementById('report-town').value;
+            const selectedVendors = Array.from(document.querySelectorAll('#report-vendors input:checked')).map(cb =>
+                cb.value);
+
+            const filteredStores = stores.filter(store => {
+                if (selectedTown && store.city !== selectedTown) return false;
+                if (selectedVendors.length > 0) {
+                    if (!store.vendors || !Array.isArray(store.vendors)) return false;
+                    const hasVendor = selectedVendors.some(v => store.vendors.includes(v));
+                    if (!hasVendor) return false;
+                }
+                return true;
+            });
+
+            if (filteredStores.length === 0) {
+                alert('No data to download!');
+                return;
+            }
+
+            let csv = 'Store Name,City,Vendors,Phone,Email\n';
+            filteredStores.forEach(store => {
+                const vendorsStr = store.vendors ? store.vendors.join('; ') : '';
+                csv += `"${store.name || ''}","${store.city || ''}","${vendorsStr}","${store.businessPhone ||
+                    ''}","${store.businessEmail || ''}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `kps-report-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
         }
     </script>
 </body>

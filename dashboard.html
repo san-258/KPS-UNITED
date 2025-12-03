@@ -152,16 +152,65 @@
                 </div>
             </div>
         </div>
-        <!-- Stores Section -->
-        <h2 style="margin-bottom: 1rem;">Stores</h2>
-        <div class="stores-grid">
-            <!-- Add New Store -->
-            <div class="store-card add-store-card" onclick="openStoreModal('add')">
-                <div class="add-icon">+</div>
-                <h3>Add New Store</h3>
+        <!-- PROMOTIONS SECTION -->
+        <div class="dashboard-section" id="promotions-section" style="display:none;">
+            <div class="section-header">
+                <h2>Active Promotions</h2>
             </div>
+            <div class="stores-grid" id="promotions-grid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
 
-
+        <!-- STORES SECTION -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2>Your Stores</h2>
+                <button class="btn" onclick="openAddStoreModal()">+ Add New Store</button>
+            </div>
+            <div class="stores-grid">
+                <!-- Dynamic Stores -->
+                <div class="store-card add-store-card" onclick="openAddStoreModal()">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">+</div>
+                    <h3>Add New Store</h3>
+                </div>
+            </div>
+        </div>
+        <!-- Support Section -->
+        <h2 style="margin-bottom: 1rem; margin-top: 2rem;">Support & Queries</h2>
+        <div class="member-card">
+            <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;">
+                    <h3>Submit a Query</h3>
+                    <form id="queryForm" onsubmit="submitQuery(event)" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <label>Select Store</label>
+                            <select id="queryStoreId" required
+                                style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <input type="text" id="querySubject" required
+                                style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea id="queryMessage" rows="4" required
+                                style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+                        </div>
+                        <button type="submit" class="btn" style="width: auto;">Submit Query</button>
+                    </form>
+                </div>
+                <div style="flex: 1; min-width: 300px;">
+                    <h3>Recent Queries</h3>
+                    <div id="queries-list" style="margin-top: 1rem; max-height: 400px; overflow-y: auto;">
+                        <!-- Populated by JS -->
+                        <p style="color: #666;">No queries submitted yet.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="confidential-footer">
@@ -242,6 +291,37 @@
                             <input type="text" id="brand" placeholder="Enter Brand Name">
                         </div>
 
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Select Vendors</label>
+                            <div class="vendor-options"
+                                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 10px;">
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" name="vendor" value="Pepsi"> Pepsi
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" name="vendor" value="Coke"> Coke
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" name="vendor" value="Dr. Pepper"> Dr. Pepper
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" name="vendor" value="7Up"> 7Up
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" name="vendor" value="Budweiser"> Budweiser
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" name="vendor" value="Miller"> Miller
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" name="vendor" value="Coors"> Coors
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" name="vendor" value="Other"> Other
+                                </label>
+                            </div>
+                        </div>
+
 
 
 
@@ -255,6 +335,35 @@
             <div class="modal-footer">
                 <button class="btn-save" onclick="saveStore()">Save</button>
                 <button class="btn-cancel" onclick="closeAddStoreModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TERMS UPDATE MODAL -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Terms & Conditions Update</h2>
+            </div>
+            <div class="modal-body">
+                <p>We have updated our Terms & Conditions. You must accept the new terms to continue using KPS United.
+                </p>
+                <div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; height: 300px; overflow-y: scroll; margin: 15px 0; white-space: pre-wrap;"
+                    id="termsTextDisplay">
+                    Loading terms...
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; font-weight: normal;">
+                        <input type="checkbox" id="acceptTermsCheckbox"
+                            onchange="document.getElementById('acceptTermsBtn').disabled = !this.checked">
+                        I have read and agree to the new Terms & Conditions
+                    </label>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button class="btn" style="background: #dc3545;" onclick="handleLogout()">Decline & Logout</button>
+                    <button id="acceptTermsBtn" class="btn" disabled onclick="acceptNewTerms()">Accept &
+                        Continue</button>
+                </div>
             </div>
         </div>
     </div>
@@ -292,6 +401,14 @@
                 document.getElementById("businessType").value = storeData.businessType || 'Retail';
                 document.getElementById("brand").value = storeData.brand || '';
 
+                // Populate Vendors
+                const vendorCheckboxes = document.querySelectorAll('input[name="vendor"]');
+                const savedVendors = storeData.vendors || [];
+                vendorCheckboxes.forEach(cb => {
+                    cb.checked = savedVendors.includes(cb.value);
+                    cb.disabled = true;
+                });
+
                 // Disable inputs
                 inputs.forEach(input => input.disabled = true);
 
@@ -303,6 +420,13 @@
 
                 // Enable inputs
                 inputs.forEach(input => input.disabled = false);
+
+                // Reset and enable vendors
+                const vendorCheckboxes = document.querySelectorAll('input[name="vendor"]');
+                vendorCheckboxes.forEach(cb => {
+                    cb.checked = false;
+                    cb.disabled = false;
+                });
             }
         }
 
@@ -311,6 +435,8 @@
             form.reset();
             // Re-enable inputs just in case
             inputs.forEach(input => input.disabled = false);
+            const vendorCheckboxes = document.querySelectorAll('input[name="vendor"]');
+            vendorCheckboxes.forEach(cb => cb.disabled = false);
         }
 
         window.onclick = function (event) {
@@ -350,7 +476,7 @@
 
             const storeData = {
                 id: newId,
-                memberId: memberId,
+                memberId: currentUser.memberId,
                 name: document.getElementById("storeName").value,
                 streetAddress: document.getElementById("streetAddress").value,
                 entityName: document.getElementById("entityName").value,
@@ -363,7 +489,8 @@
                 ein: document.getElementById("ein").value,
                 businessType: document.getElementById("businessType").value,
                 brand: document.getElementById("brand").value,
-                status: "Active" // Default status
+                vendors: Array.from(document.querySelectorAll('input[name="vendor"]:checked')).map(cb => cb.value),
+                status: "Pending" // Default status is now Pending
             };
 
             stores.push(storeData);
@@ -371,7 +498,7 @@
 
             renderStores();
             closeAddStoreModal();
-            alert("Store added successfully!");
+            alert("Store added successfully! It is now pending approval.");
         }
 
         function renderStores() {
@@ -390,25 +517,25 @@
 
             const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
 
-            // Filter stores for current member (include static store for demo purposes if needed, or just member stores)
-            // For this requirement, we should probably show stores belonging to this member.
-            // However, to keep the "demo" feel, we might want to keep showing the static one? 
-            // Let's filter by memberId OR if it's the static one (optional, but good for demo).
-            // Actually, let's strictly filter by memberId to support the "multi-tenant" feel the user wants.
-            // BUT, if I filter strictly, the static store (1000-1) won't show for new users (1001).
-            // The user said "registering member means... one member id".
-            // So let's filter strictly.
-
+            // Filter stores for current member
             const memberStores = stores.filter(store => store.memberId === currentMemberId);
 
             memberStores.forEach(store => {
                 const storeCard = document.createElement("div");
                 storeCard.className = "store-card dynamic-store";
                 storeCard.onclick = () => openStoreModal('view', store); // Attach click handler
+
+                let statusColor = 'text-orange';
+                if (store.status === 'Active') statusColor = 'text-green'; // Assuming text-green class exists or we use inline style
+                if (store.status === 'Suspended') statusColor = 'text-red';
+
+                // Fallback inline styles if classes don't exist in CSS
+                const statusStyle = store.status === 'Active' ? 'color:green;' : (store.status === 'Suspended' ? 'color:red;' : 'color:orange;');
+
                 storeCard.innerHTML = `
                     <h3>${store.name}</h3>
                     <p>📍 ${store.city}, ${store.state}</p>
-                    <p class="mt-2">Status: <span class="text-orange font-bold">${store.status}</span></p>
+                    <p class="mt-2">Status: <span style="${statusStyle} font-weight:bold;">${store.status || 'Pending'}</span></p>
                 `;
                 storesGrid.appendChild(storeCard);
             });
@@ -433,10 +560,88 @@
                 console.log(`Repaired Member ID: ${currentUser.memberId}`);
             }
 
+            checkTerms(); // Check terms on load
             renderStores();
-
-
+            loadPromotions();
+            loadUserStoresForQuery();
+            renderQueries();
         });
+
+        // PROMOTIONS LOGIC
+        function loadPromotions() {
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            const currentMemberId = currentUser ? currentUser.memberId : null;
+            const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+            const promos = JSON.parse(localStorage.getItem("adminPromos") || "[]");
+
+            // Get allowed vendors for this user's stores
+            const memberStores = stores.filter(store => store.memberId === currentMemberId);
+            const allowedVendors = new Set();
+
+            memberStores.forEach(store => {
+                if (store.vendors && Array.isArray(store.vendors)) {
+                    store.vendors.forEach(v => allowedVendors.add(v));
+                }
+            });
+
+            // Filter promos
+            const visiblePromos = promos.filter(p => allowedVendors.has(p.vendor));
+            const container = document.getElementById('promotions-section');
+            const grid = document.getElementById('promotions-grid');
+
+            if (visiblePromos.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            grid.innerHTML = visiblePromos.map(p => `
+                <div class="store-card" style="cursor: default;">
+                    ${p.image ? `<img src="${p.image}" style="width:100%; height:150px; object-fit:cover; border-radius:5px; margin-bottom:10px;">` : ''}
+                    <h3 style="color: var(--kps-blue);">${p.title}</h3>
+                    <p style="font-weight:bold; color: #666; font-size: 0.9rem; margin-bottom: 5px;">Vendor: ${p.vendor}</p>
+                    <p>${p.description}</p>
+                </div>
+            `).join('');
+        }
+
+        // TERMS LOGIC
+        function checkTerms() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const appTerms = JSON.parse(localStorage.getItem('appTerms') || 'null');
+
+            if (!currentUser || !appTerms) return;
+
+            // If user has no terms version or it's less than app terms version
+            const userVersion = parseFloat(currentUser.termsVersion || '0');
+            const appVersion = parseFloat(appTerms.version);
+
+            if (userVersion < appVersion) {
+                document.getElementById('termsTextDisplay').textContent = appTerms.text;
+                document.getElementById('termsModal').style.display = 'block';
+            }
+        }
+
+        function acceptNewTerms() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const appTerms = JSON.parse(localStorage.getItem('appTerms') || 'null');
+
+            if (currentUser && appTerms) {
+                currentUser.termsVersion = appTerms.version;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                // Also update in storeUsers if we want to persist across logins
+                let users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+                const userIndex = users.findIndex(u => u.email === currentUser.email);
+                if (userIndex !== -1) {
+                    users[userIndex].termsVersion = appTerms.version;
+                    localStorage.setItem('storeUsers', JSON.stringify(users));
+                }
+
+                document.getElementById('termsModal').style.display = 'none';
+                alert("Terms accepted. Thank you!");
+            }
+        }
 
         // Input Masking Functions
         function formatPhoneNumber(input) {
@@ -461,6 +666,110 @@
             }
 
             input.value = value;
+        }
+
+        // --- SUPPORT / QUERIES LOGIC ---
+        function loadUserStoresForQuery() {
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            const currentMemberId = currentUser ? currentUser.memberId : null;
+            const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+
+            // Filter stores for current member
+            const memberStores = stores.filter(store => store.memberId === currentMemberId);
+
+            const select = document.getElementById('queryStoreId');
+            if (memberStores.length === 0) {
+                select.innerHTML = '<option value="">No stores found</option>';
+                select.disabled = true;
+            } else {
+                select.innerHTML = memberStores.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                select.disabled = false;
+            }
+        }
+
+        function submitQuery(event) {
+            event.preventDefault();
+            const storeId = document.getElementById('queryStoreId').value;
+            const subject = document.getElementById('querySubject').value;
+            const message = document.getElementById('queryMessage').value;
+
+            if (!storeId) {
+                alert("Please select a store.");
+                return;
+            }
+
+            const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+            const store = stores.find(s => s.id == storeId);
+            const storeName = store ? store.name : 'Unknown Store';
+
+            const newQuery = {
+                id: Date.now(),
+                storeId: storeId,
+                storeName: storeName,
+                subject: subject,
+                message: message,
+                status: 'Open',
+                date: new Date().toISOString(),
+                reply: null,
+                replyDate: null
+            };
+
+            let queries = JSON.parse(localStorage.getItem('storeQueries') || '[]');
+            queries.push(newQuery);
+            localStorage.setItem('storeQueries', JSON.stringify(queries));
+
+            alert("Query submitted successfully!");
+            document.getElementById('queryForm').reset();
+            renderQueries();
+        }
+
+        function renderQueries() {
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            const currentMemberId = currentUser ? currentUser.memberId : null;
+
+            // Get all stores for this user to filter queries
+            const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+            const memberStoreIds = stores.filter(s => s.memberId === currentMemberId).map(s => s.id.toString());
+
+            const allQueries = JSON.parse(localStorage.getItem('storeQueries') || '[]');
+
+            // Filter queries for stores owned by this user
+            const userQueries = allQueries.filter(q => memberStoreIds.includes(q.storeId.toString()));
+
+            // Sort by date desc
+            userQueries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            const listContainer = document.getElementById('queries-list');
+
+            if (userQueries.length === 0) {
+                listContainer.innerHTML = '<p style="color: #666;">No queries submitted yet.</p>';
+                return;
+            }
+
+            listContainer.innerHTML = userQueries.map(q => {
+                const statusColor = q.status === 'Replied' ? 'green' : '#dc3545';
+                const replyHtml = q.reply ? `
+                    <div style="background: #f0f9ff; padding: 10px; margin-top: 10px; border-radius: 5px; border-left: 3px solid var(--kps-blue);">
+                        <strong>Admin Reply:</strong><br>
+                        ${q.reply}
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">${new Date(q.replyDate).toLocaleDateString()}</div>
+                    </div>
+                ` : '';
+
+                return `
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem; border: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <strong>${q.subject}</strong>
+                            <span style="color: ${statusColor}; font-weight: bold;">${q.status}</span>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
+                            Store: ${q.storeName} | ${new Date(q.date).toLocaleDateString()}
+                        </div>
+                        <p>${q.message}</p>
+                        ${replyHtml}
+                    </div>
+                `;
+            }).join('');
         }
     </script>
 </body>

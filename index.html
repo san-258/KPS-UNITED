@@ -393,27 +393,7 @@
     </div>
     </div>
 
-    <!-- Verification Modal -->
-    <div id="verification-modal" class="modal">
-        <div class="modal-content" style="max-width: 400px; text-align: center; padding: 2rem;">
-            <h2 style="color: var(--kps-navy); margin-bottom: 1rem;">Verify Your Email</h2>
-            <p style="margin-bottom: 1.5rem; color: #666;">We sent a verification code to your email.</p>
 
-            <div id="demo-code-display"
-                style="background: #e3f2fd; color: #0d47a1; padding: 10px; border-radius: 5px; margin-bottom: 1.5rem; border: 1px dashed #0d47a1;">
-                <!-- Code will appear here -->
-            </div>
-
-            <div class="form-group">
-                <input type="text" id="verification-input" placeholder="Enter 6-digit code"
-                    style="text-align: center; letter-spacing: 5px; font-size: 1.5rem;" maxlength="6">
-            </div>
-
-            <button class="btn" onclick="verifyRegistration()">Verify & Create Account</button>
-            <button class="btn" style="background: #ccc; margin-top: 10px;"
-                onclick="closeVerificationModal()">Cancel</button>
-        </div>
-    </div>
     <script>
         function showTab(tab) {
             document.getElementById('error-message').style.display = 'none';
@@ -447,9 +427,6 @@
             document.getElementById('error-message').style.display = 'none';
         }
 
-        let pendingUser = null;
-        let generatedRegCode = null;
-
         function handleRegister(event) {
             event.preventDefault();
 
@@ -475,74 +452,24 @@
                 return;
             }
 
-            // Store pending data
-            pendingUser = {
-                name: email.split('@')[0], // Default name to email prefix
-                email: email,
-                password: password
-            };
-
-            // Generate Code
-            generatedRegCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-            // Show Modal & Demo Code
-            document.getElementById('verification-modal').style.display = 'block';
-            document.getElementById('demo-code-display').innerHTML = `
-                <strong>Demo Mode:</strong> Your code is <br>
-                <span style="font-size: 1.5em; font-weight: bold;">${generatedRegCode}</span>
-            `;
-
-            console.log(`Verification Code for ${email}: ${generatedRegCode}`);
-        }
-
-        function verifyRegistration() {
-            const inputCode = document.getElementById('verification-input').value;
-
-            if (inputCode !== generatedRegCode) {
-                alert("Invalid code! Please try again.");
-                return;
-            }
-
-            // Code is valid, proceed with creation
-            completeRegistration();
-        }
-
-        function closeVerificationModal() {
-            document.getElementById('verification-modal').style.display = 'none';
-            pendingUser = null;
-        }
-
-        function completeRegistration() {
-            if (!pendingUser) return;
-
-            let users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
-
             // 1. Get/Init Member ID
             let nextMemberId = parseInt(localStorage.getItem('nextMemberId') || '1001');
 
             // 2. Create User Object
             users.push({
                 memberId: `${nextMemberId}-1`,
-                name: pendingUser.name,
-                email: pendingUser.email,
-                password: pendingUser.password,
+                name: email.split('@')[0],
+                email: email,
+                password: password,
                 registeredDate: new Date().toISOString(),
-                verified: true // Mark as verified
+                verified: true // Auto-verified in simplified flow
             });
 
-            // 3. Create Initial Store - REMOVED
-            // Users must add a store manually after login
-            // let stores = JSON.parse(localStorage.getItem('userStores') || '[]');
-            // const newStore = { ... };
-            // stores.push(newStore);
-            // localStorage.setItem('userStores', JSON.stringify(stores));
-
-            // 4. Increment Member ID
+            // 3. Increment Member ID
             localStorage.setItem('nextMemberId', (nextMemberId + 1).toString());
             localStorage.setItem('storeUsers', JSON.stringify(users));
 
-            closeVerificationModal();
-            showSuccess('Account verified and created successfully! Redirecting to login...');
+            showSuccess('Account created successfully! Redirecting to login...');
 
             setTimeout(() => {
                 document.getElementById('register-form').classList.remove('active');
@@ -555,12 +482,14 @@
                 document.getElementById('register-password').value = '';
                 document.getElementById('register-confirm-password').value = '';
                 document.getElementById('terms-checkbox').checked = false;
-                document.getElementById('verification-input').value = '';
 
                 document.getElementById('success-message').style.display = 'none';
             }, 2000);
         }
 
+
+    </script>
+    <script>
         function handleLogin(event) {
             event.preventDefault();
 
@@ -585,209 +514,9 @@
                 showError('Invalid email or password! Please try again.');
             }
         }
-
-
-
-        // Removed inline window.onload as it is handled by auth.js
-
-        // --- Terms Modal Logic ---
-        document.addEventListener('DOMContentLoaded', function () {
-            const termsCheckbox = document.getElementById('terms-checkbox');
-            const termsModal = document.getElementById('terms-modal');
-            const termsScrollContainer = document.getElementById('terms-scroll-container');
-            const scrollNotice = document.getElementById('scroll-notice');
-            const termsModalCheckboxes = document.querySelectorAll('.terms-modal-checkbox');
-            const termsSuccessMsg = document.getElementById('terms-success-msg');
-            let hasScrolledToEnd = false;
-
-            // Intercept the main checkbox click
-            if (termsCheckbox) {
-                termsCheckbox.addEventListener('click', function (e) {
-                    if (!this.checked) {
-                        return; // Allow unchecking without modal
-                    }
-
-                    e.preventDefault(); // Prevent immediate checking
-                    termsModal.style.display = 'flex'; // Use flex to center
-
-                    // Reset state if opening again
-                    if (!this.checked) {
-                        hasScrolledToEnd = false;
-                        termsModalCheckboxes.forEach(cb => {
-                            cb.checked = false;
-                            cb.disabled = false;
-                            cb.parentElement.style.opacity = '1';
-                        });
-                        termsSuccessMsg.style.display = 'none';
-                        scrollNotice.style.display = 'none';
-
-                        // Check if scrolling is actually needed
-                        // If content fits, enable immediately
-                        if (termsScrollContainer.scrollHeight <= termsScrollContainer.clientHeight + 5) {
-                            hasScrolledToEnd = true;
-                            scrollNotice.style.display = 'none';
-                            termsModalCheckboxes.forEach(cb => {
-                                cb.disabled = false;
-                                cb.parentElement.style.opacity = '1';
-                            });
-                        }
-                    }
-                });
-            }
-
-            // Scroll detection (Optional now - just hides notice if present)
-            if (termsScrollContainer) {
-                termsScrollContainer.addEventListener('scroll', function () {
-                    if (hasScrolledToEnd) return;
-                    // Check if scrolled to bottom (with 20px buffer)
-                    if (this.scrollHeight - this.scrollTop <= this.clientHeight + 20) {
-                        hasScrolledToEnd = true;
-                        scrollNotice.style.display = 'none';
-                    }
-                });
-            }
-
-            function checkTermsCompletion() {
-                const allChecked = Array.from(termsModalCheckboxes).every(cb => cb.checked);
-
-                if (allChecked) {
-                    termsSuccessMsg.style.display = 'block';
-                    // Enable the main checkbox
-                    setTimeout(() => {
-                        termsModal.style.display = 'none';
-                        termsCheckbox.checked = true;
-                    }, 1000);
-                } else {
-                    termsSuccessMsg.style.display = 'none';
-                }
-            }
-
-            termsModalCheckboxes.forEach(cb => {
-                cb.addEventListener('change', checkTermsCompletion);
-            });
-
-            // Expose closeTermsModal to global scope if needed, or attach listener
-            window.closeTermsModal = function () {
-                termsModal.style.display = 'none';
-                // Ensure main checkbox is unchecked if they close without completing
-                if (!Array.from(termsModalCheckboxes).every(cb => cb.checked)) {
-                    termsCheckbox.checked = false;
-                }
-            }
-        });
     </script>
 
-    <!-- Terms Confirmation Modal -->
-    <div id="terms-modal" class="modal">
-        <div class="modal-content"
-            style="max-width: 800px; padding: 0; border: 2px solid var(--kps-red); display: flex; flex-direction: column; max-height: 90vh;">
-            <div style="padding: 1.5rem; background: #f8f9fa; border-bottom: 1px solid #e0e0e0;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-file-contract" style="color: var(--kps-navy); font-size: 1.5rem;"></i>
-                    <h2 style="color: var(--kps-navy); margin: 0;">Terms and Conditions</h2>
-                </div>
-                <p style="margin: 0.5rem 0 0; color: #666; font-size: 0.9rem;">Please read the entire document to
-                    proceed.</p>
-            </div>
 
-            <div id="terms-scroll-container" style="padding: 2rem; overflow-y: auto; flex: 1; background: white;">
-                <div class="scroll-notice" id="scroll-notice"
-                    style="background: #fff3cd; padding: 1rem; text-align: center; font-weight: 600; margin-bottom: 1rem; border-radius: 5px;">
-                    ⬇️ Please scroll down to the bottom to enable acceptance ⬇️
-                </div>
-
-                <p style="color:#666;font-style:italic;margin-bottom:2rem">Last Updated: December 2, 2025</p>
-
-                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">1. Purpose</h3>
-                <p>KPS UNITED negotiates group pricing and vendor agreements on behalf of its members. This Agreement
-                    ensures compliance for the specific business location listed below.</p>
-
-                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">2. Member Obligations</h3>
-                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-                    <li style="margin-bottom: 0.5rem;"><strong>Group Pricing Commitment:</strong> Member must accept and
-                        purchase at the group price negotiated by KPS UNITED.</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Vendor Participation Rule:</strong> If Member refuses one
-                        approved vendor, they lose all vendor discounts for this location.</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Store Spacing Agreement:</strong> Member must allocate
-                        and maintain product display spacing as directed by KPS UNITED.</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Exclusive Purchasing Rule:</strong> Member shall not
-                        purchase the same vendor products from outside sources (e.g., Walmart, Dollar General, other
-                        distributors).</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Price Integrity:</strong> Member must sell products at
-                        the vendor-approved price and shall not remove, alter, or tamper with price tags.</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Issue Reporting:</strong> Any concerns must be submitted
-                        to KPS UNITED in writing.</li>
-                </ul>
-
-                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">3. Compliance Enforcement</h3>
-                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-                    <li style="margin-bottom: 0.5rem;"><strong>Vendor Complaints:</strong> If a vendor reports
-                        non-compliance, KPS UNITED will notify Member in writing.</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Correction Period:</strong> Member has seven (7) days to
-                        correct the issue.</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Termination:</strong> If Member fails to comply, KPS
-                        UNITED may terminate all vendor contracts for this business location.</li>
-                </ul>
-
-                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">4. Term & Termination</h3>
-                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-                    <li style="margin-bottom: 0.5rem;">This Agreement applies only to the business listed in the
-                        signature section.</li>
-                    <li style="margin-bottom: 0.5rem;">Each additional business owned by Member must sign a separate
-                        Agreement.</li>
-                    <li style="margin-bottom: 0.5rem;">Termination applies individually per business location.</li>
-                </ul>
-
-                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">5. Governing Law</h3>
-                <p>This Agreement shall be governed by the laws of Kentucky.</p>
-
-                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">6. Entire Agreement</h3>
-                <p>This Agreement represents the entire understanding between KPS UNITED and the specific business
-                    location listed above.</p>
-            </div>
-
-            <div style="padding: 1.5rem; background: #f8f9fa; border-top: 1px solid #e0e0e0;">
-                <h4 style="color:var(--kps-navy); margin-bottom: 1rem;">✅ Confirm Your Understanding</h4>
-
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 1;"
-                        id="label-check1">
-                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check1"
-                            style="width: 20px; height: 20px;">
-                        <span>I have read the complete Terms and Conditions</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 1;"
-                        id="label-check2">
-                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check2"
-                            style="width: 20px; height: 20px;">
-                        <span>I agree to comply with all terms</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 1;"
-                        id="label-check3">
-                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check3"
-                            style="width: 20px; height: 20px;">
-                        <span>I understand prices are subject to change</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 1;"
-                        id="label-check4">
-                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check4"
-                            style="width: 20px; height: 20px;">
-                        <span>I acknowledge the limitation of liability</span>
-                    </label>
-                </div>
-
-                <div id="terms-success-msg"
-                    style="display: none; color: green; font-weight: bold; margin-bottom: 1rem;">
-                    <i class="fas fa-check-square"></i> All terms accepted. Redirecting...
-                </div>
-
-                <div style="display: flex; justify-content: flex-end;">
-                    <button class="btn" style="background: #ccc; width: auto; padding: 0.8rem 2rem;"
-                        onclick="closeTermsModal()">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 
 </html>
