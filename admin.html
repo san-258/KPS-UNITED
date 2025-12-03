@@ -751,24 +751,36 @@
         function handleAdminLogin(event) {
             event.preventDefault();
             const password = document.getElementById('admin-password').value;
-            alert('Debug: Attempting login with password length: ' + password.length);
+            const errorDiv = document.getElementById('error-message');
+
+            // Clear previous errors
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+
+            // Show debug info
+            errorDiv.style.display = 'block';
+            errorDiv.innerHTML += 'Debug: Attempting login...<br>';
+            errorDiv.innerHTML += 'Debug: Password length: ' + password.length + '<br>';
 
             if (password === ADMIN_PASSWORD) {
-                alert('Debug: Password correct. Loading dashboard...');
-                document.getElementById('admin-login').style.display = 'none';
-                document.getElementById('admin-dashboard').classList.add('active');
-                localStorage.setItem('adminLoggedIn', 'true');
-                try {
-                    loadAllData();
-                    alert('Debug: Data loaded successfully');
-                } catch (e) {
-                    alert('Debug: Error loading data: ' + e.message);
-                    console.error(e);
-                }
+                errorDiv.innerHTML += 'Debug: Password correct. Loading dashboard...<br>';
+
+                // Small delay to let user see the message
+                setTimeout(() => {
+                    document.getElementById('admin-login').style.display = 'none';
+                    document.getElementById('admin-dashboard').classList.add('active');
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    try {
+                        loadAllData();
+                        // alert('Debug: Data loaded successfully'); 
+                    } catch (e) {
+                        errorDiv.innerHTML += 'Debug: Error loading data: ' + e.message + '<br>';
+                        console.error(e);
+                    }
+                }, 500);
             } else {
-                alert('Debug: Password incorrect. Expected: ' + ADMIN_PASSWORD);
-                const errorDiv = document.getElementById('error-message');
-                errorDiv.textContent = 'Incorrect password!';
+                errorDiv.innerHTML += 'Debug: Password incorrect. Expected: ' + ADMIN_PASSWORD + '<br>';
+                errorDiv.innerHTML += '<strong>Incorrect password!</strong>';
                 errorDiv.style.display = 'block';
             }
         }
