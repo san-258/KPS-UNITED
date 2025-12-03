@@ -1372,9 +1372,7 @@
             const tbody = document.getElementById('docs-table-body');
 
             if (docs.length === 0) {
-                tbody.innerHTML = '<tr>
-                    < td colspan = "4" class="no-users" > No documents uploaded yet</td >
-        </tr > ';
+                tbody.innerHTML = '<tr><td colspan="4" class="no-users">No documents uploaded yet</td></tr>';
                 return;
             }
 
@@ -1494,29 +1492,28 @@
                 return;
             }
 
-            if (!confirm("Are you sure you want to publish new terms? All users will be required to accept them on next
-        login.")) {
-        return;
-        }
+            if (!confirm("Are you sure you want to publish new terms? All users will be required to accept them on next login.")) {
+                return;
+            }
 
-        let currentTerms = JSON.parse(localStorage.getItem('appTerms') || 'null');
-        let newVersion = 1.0;
+            let currentTerms = JSON.parse(localStorage.getItem('appTerms') || 'null');
+            let newVersion = 1.0;
 
-        if (currentTerms) {
-            newVersion = parseFloat(currentTerms.version) + 0.1;
-        }
+            if (currentTerms) {
+                newVersion = parseFloat(currentTerms.version) + 0.1;
+            }
 
-        const newTerms = {
-            version: newVersion.toFixed(1),
-            text: content,
-            date: new Date().toISOString()
-        };
+            const newTerms = {
+                version: newVersion.toFixed(1),
+                text: content,
+                date: new Date().toISOString()
+            };
 
-        localStorage.setItem('appTerms', JSON.stringify(newTerms));
+            localStorage.setItem('appTerms', JSON.stringify(newTerms));
 
-        // Update UI
-        loadTerms();
-        alert(`Terms v${newTerms.version} published successfully!`);
+            // Update UI
+            loadTerms();
+            alert(`Terms v${newTerms.version} published successfully!`);
         }
 
         // PROMOTIONS LOGIC
@@ -1525,9 +1522,7 @@
             const tbody = document.getElementById('promos-table-body');
 
             if (promos.length === 0) {
-                tbody.innerHTML = '<tr>
-                    < td colspan = "5" class="no-users" > No promotions active</td >
-        </tr > ';
+                tbody.innerHTML = '<tr><td colspan="5" class="no-users">No promotions active</td></tr>';
                 return;
             }
 
@@ -1664,9 +1659,7 @@
             const tbody = document.getElementById('report-table-body');
 
             if (filteredStores.length === 0) {
-                tbody.innerHTML = '<tr>
-                    < td colspan = "5" class="no-users" > No stores match the selected criteria</td >
-        </tr > ';
+                tbody.innerHTML = '<tr><td colspan="5" class="no-users">No stores match the selected criteria</td></tr>';
                 return;
             }
 
@@ -1722,6 +1715,27 @@
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
         }
+        const password = document.getElementById('admin-password').value;
+
+        if (password === ADMIN_PASSWORD_FIX) {
+            console.log("Password correct!");
+            document.getElementById('admin-login').style.display = 'none';
+            document.getElementById('admin-dashboard').classList.add('active');
+            localStorage.setItem('adminLoggedIn', 'true');
+            if (typeof loadAllData === 'function') {
+                loadAllData();
+            } else {
+                console.error("loadAllData is not defined!");
+            }
+        } else {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = 'Incorrect password!';
+            errorDiv.style.display = 'block';
+        }
+        }
+
+        // Attach to form
+        document.querySelector('#admin-login form').setAttribute('onsubmit', 'handleAdminLoginFix(event)');
     </script>
 </body>
 
