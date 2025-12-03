@@ -30,12 +30,50 @@
         </ul>
     </nav>
     <div class="container">
+
+
+        <!-- Support Section -->
         <section class="section">
-            <h2>💬 Contact Us</h2>
-            <p><strong>Email:</strong> support@kpsunited.com</p>
-            <p><strong>Phone:</strong> (555) 123-4567</p>
-            <p><strong>Hours:</strong> Monday-Friday, 9 AM - 5 PM EST</p>
+            <h2 style="margin-bottom: 1rem;">Support & Queries</h2>
+            <div class="member-card"
+                style="background: white; border-radius: 10px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 300px;">
+                        <h3>Submit a Query</h3>
+                        <form id="queryForm" onsubmit="submitQuery(event)" style="margin-top: 1rem;">
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem;">Select Store</label>
+                                <select id="queryStoreId" required
+                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem;">Subject</label>
+                                <input type="text" id="querySubject" required
+                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem;">Message</label>
+                                <textarea id="queryMessage" rows="4" required
+                                    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+                            </div>
+                            <button type="submit" class="btn"
+                                style="width: auto; background-color: var(--kps-blue); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Submit
+                                Query</button>
+                        </form>
+                    </div>
+                    <div style="flex: 1; min-width: 300px;">
+                        <h3>Recent Queries</h3>
+                        <div id="queries-list" style="margin-top: 1rem; max-height: 400px; overflow-y: auto;">
+                            <!-- Populated by JS -->
+                            <p style="color: #666;">No queries submitted yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
+
         <section class="section">
             <h2>❓ FAQ</h2>
             <h3 style="color:var(--kps-red);margin-top:1rem">How do I reset my password?</h3>
@@ -43,7 +81,124 @@
             <h3 style="color:var(--kps-red);margin-top:1rem">How often are prices updated?</h3>
             <p>Price lists are typically updated at the beginning of each month.</p>
         </section>
+        <section class="section">
+            <h2>💬 Contact Us</h2>
+            <p><strong>Email:</strong> support@kpsunited.com</p>
+            <p><strong>Phone:</strong> (555) 123-4567</p>
+            <p><strong>Hours:</strong> Monday-Friday, 9 AM - 5 PM EST</p>
+        </section>
     </div>
+
+    <script>
+        // --- SUPPORT / QUERIES LOGIC ---
+        function loadUserStoresForQuery() {
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            const currentMemberId = currentUser ? currentUser.memberId : null;
+            const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+
+            // Filter stores for current member
+            const memberStores = stores.filter(store => store.memberId === currentMemberId);
+
+            const select = document.getElementById('queryStoreId');
+            if (memberStores.length === 0) {
+                select.innerHTML = '<option value="">No stores found</option>';
+                select.disabled = true;
+            } else {
+                select.innerHTML = memberStores.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                select.disabled = false;
+            }
+        }
+
+        function submitQuery(event) {
+            event.preventDefault();
+            const storeId = document.getElementById('queryStoreId').value;
+            const subject = document.getElementById('querySubject').value;
+            const message = document.getElementById('queryMessage').value;
+
+            if (!storeId) {
+                alert("Please select a store.");
+                return;
+            }
+
+            const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+            const store = stores.find(s => s.id == storeId);
+            const storeName = store ? store.name : 'Unknown Store';
+
+            const newQuery = {
+                id: Date.now(),
+                storeId: storeId,
+                storeName: storeName,
+                subject: subject,
+                message: message,
+                status: 'Open',
+                date: new Date().toISOString(),
+                reply: null,
+                replyDate: null
+            };
+
+            let queries = JSON.parse(localStorage.getItem('storeQueries') || '[]');
+            queries.push(newQuery);
+            localStorage.setItem('storeQueries', JSON.stringify(queries));
+
+            alert("Query submitted successfully!");
+            document.getElementById('queryForm').reset();
+            renderQueries();
+        }
+
+        function renderQueries() {
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            const currentMemberId = currentUser ? currentUser.memberId : null;
+
+            // Get all stores for this user to filter queries
+            const stores = JSON.parse(localStorage.getItem("userStores") || "[]");
+            const memberStoreIds = stores.filter(s => s.memberId === currentMemberId).map(s => s.id.toString());
+
+            const allQueries = JSON.parse(localStorage.getItem('storeQueries') || '[]');
+
+            // Filter queries for stores owned by this user
+            const userQueries = allQueries.filter(q => memberStoreIds.includes(q.storeId.toString()));
+
+            // Sort by date desc
+            userQueries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            const listContainer = document.getElementById('queries-list');
+
+            if (userQueries.length === 0) {
+                listContainer.innerHTML = '<p style="color: #666;">No queries submitted yet.</p>';
+                return;
+            }
+
+            listContainer.innerHTML = userQueries.map(q => {
+                const statusColor = q.status === 'Replied' ? 'green' : '#dc3545';
+                const replyHtml = q.reply ? `
+                    <div style="background: #f0f9ff; padding: 10px; margin-top: 10px; border-radius: 5px; border-left: 3px solid var(--kps-blue);">
+                        <strong>Admin Reply:</strong><br>
+                        ${q.reply}
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">${new Date(q.replyDate).toLocaleDateString()}</div>
+                    </div>
+                ` : '';
+
+                return `
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem; border: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <strong>${q.subject}</strong>
+                            <span style="color: ${statusColor}; font-weight: bold;">${q.status}</span>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
+                            Store: ${q.storeName} | ${new Date(q.date).toLocaleDateString()}
+                        </div>
+                        <p>${q.message}</p>
+                        ${replyHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.addEventListener('load', () => {
+            loadUserStoresForQuery();
+            renderQueries();
+        });
+    </script>
     <footer>
         <p>&copy; 2025 KPS United. All rights reserved.</p>
         <p style="margin-top: 0.5rem; font-size: 0.9rem;">Kentucky Convenience, Liquor, Tobacco Stores</p>
