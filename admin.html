@@ -283,7 +283,7 @@
         <p style="text-align: center; margin-top: 1.5rem; color: #666; font-size: 0.9rem;">
             Default password: <strong>admin123</strong><br>
             (Change this in the code!)<br>
-            <small>v1.1</small>
+            <small>v1.2</small>
         </p>
     </div>
 
@@ -748,8 +748,15 @@
     <script>
         const ADMIN_PASSWORD = 'admin123';
 
+        // Global error handler
+        window.onerror = function (msg, url, line, col, error) {
+            alert('Global Error: ' + msg + '\nLine: ' + line);
+            return false;
+        };
+
         function handleAdminLogin(event) {
             try {
+                alert('Starting login...'); // Aggressive Alert 1
                 console.log('handleAdminLogin called');
                 event.preventDefault();
 
@@ -777,6 +784,7 @@
                 errorDiv.innerHTML += 'Debug: Password length: ' + (password ? password.length : 0) + '<br>';
 
                 if (password === ADMIN_PASSWORD) {
+                    alert('Password check passed...'); // Aggressive Alert 2
                     errorDiv.innerHTML += 'Debug: Password correct. Loading dashboard...<br>';
 
                     // Small delay to let user see the message
@@ -792,6 +800,7 @@
 
                             if (typeof loadAllData === 'function') {
                                 loadAllData();
+                                alert('Data loaded!'); // Aggressive Alert 3
                             } else {
                                 throw new Error('loadAllData function is missing!');
                             }
@@ -802,6 +811,7 @@
                         }
                     }, 500);
                 } else {
+                    alert('Password incorrect!'); // Aggressive Alert 4
                     errorDiv.innerHTML += 'Debug: Password incorrect. Expected: ' + ADMIN_PASSWORD + '<br>';
                     errorDiv.innerHTML += '<strong>Incorrect password!</strong>';
                     errorDiv.style.display = 'block';
@@ -816,7 +826,11 @@
             if (localStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-dashboard').classList.add('active');
-                loadAllData();
+                try {
+                    loadAllData();
+                } catch (e) {
+                    console.error("Auto-login data load error", e);
+                }
             }
         };
 
