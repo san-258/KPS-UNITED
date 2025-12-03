@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - KPS United</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Reuse main styles but specific for 404 layout */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--kps-red) 0%, var(--kps-navy) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container-404 {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo-image {
+            width: 150px;
+            height: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--kps-navy);
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        h2 {
+            color: var(--kps-red);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--kps-red);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--kps-navy);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-404">
+        <img src="logo.png" alt="KPS United Logo" class="logo-image">
+        <h1>404</h1>
+        <h2>Page Not Found</h2>
+        <p>
+            Oops! It looks like you've ventured off the map. <br>
+            The page you are looking for might have been moved, deleted, or possibly never existed.
+        </p>
+        <a href="index.html" class="btn">Return to Login</a>
+    </div>
+</body>
+
+</html>

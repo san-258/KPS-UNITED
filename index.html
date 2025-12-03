@@ -360,10 +360,7 @@
         <!-- Register Form -->
         <div id="register-form" class="form-section">
             <form onsubmit="handleRegister(event)">
-                <div class="form-group">
-                    <label for="register-name">Store Name <span class="required">*</span></label>
-                    <input type="text" id="register-name" placeholder="Your Store Name" required>
-                </div>
+
 
                 <div class="form-group">
                     <label for="register-email">Email Address <span class="required">*</span></label>
@@ -456,7 +453,6 @@
         function handleRegister(event) {
             event.preventDefault();
 
-            const name = document.getElementById('register-name').value;
             const email = document.getElementById('register-email').value.toLowerCase();
             const password = document.getElementById('register-password').value;
             const confirmPassword = document.getElementById('register-confirm-password').value;
@@ -481,7 +477,7 @@
 
             // Store pending data
             pendingUser = {
-                name: name,
+                name: email.split('@')[0], // Default name to email prefix
                 email: email,
                 password: password
             };
@@ -534,27 +530,12 @@
                 verified: true // Mark as verified
             });
 
-            // 3. Create Initial Store
-            let stores = JSON.parse(localStorage.getItem('userStores') || '[]');
-            const newStore = {
-                id: `${nextMemberId}-1`,
-                memberId: `${nextMemberId}-1`,
-                name: pendingUser.name,
-                businessEmail: pendingUser.email,
-                streetAddress: "Pending",
-                entityName: pendingUser.name,
-                city: "Pending",
-                state: "KY",
-                zip: "00000",
-                county: "Pending",
-                businessPhone: "Pending",
-                ein: "Pending",
-                businessType: "Retail",
-                brand: "Pending",
-                status: "Active"
-            };
-            stores.push(newStore);
-            localStorage.setItem('userStores', JSON.stringify(stores));
+            // 3. Create Initial Store - REMOVED
+            // Users must add a store manually after login
+            // let stores = JSON.parse(localStorage.getItem('userStores') || '[]');
+            // const newStore = { ... };
+            // stores.push(newStore);
+            // localStorage.setItem('userStores', JSON.stringify(stores));
 
             // 4. Increment Member ID
             localStorage.setItem('nextMemberId', (nextMemberId + 1).toString());
@@ -570,7 +551,6 @@
                 document.querySelectorAll('.tab-btn')[1].classList.remove('active');
 
                 // Clear form
-                document.getElementById('register-name').value = '';
                 document.getElementById('register-email').value = '';
                 document.getElementById('register-password').value = '';
                 document.getElementById('register-confirm-password').value = '';
@@ -609,7 +589,87 @@
 
 
         // Removed inline window.onload as it is handled by auth.js
+
+        // --- Terms Modal Logic ---
+        const termsCheckbox = document.getElementById('terms-checkbox');
+        const termsModal = document.getElementById('terms-modal');
+        const termsModalCheckboxes = document.querySelectorAll('.terms-modal-checkbox');
+        const termsSuccessMsg = document.getElementById('terms-success-msg');
+
+        // Intercept the main checkbox click
+        termsCheckbox.addEventListener('click', function (e) {
+            if (!this.checked) return; // Allow unchecking without modal
+
+            e.preventDefault(); // Prevent immediate checking
+            termsModal.style.display = 'block';
+        });
+
+        function checkTermsCompletion() {
+            const allChecked = Array.from(termsModalCheckboxes).every(cb => cb.checked);
+
+            if (allChecked) {
+                termsSuccessMsg.style.display = 'block';
+                // Enable the main checkbox
+                setTimeout(() => {
+                    termsModal.style.display = 'none';
+                    termsCheckbox.checked = true;
+                    // Reset modal for next time (optional, but good UX if they uncheck and recheck)
+                    // termsModalCheckboxes.forEach(cb => cb.checked = false);
+                    // termsSuccessMsg.style.display = 'none';
+                }, 1500);
+            } else {
+                termsSuccessMsg.style.display = 'none';
+            }
+        }
+
+        termsModalCheckboxes.forEach(cb => {
+            cb.addEventListener('change', checkTermsCompletion);
+        });
+
+        function closeTermsModal() {
+            termsModal.style.display = 'none';
+            // Ensure main checkbox is unchecked if they close without completing
+            if (!Array.from(termsModalCheckboxes).every(cb => cb.checked)) {
+                termsCheckbox.checked = false;
+            }
+        }
     </script>
+
+    <!-- Terms Confirmation Modal -->
+    <div id="terms-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px; padding: 2rem; border: 2px solid var(--kps-red);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                <i class="fas fa-check-square" style="color: green; font-size: 1.5rem;"></i>
+                <h2 style="color: var(--kps-navy); margin: 0;">Confirm Your Understanding</h2>
+            </div>
+            <p style="margin-bottom: 1.5rem; color: #333;">Check the boxes below to confirm:</p>
+
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" class="terms-modal-checkbox" style="width: 20px; height: 20px;">
+                    <span>I have read the complete Terms and Conditions</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" class="terms-modal-checkbox" style="width: 20px; height: 20px;">
+                    <span>I agree to comply with all terms</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" class="terms-modal-checkbox" style="width: 20px; height: 20px;">
+                    <span>I understand prices are subject to change</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" class="terms-modal-checkbox" style="width: 20px; height: 20px;">
+                    <span>I acknowledge the limitation of liability</span>
+                </label>
+            </div>
+
+            <div id="terms-success-msg" style="display: none; color: green; font-weight: bold; margin-bottom: 1rem;">
+                <i class="fas fa-check-square"></i> Great! Checkboxes are now enabled.
+            </div>
+
+            <button class="btn" style="background: #ccc;" onclick="closeTermsModal()">Cancel</button>
+        </div>
+    </div>
 </body>
 
 </html>

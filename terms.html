@@ -1,2 +1,157 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Terms - KPS United</title><style>:root{--kps-red:#D84315;--kps-navy:#1A3A52}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:#f4f4f4}header{background:linear-gradient(135deg,var(--kps-red),var(--kps-navy));color:white;padding:2rem 0;text-align:center}.scroll-notice{background:#fff3cd;padding:1rem;text-align:center;font-weight:600;position:sticky;top:0}.scroll-notice.hidden{display:none}.outer-container{max-width:900px;margin:2rem auto;padding:0 20px}.container{background:white;padding:3rem;border-radius:10px;max-height:500px;overflow-y:auto;border:3px solid var(--kps-red)}h2{color:var(--kps-navy);margin-top:2rem}li{margin-bottom:0.5rem}.agreement-section{background:#f8f9ff;padding:2rem;border-radius:10px;margin-top:2rem;border:2px solid var(--kps-red)}.back-btn{display:inline-block;padding:0.8rem 1.5rem;background:var(--kps-red);color:white;text-decoration:none;border-radius:5px;margin-top:2rem}</style></head><body><header><h1>📜 Terms and Conditions</h1><p>KPS United - Kentucky Stores</p></header><div class="scroll-notice" id="scroll-notice">⬇️ Please scroll down and read the entire document ⬇️</div><div class="outer-container"><div class="container" id="terms-container"><p style="color:#666;font-style:italic;margin-bottom:2rem">Last Updated: December 1, 2025</p><p>Welcome to KPS United. By accessing and using this platform, you agree to be bound by these Terms and Conditions.</p><h2>1. Acceptance of Terms</h2><p>By creating an account, you acknowledge that you have read and understood these terms.</p><h2>2. Eligibility</h2><p>To use this platform, you must be at least 18 years of age and be a registered Kentucky store owner.</p><h2>3. Account Security</h2><p>You are responsible for maintaining the confidentiality of your password.</p><h2>4. Use of Platform</h2><p>You may use this platform to access price lists, contracts, business documents, and analytics.</p><h2>5. Pricing and Contracts</h2><p>All prices are subject to change without prior notice and are not binding until a formal contract is executed.</p><h2>6. Intellectual Property</h2><p>All content on this platform is protected by copyright and intellectual property laws.</p><h2>7. Privacy and Data Protection</h2><p>We are committed to protecting your privacy. Your information will be handled in accordance with applicable data protection laws.</p><h2>8. Limitation of Liability</h2><p>We provide this platform "as is" without warranties of any kind.</p><h2>9. Contact Information</h2><p>If you have questions, please contact us at: support@kpsunited.com</p></div><div class="agreement-section"><h2 style="color:var(--kps-navy)">✅ Confirm Your Understanding</h2><p style="margin-bottom:1.5rem">Check the boxes below to confirm:</p><div style="margin-bottom:1rem"><label><input type="checkbox" id="check1" disabled> I have read the complete Terms and Conditions</label></div><div style="margin-bottom:1rem"><label><input type="checkbox" id="check2" disabled> I agree to comply with all terms</label></div><div style="margin-bottom:1rem"><label><input type="checkbox" id="check3" disabled> I understand prices are subject to change</label></div><div style="margin-bottom:1rem"><label><input type="checkbox" id="check4" disabled> I acknowledge the limitation of liability</label></div><p id="scroll-instruction" style="color:#666;margin-top:1rem">Scroll to the bottom to enable checkboxes</p></div><a href="index.html" class="back-btn">← Back to Login</a></div><script>const container=document.getElementById('terms-container'),scrollNotice=document.getElementById('scroll-notice'),checkboxes=[document.getElementById('check1'),document.getElementById('check2'),document.getElementById('check3'),document.getElementById('check4')],scrollInstruction=document.getElementById('scroll-instruction');let hasScrolled=false;container.addEventListener('scroll',function(){const scrollTop=container.scrollTop,scrollHeight=container.scrollHeight,clientHeight=container.clientHeight;if(scrollTop+clientHeight>=scrollHeight-20&&!hasScrolled){hasScrolled=true;scrollNotice.classList.add('hidden');checkboxes.forEach(cb=>cb.disabled=false);scrollInstruction.innerHTML='<strong style="color:#28a745">✅ Great! Checkboxes are now enabled.</strong>'}})</script></body></html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Terms - KPS United</title>
+    <style>
+        :root {
+            --kps-red: #D84315;
+            --kps-navy: #1A3A52
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f4f4
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--kps-red), var(--kps-navy));
+            color: white;
+            padding: 2rem 0;
+            text-align: center
+        }
+
+        .scroll-notice {
+            background: #fff3cd;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            position: sticky;
+            top: 0
+        }
+
+        .scroll-notice.hidden {
+            display: none
+        }
+
+        .outer-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 20px
+        }
+
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 3px solid var(--kps-red)
+        }
+
+        h2 {
+            color: var(--kps-navy);
+            margin-top: 2rem
+        }
+
+        li {
+            margin-bottom: 0.5rem
+        }
+
+        .agreement-section {
+            background: #f8f9ff;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            border: 2px solid var(--kps-red)
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--kps-red);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 2rem
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>📜 Terms and Conditions</h1>
+        <p>KPS United - Kentucky Stores</p>
+    </header>
+    <div class="scroll-notice" id="scroll-notice">⬇️ Please scroll down and read the entire document ⬇️</div>
+    <div class="outer-container">
+        <div class="container" id="terms-container">
+            <p style="color:#666;font-style:italic;margin-bottom:2rem">Last Updated: December 2, 2025</p>
+
+            <h2>1. Purpose</h2>
+            <p>KPS UNITED negotiates group pricing and vendor agreements on behalf of its members. This Agreement
+                ensures compliance for the specific business location listed below.</p>
+
+            <h2>2. Member Obligations</h2>
+            <ul>
+                <li><strong>Group Pricing Commitment:</strong> Member must accept and purchase at the group price
+                    negotiated by KPS UNITED.</li>
+                <li><strong>Vendor Participation Rule:</strong> If Member refuses one approved vendor, they lose all
+                    vendor discounts for this location.</li>
+                <li><strong>Store Spacing Agreement:</strong> Member must allocate and maintain product display spacing
+                    as directed by KPS UNITED.</li>
+                <li><strong>Exclusive Purchasing Rule:</strong> Member shall not purchase the same vendor products from
+                    outside sources (e.g., Walmart, Dollar General, other distributors).</li>
+                <li><strong>Price Integrity:</strong> Member must sell products at the vendor-approved price and shall
+                    not remove, alter, or tamper with price tags.</li>
+                <li><strong>Issue Reporting:</strong> Any concerns must be submitted to KPS UNITED in writing.</li>
+            </ul>
+
+            <h2>3. Compliance Enforcement</h2>
+            <ul>
+                <li><strong>Vendor Complaints:</strong> If a vendor reports non-compliance, KPS UNITED will notify
+                    Member in writing.</li>
+                <li><strong>Correction Period:</strong> Member has seven (7) days to correct the issue.</li>
+                <li><strong>Termination:</strong> If Member fails to comply, KPS UNITED may terminate all vendor
+                    contracts for this business location.</li>
+            </ul>
+
+            <h2>4. Term & Termination</h2>
+            <ul>
+                <li>This Agreement applies only to the business listed in the signature section.</li>
+                <li>Each additional business owned by Member must sign a separate Agreement.</li>
+                <li>Termination applies individually per business location.</li>
+            </ul>
+
+            <h2>5. Governing Law</h2>
+            <p>This Agreement shall be governed by the laws of Kentucky.</p>
+
+            <h2>6. Entire Agreement</h2>
+            <p>This Agreement represents the entire understanding between KPS UNITED and the specific business location
+                listed above.</p>
+        </div>
+        <div class="agreement-section">
+            <h2 style="color:var(--kps-navy)">✅ Confirm Your Understanding</h2>
+            <p style="margin-bottom:1.5rem">Check the boxes below to confirm:</p>
+            <div style="margin-bottom:1rem"><label><input type="checkbox" id="check1" disabled> I have read the complete
+                    Terms and Conditions</label></div>
+            <div style="margin-bottom:1rem"><label><input type="checkbox" id="check2" disabled> I agree to comply with
+                    all terms</label></div>
+            <div style="margin-bottom:1rem"><label><input type="checkbox" id="check3" disabled> I understand prices are
+                    subject to change</label></div>
+            <div style="margin-bottom:1rem"><label><input type="checkbox" id="check4" disabled> I acknowledge the
+                    limitation of liability</label></div>
+            <p id="scroll-instruction" style="color:#666;margin-top:1rem">Scroll to the bottom to enable checkboxes</p>
+        </div><a href="index.html" class="back-btn">← Back to Login</a>
+    </div>
+    <script>const container = document.getElementById('terms-container'), scrollNotice = document.getElementById('scroll-notice'), checkboxes = [document.getElementById('check1'), document.getElementById('check2'), document.getElementById('check3'), document.getElementById('check4')], scrollInstruction = document.getElementById('scroll-instruction'); let hasScrolled = false; container.addEventListener('scroll', function () { const scrollTop = container.scrollTop, scrollHeight = container.scrollHeight, clientHeight = container.clientHeight; if (scrollTop + clientHeight >= scrollHeight - 20 && !hasScrolled) { hasScrolled = true; scrollNotice.classList.add('hidden'); checkboxes.forEach(cb => cb.disabled = false); scrollInstruction.innerHTML = '<strong style="color:#28a745">✅ Great! Checkboxes are now enabled.</strong>' } })</script>
+</body>
+
+</html>
