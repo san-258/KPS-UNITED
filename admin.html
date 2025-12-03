@@ -780,14 +780,7 @@
             }
         };
 
-        function loadAllData() {
-            loadStores();
-            loadVendors();
-            loadQueries();
-            loadComm();
-            // loadDocs(); // To be implemented
-            loadReportingFilters();
-        }
+
 
         function switchTab(tabName) {
             // Hide all tabs
@@ -843,9 +836,9 @@
             const tbody = document.getElementById('users-table-body');
 
             if (stores.length === 0) {
-                tbody.innerHTML = '<tr>
-                    < td colspan = "8" class="no-users" > No stores registered yet</td >
-    </tr > ';
+                tbody.innerHTML = `<tr>
+                    <td colspan="8" class="no-users">No stores registered yet</td>
+                </tr>`;
                 return;
             }
 
@@ -958,9 +951,9 @@
                     store.businessPhone.includes(searchTerm)));
 
             if (filteredStores.length === 0) {
-                tbody.innerHTML = '<tr>
-                    < td colspan = "8" class="no-users" > No stores match your search</td >
-    </tr > ';
+                tbody.innerHTML = `<tr>
+                    <td colspan="8" class="no-users">No stores match your search</td>
+                </tr>`;
                 return;
             }
 
@@ -1254,9 +1247,9 @@
             const tbody = document.getElementById('queries-table-body');
 
             if (queries.length === 0) {
-                tbody.innerHTML = '<tr>
-                    < td colspan = "5" class="no-users" > No queries submitted yet</td >
-        </tr > ';
+                tbody.innerHTML = `<tr>
+                    <td colspan="5" class="no-users">No queries submitted yet</td>
+                </tr>`;
                 return;
             }
 
@@ -1328,9 +1321,9 @@
             const tbody = document.getElementById('comm-table-body');
 
             if (comms.length === 0) {
-                tbody.innerHTML = '<tr>
-                    < td colspan = "4" class="no-users" > No communications logged yet</td >
-        </tr > ';
+                tbody.innerHTML = `<tr>
+                    <td colspan="4" class="no-users">No communications logged yet</td>
+                </tr>`;
                 return;
             }
 
