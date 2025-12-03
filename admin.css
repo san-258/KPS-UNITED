@@ -1,0 +1,252 @@
+        /* KPS UNITED BRAND COLORS */
+        :root {
+            --kps-red: #D84315;
+            --kps-navy: #1A3A52;
+            --kps-yellow: #FDB813;
+            --kps-green: #2E7D60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--kps-red) 0%, var(--kps-navy) 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 450px;
+            width: 100%;
+            margin: 100px auto;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .admin-container.active {
+            display: block;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--kps-red);
+        }
+
+        .admin-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-logo {
+            height: 90px;
+            width: auto;
+        }
+
+        .admin-header h1 {
+            color: var(--kps-navy);
+            font-size: 2rem;
+        }
+
+        .logo h1 {
+            color: var(--kps-navy);
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-image {
+            width: 180px;
+            height: auto;
+            display: block;
+            margin: 0 auto 1rem;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--kps-red);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--kps-red);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--kps-navy);
+        }
+
+        .btn-secondary {
+            background: var(--kps-green);
+            margin-right: 1rem;
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            width: auto;
+        }
+
+        .btn-secondary:hover {
+            background: #25664D;
+        }
+
+        .btn-danger {
+            background: var(--kps-red);
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            width: auto;
+        }
+
+        .btn-danger:hover {
+            background: var(--kps-navy);
+        }
+
+        .error-message {
+            background: #ffe6e6;
+            color: #cc0000;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--kps-red) 0%, var(--kps-navy) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .users-table th {
+            background: var(--kps-red);
+            color: white;
+            font-weight: 600;
+        }
+
+        .users-table tr:hover {
+            background: #f8f9ff;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--kps-red);
+        }
+
+        .no-users {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .action-buttons {
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .admin-header-left {
+                flex-direction: column;
+                text-align: center;
+            }
+
+        }
