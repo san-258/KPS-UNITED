@@ -593,15 +593,47 @@
         // --- Terms Modal Logic ---
         const termsCheckbox = document.getElementById('terms-checkbox');
         const termsModal = document.getElementById('terms-modal');
+        const termsScrollContainer = document.getElementById('terms-scroll-container');
+        const scrollNotice = document.getElementById('scroll-notice');
         const termsModalCheckboxes = document.querySelectorAll('.terms-modal-checkbox');
         const termsSuccessMsg = document.getElementById('terms-success-msg');
+        let hasScrolledToEnd = false;
 
         // Intercept the main checkbox click
         termsCheckbox.addEventListener('click', function (e) {
             if (!this.checked) return; // Allow unchecking without modal
 
             e.preventDefault(); // Prevent immediate checking
-            termsModal.style.display = 'block';
+            termsModal.style.display = 'flex'; // Use flex to center
+
+            // Reset state if opening again
+            if (!this.checked) {
+                hasScrolledToEnd = false;
+                scrollNotice.style.display = 'block';
+                termsModalCheckboxes.forEach(cb => {
+                    cb.checked = false;
+                    cb.disabled = true;
+                    cb.parentElement.style.opacity = '0.5';
+                });
+                termsSuccessMsg.style.display = 'none';
+            }
+        });
+
+        // Scroll detection
+        termsScrollContainer.addEventListener('scroll', function () {
+            if (hasScrolledToEnd) return;
+
+            // Check if scrolled to bottom (with 20px buffer)
+            if (this.scrollHeight - this.scrollTop <= this.clientHeight + 20) {
+                hasScrolledToEnd = true;
+                scrollNotice.style.display = 'none';
+
+                // Enable checkboxes
+                termsModalCheckboxes.forEach(cb => {
+                    cb.disabled = false;
+                    cb.parentElement.style.opacity = '1';
+                });
+            }
         });
 
         function checkTermsCompletion() {
@@ -613,10 +645,7 @@
                 setTimeout(() => {
                     termsModal.style.display = 'none';
                     termsCheckbox.checked = true;
-                    // Reset modal for next time (optional, but good UX if they uncheck and recheck)
-                    // termsModalCheckboxes.forEach(cb => cb.checked = false);
-                    // termsSuccessMsg.style.display = 'none';
-                }, 1500);
+                }, 1000);
             } else {
                 termsSuccessMsg.style.display = 'none';
             }
@@ -637,37 +666,113 @@
 
     <!-- Terms Confirmation Modal -->
     <div id="terms-modal" class="modal">
-        <div class="modal-content" style="max-width: 600px; padding: 2rem; border: 2px solid var(--kps-red);">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
-                <i class="fas fa-check-square" style="color: green; font-size: 1.5rem;"></i>
-                <h2 style="color: var(--kps-navy); margin: 0;">Confirm Your Understanding</h2>
-            </div>
-            <p style="margin-bottom: 1.5rem; color: #333;">Check the boxes below to confirm:</p>
-
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                    <input type="checkbox" class="terms-modal-checkbox" style="width: 20px; height: 20px;">
-                    <span>I have read the complete Terms and Conditions</span>
-                </label>
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                    <input type="checkbox" class="terms-modal-checkbox" style="width: 20px; height: 20px;">
-                    <span>I agree to comply with all terms</span>
-                </label>
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                    <input type="checkbox" class="terms-modal-checkbox" style="width: 20px; height: 20px;">
-                    <span>I understand prices are subject to change</span>
-                </label>
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                    <input type="checkbox" class="terms-modal-checkbox" style="width: 20px; height: 20px;">
-                    <span>I acknowledge the limitation of liability</span>
-                </label>
+        <div class="modal-content"
+            style="max-width: 800px; padding: 0; border: 2px solid var(--kps-red); display: flex; flex-direction: column; max-height: 90vh;">
+            <div style="padding: 1.5rem; background: #f8f9fa; border-bottom: 1px solid #e0e0e0;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-file-contract" style="color: var(--kps-navy); font-size: 1.5rem;"></i>
+                    <h2 style="color: var(--kps-navy); margin: 0;">Terms and Conditions</h2>
+                </div>
+                <p style="margin: 0.5rem 0 0; color: #666; font-size: 0.9rem;">Please read the entire document to
+                    proceed.</p>
             </div>
 
-            <div id="terms-success-msg" style="display: none; color: green; font-weight: bold; margin-bottom: 1rem;">
-                <i class="fas fa-check-square"></i> Great! Checkboxes are now enabled.
+            <div id="terms-scroll-container" style="padding: 2rem; overflow-y: auto; flex: 1; background: white;">
+                <div class="scroll-notice" id="scroll-notice"
+                    style="background: #fff3cd; padding: 1rem; text-align: center; font-weight: 600; margin-bottom: 1rem; border-radius: 5px;">
+                    ⬇️ Please scroll down to the bottom to enable acceptance ⬇️
+                </div>
+
+                <p style="color:#666;font-style:italic;margin-bottom:2rem">Last Updated: December 2, 2025</p>
+
+                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">1. Purpose</h3>
+                <p>KPS UNITED negotiates group pricing and vendor agreements on behalf of its members. This Agreement
+                    ensures compliance for the specific business location listed below.</p>
+
+                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">2. Member Obligations</h3>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li style="margin-bottom: 0.5rem;"><strong>Group Pricing Commitment:</strong> Member must accept and
+                        purchase at the group price negotiated by KPS UNITED.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Vendor Participation Rule:</strong> If Member refuses one
+                        approved vendor, they lose all vendor discounts for this location.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Store Spacing Agreement:</strong> Member must allocate
+                        and maintain product display spacing as directed by KPS UNITED.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Exclusive Purchasing Rule:</strong> Member shall not
+                        purchase the same vendor products from outside sources (e.g., Walmart, Dollar General, other
+                        distributors).</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Price Integrity:</strong> Member must sell products at
+                        the vendor-approved price and shall not remove, alter, or tamper with price tags.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Issue Reporting:</strong> Any concerns must be submitted
+                        to KPS UNITED in writing.</li>
+                </ul>
+
+                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">3. Compliance Enforcement</h3>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li style="margin-bottom: 0.5rem;"><strong>Vendor Complaints:</strong> If a vendor reports
+                        non-compliance, KPS UNITED will notify Member in writing.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Correction Period:</strong> Member has seven (7) days to
+                        correct the issue.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Termination:</strong> If Member fails to comply, KPS
+                        UNITED may terminate all vendor contracts for this business location.</li>
+                </ul>
+
+                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">4. Term & Termination</h3>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li style="margin-bottom: 0.5rem;">This Agreement applies only to the business listed in the
+                        signature section.</li>
+                    <li style="margin-bottom: 0.5rem;">Each additional business owned by Member must sign a separate
+                        Agreement.</li>
+                    <li style="margin-bottom: 0.5rem;">Termination applies individually per business location.</li>
+                </ul>
+
+                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">5. Governing Law</h3>
+                <p>This Agreement shall be governed by the laws of Kentucky.</p>
+
+                <h3 style="color: var(--kps-navy); margin-top: 1.5rem;">6. Entire Agreement</h3>
+                <p>This Agreement represents the entire understanding between KPS UNITED and the specific business
+                    location listed above.</p>
             </div>
 
-            <button class="btn" style="background: #ccc;" onclick="closeTermsModal()">Cancel</button>
+            <div style="padding: 1.5rem; background: #f8f9fa; border-top: 1px solid #e0e0e0;">
+                <h4 style="color:var(--kps-navy); margin-bottom: 1rem;">✅ Confirm Your Understanding</h4>
+
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 0.5;"
+                        id="label-check1">
+                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check1" disabled
+                            style="width: 20px; height: 20px;">
+                        <span>I have read the complete Terms and Conditions</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 0.5;"
+                        id="label-check2">
+                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check2" disabled
+                            style="width: 20px; height: 20px;">
+                        <span>I agree to comply with all terms</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 0.5;"
+                        id="label-check3">
+                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check3" disabled
+                            style="width: 20px; height: 20px;">
+                        <span>I understand prices are subject to change</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 0.5;"
+                        id="label-check4">
+                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check4" disabled
+                            style="width: 20px; height: 20px;">
+                        <span>I acknowledge the limitation of liability</span>
+                    </label>
+                </div>
+
+                <div id="terms-success-msg"
+                    style="display: none; color: green; font-weight: bold; margin-bottom: 1rem;">
+                    <i class="fas fa-check-square"></i> All terms accepted. Redirecting...
+                </div>
+
+                <div style="display: flex; justify-content: flex-end;">
+                    <button class="btn" style="background: #ccc; width: auto; padding: 0.8rem 2rem;"
+                        onclick="closeTermsModal()">Cancel</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
