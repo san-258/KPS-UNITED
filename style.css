@@ -482,6 +482,13 @@ footer {
     transition: border-color 0.3s;
 }
 
+.form-group input[type="checkbox"],
+.form-group input[type="radio"] {
+    width: auto;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
