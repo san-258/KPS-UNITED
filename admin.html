@@ -750,13 +750,22 @@
         function handleAdminLogin(event) {
             event.preventDefault();
             const password = document.getElementById('admin-password').value;
+            alert('Debug: Attempting login with password length: ' + password.length);
 
             if (password === ADMIN_PASSWORD) {
+                alert('Debug: Password correct. Loading dashboard...');
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-dashboard').classList.add('active');
                 localStorage.setItem('adminLoggedIn', 'true');
-                loadAllData();
+                try {
+                    loadAllData();
+                    alert('Debug: Data loaded successfully');
+                } catch (e) {
+                    alert('Debug: Error loading data: ' + e.message);
+                    console.error(e);
+                }
             } else {
+                alert('Debug: Password incorrect. Expected: ' + ADMIN_PASSWORD);
                 const errorDiv = document.getElementById('error-message');
                 errorDiv.textContent = 'Incorrect password!';
                 errorDiv.style.display = 'block';
