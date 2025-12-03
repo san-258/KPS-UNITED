@@ -591,77 +591,90 @@
         // Removed inline window.onload as it is handled by auth.js
 
         // --- Terms Modal Logic ---
-        const termsCheckbox = document.getElementById('terms-checkbox');
-        const termsModal = document.getElementById('terms-modal');
-        const termsScrollContainer = document.getElementById('terms-scroll-container');
-        const scrollNotice = document.getElementById('scroll-notice');
-        const termsModalCheckboxes = document.querySelectorAll('.terms-modal-checkbox');
-        const termsSuccessMsg = document.getElementById('terms-success-msg');
-        let hasScrolledToEnd = false;
+        document.addEventListener('DOMContentLoaded', function () {
+            const termsCheckbox = document.getElementById('terms-checkbox');
+            const termsModal = document.getElementById('terms-modal');
+            const termsScrollContainer = document.getElementById('terms-scroll-container');
+            const scrollNotice = document.getElementById('scroll-notice');
+            const termsModalCheckboxes = document.querySelectorAll('.terms-modal-checkbox');
+            const termsSuccessMsg = document.getElementById('terms-success-msg');
+            let hasScrolledToEnd = false;
 
-        // Intercept the main checkbox click
-        termsCheckbox.addEventListener('click', function (e) {
-            if (!this.checked) return; // Allow unchecking without modal
+            // Intercept the main checkbox click
+            if (termsCheckbox) {
+                termsCheckbox.addEventListener('click', function (e) {
+                    if (!this.checked) {
+                        return; // Allow unchecking without modal
+                    }
 
-            e.preventDefault(); // Prevent immediate checking
-            termsModal.style.display = 'flex'; // Use flex to center
+                    e.preventDefault(); // Prevent immediate checking
+                    termsModal.style.display = 'flex'; // Use flex to center
 
-            // Reset state if opening again
-            if (!this.checked) {
-                hasScrolledToEnd = false;
-                scrollNotice.style.display = 'block';
-                termsModalCheckboxes.forEach(cb => {
-                    cb.checked = false;
-                    cb.disabled = true;
-                    cb.parentElement.style.opacity = '0.5';
+                    // Reset state if opening again
+                    if (!this.checked) {
+                        hasScrolledToEnd = false;
+                        termsModalCheckboxes.forEach(cb => {
+                            cb.checked = false;
+                            cb.disabled = false;
+                            cb.parentElement.style.opacity = '1';
+                        });
+                        termsSuccessMsg.style.display = 'none';
+                        scrollNotice.style.display = 'none';
+
+                        // Check if scrolling is actually needed
+                        // If content fits, enable immediately
+                        if (termsScrollContainer.scrollHeight <= termsScrollContainer.clientHeight + 5) {
+                            hasScrolledToEnd = true;
+                            scrollNotice.style.display = 'none';
+                            termsModalCheckboxes.forEach(cb => {
+                                cb.disabled = false;
+                                cb.parentElement.style.opacity = '1';
+                            });
+                        }
+                    }
                 });
-                termsSuccessMsg.style.display = 'none';
             }
-        });
 
-        // Scroll detection
-        termsScrollContainer.addEventListener('scroll', function () {
-            if (hasScrolledToEnd) return;
-
-            // Check if scrolled to bottom (with 20px buffer)
-            if (this.scrollHeight - this.scrollTop <= this.clientHeight + 20) {
-                hasScrolledToEnd = true;
-                scrollNotice.style.display = 'none';
-
-                // Enable checkboxes
-                termsModalCheckboxes.forEach(cb => {
-                    cb.disabled = false;
-                    cb.parentElement.style.opacity = '1';
+            // Scroll detection (Optional now - just hides notice if present)
+            if (termsScrollContainer) {
+                termsScrollContainer.addEventListener('scroll', function () {
+                    if (hasScrolledToEnd) return;
+                    // Check if scrolled to bottom (with 20px buffer)
+                    if (this.scrollHeight - this.scrollTop <= this.clientHeight + 20) {
+                        hasScrolledToEnd = true;
+                        scrollNotice.style.display = 'none';
+                    }
                 });
             }
-        });
 
-        function checkTermsCompletion() {
-            const allChecked = Array.from(termsModalCheckboxes).every(cb => cb.checked);
+            function checkTermsCompletion() {
+                const allChecked = Array.from(termsModalCheckboxes).every(cb => cb.checked);
 
-            if (allChecked) {
-                termsSuccessMsg.style.display = 'block';
-                // Enable the main checkbox
-                setTimeout(() => {
-                    termsModal.style.display = 'none';
-                    termsCheckbox.checked = true;
-                }, 1000);
-            } else {
-                termsSuccessMsg.style.display = 'none';
+                if (allChecked) {
+                    termsSuccessMsg.style.display = 'block';
+                    // Enable the main checkbox
+                    setTimeout(() => {
+                        termsModal.style.display = 'none';
+                        termsCheckbox.checked = true;
+                    }, 1000);
+                } else {
+                    termsSuccessMsg.style.display = 'none';
+                }
             }
-        }
 
-        termsModalCheckboxes.forEach(cb => {
-            cb.addEventListener('change', checkTermsCompletion);
-        });
+            termsModalCheckboxes.forEach(cb => {
+                cb.addEventListener('change', checkTermsCompletion);
+            });
 
-        function closeTermsModal() {
-            termsModal.style.display = 'none';
-            // Ensure main checkbox is unchecked if they close without completing
-            if (!Array.from(termsModalCheckboxes).every(cb => cb.checked)) {
-                termsCheckbox.checked = false;
+            // Expose closeTermsModal to global scope if needed, or attach listener
+            window.closeTermsModal = function () {
+                termsModal.style.display = 'none';
+                // Ensure main checkbox is unchecked if they close without completing
+                if (!Array.from(termsModalCheckboxes).every(cb => cb.checked)) {
+                    termsCheckbox.checked = false;
+                }
             }
-        }
+        });
     </script>
 
     <!-- Terms Confirmation Modal -->
@@ -737,27 +750,27 @@
                 <h4 style="color:var(--kps-navy); margin-bottom: 1rem;">✅ Confirm Your Understanding</h4>
 
                 <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 0.5;"
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 1;"
                         id="label-check1">
-                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check1" disabled
+                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check1"
                             style="width: 20px; height: 20px;">
                         <span>I have read the complete Terms and Conditions</span>
                     </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 0.5;"
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 1;"
                         id="label-check2">
-                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check2" disabled
+                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check2"
                             style="width: 20px; height: 20px;">
                         <span>I agree to comply with all terms</span>
                     </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 0.5;"
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 1;"
                         id="label-check3">
-                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check3" disabled
+                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check3"
                             style="width: 20px; height: 20px;">
                         <span>I understand prices are subject to change</span>
                     </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 0.5;"
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: 1;"
                         id="label-check4">
-                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check4" disabled
+                        <input type="checkbox" class="terms-modal-checkbox" id="modal-check4"
                             style="width: 20px; height: 20px;">
                         <span>I acknowledge the limitation of liability</span>
                     </label>
